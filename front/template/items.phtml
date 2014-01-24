@@ -1,0 +1,234 @@
+<style>
+	.item .border {
+		border: 1px solid #a1a1a1;
+		margin-bottom: 7px;
+		border-radius: 5px; 
+	}
+	.item .border-space{ padding: 5px 5px; }
+	
+	#addItem a { text-decoration: none; }
+	
+	
+</style>
+<div class="row">
+	<div class="col-lg-12">
+		<h3>Item(s) <small>Supplies / Materials </small></h3>
+		<ol class="breadcrumb">
+			<li>
+				<a href="/"><i class="icon-dashboard"></i> Inventory</a>
+			</li>
+			<li class="active">
+				<i class="icon-file-alt"></i> Item(s)
+			</li>
+		</ol>
+	</div>
+</div>
+<div class="border-space">
+	<button class="btn btn-primary" data-toggle="modal" data-target="#item-modal" 
+		data-backdrop="static" data-keyboard="false" id="add-item">Add Item</button>
+</div>
+<div class="border">
+	<div class="row search border-space">
+		<div class="col-sm-10">
+			<form role="form" action="/item/search/" method="post" name="item-search">
+				<div class="row">
+					<label for="inputEmail3" class="col-sm-2 control-label">Search By:</label>
+					<div class="col-xs-3">
+						<?php if (isset($error['field'])) : ?>
+						<div class="form-group has-error">
+							<label class="control-label" for="inputError">
+								<?php echo $error['field']; ?>
+							</label>
+						<?php endif; ?>
+							<select class="form-control" name="field" required="required">
+								<option value="">Select One</option>
+								<?php foreach($fields as $field => $value): ?>
+								<option value="<?php echo $value; ?>"><?php echo $field; ?></option>
+								<?php endforeach; ?>
+							</select>
+						<?php if (isset($error['field'])) : ?>
+							</div>
+						<?php endif; ?>
+					</div>
+					<div class="col-xs-3">
+							<?php if (isset($error['keyword'])) : ?>
+							<div class="form-group has-error">
+								<label class="control-label" for="inputError">
+									<?php echo $error['keyword']; ?>
+								</label>
+							<?php endif; ?>
+								<input type="input" placeholder="Keyword" name="keyword" class="form-control" required="required">
+							<?php if (isset($error['keyword'])) : ?>
+								</div>
+							<?php endif; ?>
+					</div>
+					<div class="col-xs-2">
+						<button type="submit" class="btn btn-default" name="search">Search</button>
+					</div>
+					
+				</div>
+			</form>
+		</div>
+		<div class="col-sm-2">
+			<form action="/item" method="post">
+				<div class="col-xs-4">
+					<button type="submit" class="btn btn-default" name="show-all">Show All</button>
+				</div>
+			</form>
+			
+		</div>
+	</div>
+</div>
+<div class="border">
+	<div class="row item-list border-space">
+		<div class="col-lg-12">
+			<h4 align="center">Items List</h4>
+			<div class="table-responsive">
+				<table class="table table-hover table-striped table-bordered tablesorter">
+					<thead>
+						<tr>
+							<th class="header">Article <i class="fa fa-sort"></i></th>
+							<th class="header">Description <i class="fa fa-sort"></i></th>
+							<th class="header">Stock Number <i class="fa fa-sort"></i></th>
+							<th class="header">Type <i class="fa fa-sort"></i></th>
+							<th class="header">Unit Of Measure <i class="fa fa-sort"></i></th>
+							<th class="header">Qty <i class="fa fa-sort"></i></th>
+							<th class="header">Cost <i class="fa fa-sort"></i></th>
+							<th class="header">Remarks <i class="fa fa-sort"></i></th>
+							<th class="header">Action(s)</th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php if(!empty($items)):?>
+						<?php foreach ($items as $item):?>
+						<tr data='<?php echo json_encode($item); ?>'>
+							<td><?php echo $item['item_article']; ?></td>
+							<td><?php echo $item['item_desc']; ?></td>
+							<td><?php echo $item['item_stock_no']; ?></td>
+							<td><?php echo $item['item_item_type']; ?></td>
+							<td><?php echo $item['item_unit_measure']; ?></td>
+							<td><?php echo $item['item_qty']; ?></td>
+							<td><?php echo 'P 10.00'; ?></td>
+							<td><?php echo $item['item_remarks']; ?></td>
+							<td>
+								<input type="hidden" name="item_serialize" value="
+								<?php echo json_encode($item); ?>"/>
+								<div class="btn-group">
+								  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+								    Action <span class="caret"></span>
+								  </button>
+								  <ul class="dropdown-menu" role="menu">
+								    <li><a href="#" data-toggle="modal" data-target="#item-modal" 
+								    	data-backdrop="static" data-keyboard="false" id="edit-item">Edit</a></li>
+								    <li><a href="/item/delete/<?php echo $item['item_id']; ?>" id="delete-item">Delete</a></li>
+								    <li><a href="#" data-toggle="modal" data-target="#item-modal"
+								    	data-backdrop="static" data-keyboard="false"id="view-item" >View</a></li>
+								  </ul>
+								</div>
+							</td>
+						</tr>
+						<?php endforeach; ?>
+						<?php endif; ?>
+						<?php if(empty($items)): ?>
+							<tr>
+								<td colspan="8" align="center">No items found<!/td>
+							</tr>
+						<?php endif; ?>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="item-modal" tabindex="-1" role="dialog" aria-labelledby="mymodallabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="my-modal-label"><span class="modal-form-state">Action Here</span></h4>
+      </div>
+      <div class="modal-body">
+      	<form class="form-horizontal" role="form" action="" method="post" name="add-item" id="item-modal-form">
+      		<input type="hidden" name="id"/>
+		  <div class="form-group ">
+		    <label for="input-name" class="col-sm-2 control-label">Desc:</label>
+		    <div class="col-sm-10">
+		      <input type="text" class="form-control"  placeholder="Description" name="item_desc" required="required">
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="input-address" class="col-sm-2 control-label">Unit:</label>
+		    <div class="col-xs-3">
+		      <input type="text" class="form-control"  placeholder="Unit" name="item_unit_measure" required="required">
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label class="col-sm-2 control-label">Qty:</label>
+		    <div class="col-xs-2">
+		      <input type="text" class="form-control"  placeholder="Qty" name="item_qty" required="required">
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="input-tel" class="col-sm-2 control-label">Stock No.:</label>
+		    <div class="col-xs-4">
+		      <input type="text" class="form-control" placeholder="Stock No" name="item_stock_no">
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="input-tel" class="col-sm-2 control-label">Type :</label>
+		    <div class="col-xs-4">
+		      <input type="text" class="form-control" placeholder="Type" name="item_item_type">
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="input-tel" class="col-sm-2 control-label">Article:</label>
+		    <div class="col-xs-4">
+		      <input type="text" class="form-control" placeholder="Article" name="item_article">
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="input-tel" class="col-sm-2 control-label">Remarks:</label>
+		    <div class="col-xs-4">
+		      <textarea type="te" class="form-control" placeholder="Remarks" name="item_remarks"></textarea>
+		    </div>
+		  </div>		
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary" name=""><span class="modal-form-action">Save changes</span></button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+(function($) {
+	
+	var item = {};
+	add = ['/item/add','Add','Add Item','add-item'];
+	edit = ['/item/edit','Save Changes','Edit Item', 'edit-item'];
+	view = ['#','Ok','View item', 'view-item'];
+	
+	function changeModal(action) {
+		$('#item-modal-form').attr('action', action[0]);
+		var modal_action = $('#item-modal-form').parents('div.modal-content')
+			.find('span.modal-form-action');
+		//modal_action.parent().attr('name', action[3]);
+		modal_action.html(action[1]);
+		$('#item-modal-form').attr('name', action[3]).parents('div.modal-content')
+			.find('#my-modal-label').html(action[2])
+	}
+	
+	$('#add-item').on('click', function() {
+		changeModal(add);
+	})
+	
+	$('#edit-item').on('click', function() {
+		changeModal(edit);
+	})
+	$('#view-item').on('click', function() {
+		changeModal(view);
+	})
+	
+})(jQuery);
+</script>

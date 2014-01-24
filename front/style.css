@@ -1,0 +1,5 @@
+/* FRONT STYLES */
+.navbar-inverse .navbar-nav > li > a:hover, .navbar-inverse .navbar-nav > li > a:focus {
+	background-color: white;
+	color: black;
+}

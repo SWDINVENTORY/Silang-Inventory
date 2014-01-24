@@ -1,0 +1,204 @@
+<style>
+	.supplier .border {
+		border: 1px solid #a1a1a1;
+		margin-bottom: 7px;
+		border-radius: 5px; 
+	}
+	.supplier .border-space{ padding: 5px 5px; }
+	
+	#addSupplier a { text-decoration: none; }
+	
+	
+</style>
+<div class="row">
+	<div class="col-lg-12">
+		<h3>Suppliers <small>Item(s) / Materials supplier</small></h3>
+		<ol class="breadcrumb">
+			<li>
+				<a href="/"><i class="icon-dashboard"></i> Inventory</a>
+			</li>
+			<li class="active">
+				<i class="icon-file-alt"></i> Supplier
+			</li>
+		</ol>
+	</div>
+</div>
+<div class="border-space">
+	<button class="btn btn-primary" data-toggle="modal" data-target="#supplier-modal" 
+		data-backdrop="static" data-keyboard="false" id="add-supplier">Add Supplier</button>
+</div>
+<div class="border">
+	<div class="row search border-space">
+		<div class="col-sm-10">
+			<form role="form" action="/supplier/search/" method="post" name="supplier-search">
+				<div class="row">
+					<label for="inputEmail3" class="col-sm-2 control-label">Search By:</label>
+					<div class="col-xs-3">
+						<?php if (isset($error['field'])) : ?>
+						<div class="form-group has-error">
+							<label class="control-label" for="inputError">
+								<?php echo $error['field']; ?>
+							</label>
+						<?php endif; ?>
+							<select class="form-control" name="field" required="required">
+								<option value="">Select One</option>
+								<option value="supplier_address">Address</option>
+								<option value="supplier_name">Name</option>
+							</select>
+						<?php if (isset($error['field'])) : ?>
+							</div>
+						<?php endif; ?>
+					</div>
+					<div class="col-xs-3">
+							<?php if (isset($error['keyword'])) : ?>
+							<div class="form-group has-error">
+								<label class="control-label" for="inputError">
+									<?php echo $error['keyword']; ?>
+								</label>
+							<?php endif; ?>
+								<input type="input" placeholder="Keyword" name="keyword" class="form-control" required="required">
+							<?php if (isset($error['keyword'])) : ?>
+								</div>
+							<?php endif; ?>
+					</div>
+					<div class="col-xs-2">
+						<button type="submit" class="btn btn-default" name="search">Search</button>
+					</div>
+					
+				</div>
+			</form>
+		</div>
+		<div class="col-sm-2">
+			<form action="/supplier" method="post">
+				<div class="col-xs-4">
+					<button type="submit" class="btn btn-default" name="show-all">Show All</button>
+				</div>
+			</form>
+			
+		</div>
+	</div>
+</div>
+<div class="border">
+	<div class="row supplier-list border-space">
+		<div class="col-lg-12">
+			<h4 align="center">Supplier List</h4>
+			<div class="table-responsive">
+				<table class="table table-hover table-striped table-bordered tablesorter">
+					<thead>
+						<tr>
+							<th class="header">Name <i class="fa fa-sort"></i></th>
+							<th class="header">Address <i class="fa fa-sort"></i></th>
+							<th class="header">Telephone No. <i class="fa fa-sort"></i></th>
+							<th class="header"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php foreach ($suppliers as $supplier):?>
+						<tr data='<?php echo json_encode($supplier); ?>'>
+							<td><?php echo $supplier['supplier_name']; ?></td>
+							<td><?php echo $supplier['supplier_address']; ?></td>
+							<td><?php echo $supplier['supplier_tel_no']; ?></td>
+							<td>							
+								<div class="btn-group">
+								  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+								    Action <span class="caret"></span>
+								  </button>
+								  <ul class="dropdown-menu" role="menu">
+								    <li><a href="#" data-toggle="modal" data-target="#supplier-modal" 
+								    	data-backdrop="static" data-keyboard="false" class="edit-supplier">Edit</a></li>
+								    <li><a href="/supplier/delete/<?php echo $supplier['supplier_id']; ?>" class="delete-supplier">Delete</a></li>
+								    <li><a href="#" data-toggle="modal" data-target="#supplier-modal"
+								    	data-backdrop="static" data-keyboard="false"class="view-supplier" >View</a></li>
+								  </ul>
+								</div>
+							</td>
+						</tr>
+						<?php endforeach; ?>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="supplier-modal" tabindex="-1" role="dialog" aria-labelledby="mymodallabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="my-modal-label"><span class="modal-form-state">Action Here</span></h4>
+      </div>
+      <div class="modal-body">
+      	<form class="form-horizontal" role="form" action="" method="post" name="add-supplier" id="supplier-modal-form">
+      		<input type="hidden" name="supplier_id"/>
+		  <div class="form-group ">
+		    <label for="input-name" class="col-sm-2 control-label">Name:</label>
+		    <div class="col-sm-10">
+		      <input type="text" class="form-control" id="input-name" placeholder="Enter Name" name="supplier_name" required="required">
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="input-address" class="col-sm-2 control-label">Address:</label>
+		    <div class="col-sm-10">
+		      <input type="text" class="form-control" id="input-address" placeholder="Enter Address" name="supplier_address" required="required">
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="input-tel" class="col-sm-2 control-label">Tel No. :</label>
+		    <div class="col-xs-4">
+		      <input type="text" class="form-control" id="input-tel" placeholder="Enter Tel No" name="supplier_tel_no">
+		    </div>
+		  </div>
+		
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary" name=""><span class="modal-form-action">Save changes</span></button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+(function($) {
+	
+	var supplier = {};
+	var add = ['/supplier/add','Add','Add Supplier','add-supplier'];
+	var edit = ['/supplier/edit','Save Changes','Edit Supplier', 'edit-supplier'];
+	var view = ['','Ok','View Supplier', 'view-supplier'];
+	
+	function changeModal(action) {
+		$('#supplier-modal-form').attr('action', action[0]);
+		var modal_action = $('#supplier-modal-form').parents('div.modal-content')
+			.find('span.modal-form-action');
+		//modal_action.parent().attr('name', action[3]);
+		modal_action.html(action[1]);
+		$('#supplier-modal-form').attr('name', action[3]).parents('div.modal-content')
+			.find('#my-modal-label').html(action[2])
+	}
+	
+	$('#add-supplier').on('click', function() {
+		changeModal(add);
+	})
+	
+	$('.edit-supplier').on('click', function() {
+		changeModal(edit);
+		var supplier = JSON.parse($(this).parents('tr').attr('data'));
+		if(supplier) {
+			$.each( Object.keys(supplier),function(i,e){
+				$('form[name="'+edit[3]+'"] input[name="'+e+'"]').val(supplier[e]);		
+			})	
+		}
+	})
+	
+	$('.view-supplier').on('click', function() {
+		changeModal(view);
+		var supplier = JSON.parse($(this).parents('tr').attr('data'));
+		if(supplier) {
+			$.each( Object.keys(supplier),function(i,e){
+				$('form[name="'+view[3]+'"] input[name="'+e+'"]').val(supplier[e]);		
+			})	
+		}
+	})
+	
+})(jQuery);
+</script>

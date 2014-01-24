@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html class="<?php print $class; ?>">
+	
+<head>
+	<title><?php print $title; ?></title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	
+	<?php if(isset($meta) && is_array($meta)): ?>
+    <?php foreach($meta as $name => $content): ?>
+    <meta name="<?php print $name; ?>" content="<?php print $content; ?>" />
+    <?php endforeach; ?>
+    <?php endif; ?>
+    <link rel="stylesheet" type="text/css" href="/assets/css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/sb-admin.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="/assets/front/style.css" />
+    <link rel="stylesheet" type="text/css" href="/assets/font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/morris.min.css" />
+    
+    <script type="text/javascript" src="/assets/front/script.js"></script>
+    <script type="text/javascript" src="/assets/js/jquery.js"></script>
+    <script type="text/javascript" src="/assets/js/bootstrap.js"></script>
+    
+</head>
+
+<body>
+	<div class="page">
+		<div id="wrapper">
+			<div class="head"><?php echo $head; ?></div>
+			<div id="page-wrapper">
+				<div class="body"><?php echo $body; ?></div>
+			</div>
+			<div class="foot"><?php echo $foot; ?></div>
+	    </div>
+	    <script type="text/javascript" src="/assets/js/raphael_min.js"></script>
+	    <script type="text/javascript" src="/assets/js/morris_min.js"></script>
+	    <script type="text/javascript" src="/assets/js/morris/chart-data-morris.js"></script>
+	    <script type="text/javascript" src="/assets/js/tablesorter/tablesorter.js"></script>
+	    <script type="text/javascript" src="/assets/js/tablesorter/tables.js"></script>
+    </div>
+</body>
+</html>
