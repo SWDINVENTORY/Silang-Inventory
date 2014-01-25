@@ -86,42 +86,20 @@
 		</div>
 	</div>
 </div>
+<hr/>
 <div class="border">
 		<div class="form-inline row item-input">
-			<div class="col-sm-4">
-			    <label class="control-label col-sm-2">Desc</label>
-				<div class="col-sm-10">
-					<input type="text" class="form-control" data="po_dtl_item_desc" placeholder="Description">
-			  	</div>
-		  	</div>
-		  <div class="col-sm-2">
-		  		<label class="control-label col-sm-5">Quantity</label>
-			    <div class="col-sm-7">
-				    <input type="text" class="form-control" data="po_dtl_item_desc" placeholder="QTY" class="qty">
-				</div>
-		  </div>
-		  <div class="col-sm-2">
-		  		<label class="control-label col-sm-3">Unit</label>
-			    <div class="col-sm-9">
-				    <input type="text" class="form-control" placeholder="Unit" data="po_dtl_item_unit">
-				</div>
-		  </div>
-		  <div class="col-sm-2">
-		  		<label class="control-label col-sm-6">Unit Cost</label>
-			    <div class="col-sm-6">
-				    <input type="text" class="form-control cost" placeholder="Cost" data="po_dtl_item_cost">
-				</div>
-		  </div>
-		  <div class="col-sm-2">
-		  		<button type="button" class="btn btn-default" id="add-to-purchase">ADD TO LIST</button>
-		  </div>
+			<div class="col-sm-offset-10 col-sm-2">
+				<button type="button" class="btn btn-primary intent-add-detail" id="add-to-purchase"
+					data-toggle="modal" data-target="#po-dtl-modal">ADD ITEM</button>
+			</div>
 		</div>
 </div>
 <div class="row border-space">
 	<div class="col-lg-12">
 		<h4 align="center">Purchase List</h4>
 		<div class="table-responsive">
-			<table class="table table-hover table-striped table-bordered tablesorter">
+			<table class="table table-hover table-striped table-bordered tablesorter" id="po-dtl-table">
 				<thead>
 					<tr>
 						<th class="header">Item No. <i class="fa fa-sort"></i></th>
@@ -130,16 +108,29 @@
 						<th class="header">Description <i class="fa fa-sort"></i></th>
 						<th class="header">Unit Cost <i class="fa fa-sort"></i></th>
 						<th class="header">Amount <i class="fa fa-sort"></i></th>
+						<th class="header">Action</th>
 					</tr>
 				</thead>
-				<tbody>
+				<tbody id"purchase-list">
 					<tr>
 						<td>1<input type="hidden" value="1" name="po_dtl[0][po_dtl_item_no]"/></td>
-						<td>bag<input type="hidden" value="1" name="po_dtl[0][po_dtl_item_unit]"/></td>
-						<td>50<input type="hidden" value="1" name="po_dtl[0][po_dtl_item_qty]"/></td>
-						<td>Portland Cement<input type="hidden" value="1" name="po_dtl[0][po_dtl_item_desc]"/></td>
-						<td>228.00<input type="hidden" value="1" name="po_dtl[0][po_dtl_item_cost]"/></td>
+						<td>bag<input type="hidden" value="1" name="po_dtl[0][po_dtl_item_desc]"/></td>
+						<td>50</td>
+						<td>Portland Cement</td>
+						<td>228.00</td>
 						<td>11,480</td>	
+						<td>							
+								<div class="btn-group">
+								  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+								    Action <span class="caret"></span>
+								  </button>
+								  <ul class="dropdown-menu" role="menu">
+								    <li><a href="#" data-toggle="modal" data-target="#supplier-modal" data-backdrop="static" data-keyboard="false" class="intent-adjust-detail">Edit</a></li>
+								    <li><a href="/supplier/delete/1" class="intent-delete-detail">Delete</a></li>
+								    <li><a href="#" data-toggle="modal" data-target="#supplier-modal" data-backdrop="static" data-keyboard="false" class="view-supplier">View</a></li>
+								  </ul>
+								</div>
+							</td>
 					</tr>
 				</tbody>
 			</table>
@@ -150,21 +141,63 @@
 	<button type="submit" class="btn btn-primary" name="furnish">Furnish</button>
 </div>
 </form>
-<script type="text/javascript">
-(function($) {
-	var po_dtl = {};
-	var itemCounter = 0;
-	var item_inputs = $('div.item-input').find('input');
-	
-	$('#add-to-purchase').on('click', function() {
-		console.log('hey');
-		po_dtl[itemCounter] = {};
-		$.each(item_inputs, function(i, e){
-			var item_input = $(e);
-			po_dtl[itemCounter][item_input.attr('data')] = item_input.val();
-		});
-		po_dtl[itemCounter]['po_dtl_item_no'] = itemCounter;
-		itemCounter+=1;
-	});
-})(jQuery);
+
+<form class="form-horizontal" id="po-modal-form">
+			
+<div class="modal fade" id="po-dtl-modal" tabindex="-1" role="dialog" aria-labelledby="mymodallabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="my-modal-label"><span class="modal-form-state">Action Here</span></h4>
+      </div>
+      <div class="modal-body">
+      	  <div class="form-group ">
+			    <label for="input-name" class="col-sm-2 control-label">Desc:</label>
+			    <div class="col-sm-10">
+			      <input type="text" class="form-control" placeholder="Desc" name="po_dtl[po_dtl_item_desc]" id='po-dtl-desc' required="required">
+			    </div>
+			  </div>
+			  <div class="form-group">
+			    <label for="input-address" class="col-sm-2 control-label">Unit:</label>
+			    <div class="col-sm-3">
+			      <input type="text" class="form-control" id="po-dtl-unit" placeholder="Enter Address" name="po_dtl[po_dtl_item_unit]" required="required">
+			    </div>
+			  </div>
+			  <div class="form-group">
+			    <label for="input-tel" class="col-sm-2 control-label">Qty :</label>
+			    <div class="col-xs-4">
+			      <input type="text" class="form-control" id="po-dtl-qty" placeholder="Enter Tel No" name="po_dtl[po_dtl_item_qty]">
+			    </div>
+			  </div>
+			  <div class="form-group">
+			    <label for="input-tel" class="col-sm-2 control-label">Cost :</label>
+			    <div class="col-xs-4">
+			      <input type="text" class="form-control" placeholder="Enter Tel No" id="po-dtl-cost" name="po_dtl[po_dtl_item_cost]">
+			    </div>
+			  </div>
+	      
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" name=""><span class="modal-form-action intent-cancel" id="AlterableButton">Save changes</span></button>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
+</form>
+<script type="text/html" id="item_tmpl">
+<tr>
+	<td>{}<input type="hidden" value="" name="{po_dtl_item_no}"/></td>
+	<td>{}<input type="hidden" value="" name="{po_dtl_item_unit}"/></td>
+	<td>{}<input type="hidden" value="" name="{po_dtl_item_qty}"/></td>
+	<td>{}<input type="hidden" value="" name="{po_dtl_item_desc}"/></td>
+	<td>{}<input type="hidden" value="" name="{po_dtl_item_cost}"/></td>
+	<td></td>	
+</tr>
 </script>
+<script type="text/javascript">
+(function($) {})(jQuery);
+</script>
+
+<script type="text/javascript" src="/assets/js/uiCache.js"></script>
+<script type="text/javascript" src="/assets/js/po.js"></script>

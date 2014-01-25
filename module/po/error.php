@@ -1,5 +1,5 @@
 <?php //-->
-class Supplier_Error extends Eden_Error {
+class Po_Error extends Eden_Error {
 	/* Constants
 	-------------------------------*/
 	/* Public Properties

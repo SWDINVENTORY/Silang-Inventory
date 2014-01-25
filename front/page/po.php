@@ -63,7 +63,7 @@ class Front_Page_Po extends Front_Page {
 		$po = $this->post;
 		front()->output($po);
 		exit;
-		header('Location: /supplier');
+		header('Location: /po');
 		return $this;
 	}
 	

@@ -1,14 +1,14 @@
 <?php //-->
 
-class Supplier_Model extends Abstract_Model {
+class Po_Model extends Abstract_Model {
 	/* Constants
 	-------------------------------*/
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_primary = Supplier::SUPPLIER_ID;
-	protected $_table	= Supplier::SUPPLIER_TABLE;
+	protected $_primary =Po::PO_ID;
+	protected $_table	= Po::PO_TABLE;
 
 	/* Private Properties
 	-------------------------------*/
@@ -18,22 +18,14 @@ class Supplier_Model extends Abstract_Model {
 		return self::_getMultiple(__CLASS__);
 	}
 	
-	public function updateSupplier($supplier) {
-		$data = $supplier;
-		front()->output($supplier);
-		$data[Supplier::SUPPLIER_UPDATED] = date('Y-m-d H:i:s', time());
-		$filter 	= array();
-		$filter[]	= array(Supplier::SUPPLIER_ID.'=%s',
-						$data[Supplier::SUPPLIER_ID]);
+	public function add($data) {
 		
-		$this->_database->updateRows($this->_table, $data, $filter);
 	}
 
 	/* Magic
 	-------------------------------*/
 	/* Public Methods
 	-------------------------------*/		
-	
 	/* Private Methods
 	-------------------------------*/
 }
