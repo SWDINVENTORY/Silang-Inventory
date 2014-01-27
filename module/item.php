@@ -57,6 +57,16 @@ class Item extends Abstract_Model {
 			->getRows();
 	}
 	
+	public function model($value = NULL, $key = 'user_id') {
+		$model = $this->Item_Model()->setDatabase($this->_database);
+		
+		if(!is_null($value)) {
+			
+			$model->load($value, $key);
+		}
+		
+		return $model;
+	}
 	/* Protected Methods
 	-------------------------------*/
 	/* Private Methods

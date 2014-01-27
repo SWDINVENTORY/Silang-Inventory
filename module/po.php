@@ -8,10 +8,12 @@ class Po extends Abstract_Model {
 	const MODEL = 'Po_Model';
 	
 	const PO_TABLE = 'po';
+	const SUPPLIER_TABLE = 'supplier';
 		
 	const PO_ID = 'po_id';
 	const PO_NO = 'po_no';
-	const PO_PROCMOD = 'po_procmod';
+	const PO_SUPPLIER_ID = 'po_supplier_id';
+	const PO_PROC_MOD = 'po_proc_mod';
 	const PO_DELIV_PLACE = 'po_deliv_place';
 	const PO_DELIV_DATE = 'po_deliv_date';
 	const PO_DELIV_TERM = 'po_deliv_term';
@@ -23,6 +25,17 @@ class Po extends Abstract_Model {
 	const PO_AMOUNT = 'po_amount';
 	const PO_ALOBS_NO = 'po_alobs_no';
 	const PO_CREATED = 'po_created';
+	
+	const PO_DTL_TABLE = 'po_dtl';
+	
+	const PO_DTL_ID = 'po_dtl_id';
+	const PO_DTL_PO_ID = 'po_dtl_po_id';
+	const PO_DTL_ITEM_NO = 'po_dtl_item_no';
+	const PO_DTL_ITEM_UNIT = 'po_dtl_item_unit';
+	const PO_DTL_ITEM_QTY= 'po_dtl_item_qty';
+	const PO_DTL_ITEM_DESC= 'po_dtl_item_desc';
+	const PO_DTL_ITEM_COST= 'po_dtl_item_cost';
+	const PO_DTL_ITEM_CREATED = 'po_dtl_item_created';
 		
 	/* Public Properties
 	-------------------------------*/
@@ -71,6 +84,12 @@ class Po extends Abstract_Model {
 		return $model;
 	}
 	
+	public function getAll() {
+		return $this->_getAll('*')
+			->innerJoinOn(Po::SUPPLIER_TABLE,'po_supplier_id=supplier_id')
+			->sortByPoNo('ASC')
+			->getRows();
+	}
 	/* Protected Methods
 	-------------------------------*/
 	/* Private Methods

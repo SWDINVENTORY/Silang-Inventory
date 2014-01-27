@@ -35,6 +35,15 @@ class Front_Page_Supplier extends Front_Page {
 		$this->_body['suppliers'] = $this->suppliers;
 		
 		$this->_body['error'] = $this->_errors;
+		
+		if(IS_AJAX) {
+			
+			$suppliers = array();
+			$suppliers['data'] = $this->suppliers;
+			header('Content-Type: application/javascript');
+			echo json_encode($suppliers);
+			exit;
+		}
 		return $this->_page();
 	}
 	
@@ -97,7 +106,7 @@ class Front_Page_Supplier extends Front_Page {
 	protected function _edit() {
 		$supplier = $this->post;
 				
-		$this->Supplier()->model()->updateSupplier($supplier);
+		$this->Supplier()->model()->supplierUpdate($supplier);
 		header('Location: /supplier');
 		return $this;
 	}
@@ -123,7 +132,26 @@ class Front_Page_Supplier extends Front_Page {
 				$value = $post['keyword'];
 			}
 		}
-		$this->suppliers = front()->Supplier()->getMatchBy($field, $value);
+		
+		if(isset($field) && isset($value)) {
+			$this->suppliers = front()->Supplier()->getMatchBy($field, $value);
+			$supplier = array();
+			if(IS_AJAX){
+				foreach ($this->suppliers as $temp) {
+					array_push(
+						$supplier,
+						array(
+							'value' => $temp['supplier_name'],
+							'data' => $temp
+						) 
+					);
+				}
+				header('Content-Type: application/javascript');
+				echo json_encode($supplier);
+				exit;
+			}
+		}
+		
 		return $this;
 	}
 	/* Private Methods

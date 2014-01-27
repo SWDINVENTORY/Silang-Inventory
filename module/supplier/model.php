@@ -18,7 +18,7 @@ class Supplier_Model extends Abstract_Model {
 		return self::_getMultiple(__CLASS__);
 	}
 	
-	public function updateSupplier($supplier) {
+	public function supplierUpdate($supplier) {
 		$data = $supplier;
 		front()->output($supplier);
 		$data[Supplier::SUPPLIER_UPDATED] = date('Y-m-d H:i:s', time());

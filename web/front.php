@@ -3,6 +3,7 @@
  * This file is part a custom application package.
  * (c) 2011-2012 Openovate Labs
  */
+define('IS_AJAX', isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
 require dirname(__FILE__).'/../front.php';
 
 /* Get Application

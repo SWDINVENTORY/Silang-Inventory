@@ -3,3 +3,31 @@
 	background-color: white;
 	color: black;
 }
+
+.modal-backdrop.in {
+	opacity: .92;
+}
+
+label input {
+	display: inline;
+	width: 76%;
+	height: 34px;
+	padding: 6px 12px;
+	font-size: 14px;
+	line-height: 1.428571429;
+	color: #555555;
+	vertical-align: middle;
+	background-color: #ffffff;
+	background-image: none;
+	border: 1px solid #cccccc;
+	border-radius: 4px;
+}
+
+.paginate_disabled_next, .paginate_disabled_previous {
+	display: none;
+}
+
+.autocomplete-suggestions { border: 1px solid #999; background: #FFF; overflow: auto; }
+.autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
+.autocomplete-selected { background: #F0F0F0; }
+.autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }

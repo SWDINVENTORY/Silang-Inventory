@@ -1,17 +1,16 @@
 <style>
 	.supplier .border {
-		border: 1px solid #a1a1a1;
-		margin-bottom: 7px;
-		border-radius: 5px; 
+		padding: 5px;
 	}
 	.supplier .border-space{ padding: 5px 5px; }
 	
+	.supplier .pad-it {
+		margin-bottom: 20px;
+	}
 	#addSupplier a { text-decoration: none; }
-	
-	
 </style>
 <div class="row">
-	<div class="col-lg-12">
+	<div class="col-md-12">
 		<h3>Suppliers <small>Item(s) / Materials supplier</small></h3>
 		<ol class="breadcrumb">
 			<li>
@@ -23,82 +22,35 @@
 		</ol>
 	</div>
 </div>
-<div class="border-space">
-	<button class="btn btn-primary" data-toggle="modal" data-target="#supplier-modal" 
-		data-backdrop="static" data-keyboard="false" id="add-supplier">Add Supplier</button>
-</div>
 <div class="border">
-	<div class="row search border-space">
-		<div class="col-sm-10">
-			<form role="form" action="/supplier/search/" method="post" name="supplier-search">
-				<div class="row">
-					<label for="inputEmail3" class="col-sm-2 control-label">Search By:</label>
-					<div class="col-xs-3">
-						<?php if (isset($error['field'])) : ?>
-						<div class="form-group has-error">
-							<label class="control-label" for="inputError">
-								<?php echo $error['field']; ?>
-							</label>
-						<?php endif; ?>
-							<select class="form-control" name="field" required="required">
-								<option value="">Select One</option>
-								<option value="supplier_address">Address</option>
-								<option value="supplier_name">Name</option>
-							</select>
-						<?php if (isset($error['field'])) : ?>
-							</div>
-						<?php endif; ?>
-					</div>
-					<div class="col-xs-3">
-							<?php if (isset($error['keyword'])) : ?>
-							<div class="form-group has-error">
-								<label class="control-label" for="inputError">
-									<?php echo $error['keyword']; ?>
-								</label>
-							<?php endif; ?>
-								<input type="input" placeholder="Keyword" name="keyword" class="form-control" required="required">
-							<?php if (isset($error['keyword'])) : ?>
-								</div>
-							<?php endif; ?>
-					</div>
-					<div class="col-xs-2">
-						<button type="submit" class="btn btn-default" name="search">Search</button>
-					</div>
-					
-				</div>
-			</form>
-		</div>
-		<div class="col-sm-2">
-			<form action="/supplier" method="post">
-				<div class="col-xs-4">
-					<button type="submit" class="btn btn-default" name="show-all">Show All</button>
-				</div>
-			</form>
-			
-		</div>
+	<div class="border-space col-md-offset-11 col-md-1">
+		<button class="btn btn-primary" data-toggle="modal" data-target="#supplier-modal" 
+			data-backdrop="static" data-keyboard="false" id="add-supplier">Add</button>
 	</div>
-</div>
-<div class="border">
+	<hr />
 	<div class="row supplier-list border-space">
-		<div class="col-lg-12">
-			<h4 align="center">Supplier List</h4>
+		<div class="col-md-12">
 			<div class="table-responsive">
-				<table class="table table-hover table-striped table-bordered tablesorter">
+				<table class="table table-hover table-striped table-bordered" id="supplier-list">
 					<thead>
 						<tr>
-							<th class="header">Name <i class="fa fa-sort"></i></th>
-							<th class="header">Address <i class="fa fa-sort"></i></th>
-							<th class="header">Telephone No. <i class="fa fa-sort"></i></th>
-							<th class="header"></th>
+							<th>Name</th>
+							<th>Address</th>
+							<th>Telephone No.</th>
+							<th>Action</th>
 						</tr>
 					</thead>
 					<tbody>
+						<?php if(empty($suppliers)): ?>
 						<?php foreach ($suppliers as $supplier):?>
-						<tr data='<?php echo json_encode($supplier); ?>'>
+						<tr>
 							<td><?php echo $supplier['supplier_name']; ?></td>
 							<td><?php echo $supplier['supplier_address']; ?></td>
 							<td><?php echo $supplier['supplier_tel_no']; ?></td>
-							<td>							
+							<td>
+								<input type="hidden" name="supplier_serialize" value='
+								<?php echo json_encode($supplier); ?>'/>
+								
 								<div class="btn-group">
 								  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 								    Action <span class="caret"></span>
@@ -114,6 +66,7 @@
 							</td>
 						</tr>
 						<?php endforeach; ?>
+						<?php endif; ?>
 					</tbody>
 				</table>
 			</div>
@@ -148,7 +101,6 @@
 		      <input type="text" class="form-control" id="input-tel" placeholder="Enter Tel No" name="supplier_tel_no">
 		    </div>
 		  </div>
-		
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -158,47 +110,82 @@
     </div>
   </div>
 </div>
+<script type="text/html" id="action_tpl">
+	<input type="hidden" name="supplier_serialize" value='//serialize//'/>
+	<div class="btn-group">
+	  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+	    Action <span class="caret"></span>
+	  </button>
+	  <ul class="dropdown-menu" role="menu">
+	    <li><a href="#" data-toggle="modal" data-target="#supplier-modal" 
+	    	data-backdrop="static" data-keyboard="false" class="edit-supplier">Edit</a></li>
+	    <li><a href="/supplier/delete/\\supplier_id\\" class="delete-supplier">Delete</a></li>
+	    <li><a href="#" data-toggle="modal" data-target="#supplier-modal"
+	    	data-backdrop="static" data-keyboard="false"class="view-supplier" >View</a></li>
+	  </ul>
+	</div>
+</script>
 <script type="text/javascript">
 (function($) {
-	
-	var supplier = {};
-	var add = ['/supplier/add','Add','Add Supplier','add-supplier'];
-	var edit = ['/supplier/edit','Save Changes','Edit Supplier', 'edit-supplier'];
-	var view = ['','Ok','View Supplier', 'view-supplier'];
-	
-	function changeModal(action) {
-		$('#supplier-modal-form').attr('action', action[0]);
-		var modal_action = $('#supplier-modal-form').parents('div.modal-content')
-			.find('span.modal-form-action');
-		//modal_action.parent().attr('name', action[3]);
-		modal_action.html(action[1]);
-		$('#supplier-modal-form').attr('name', action[3]).parents('div.modal-content')
-			.find('#my-modal-label').html(action[2])
-	}
-	
-	$('#add-supplier').on('click', function() {
-		changeModal(add);
-	})
-	
-	$('.edit-supplier').on('click', function() {
-		changeModal(edit);
-		var supplier = JSON.parse($(this).parents('tr').attr('data'));
-		if(supplier) {
-			$.each( Object.keys(supplier),function(i,e){
-				$('form[name="'+edit[3]+'"] input[name="'+e+'"]').val(supplier[e]);		
-			})	
+	var tableHandle;
+	//tableHandle._fnAjaxUpdate() <-- TO GET FROM SERVER
+	//tableHandle.fnDraw()   <-- TO DRAW
+	$(document).ready(function() {
+		var template = $('#action_tpl').text().trim();
+		
+		tableHandle = $('#supplier-list').dataTable( {
+			'sPaginationType': 'two_button',
+			'iDisplayLength': 10,
+			'sDom': '<"pad-it"<"pull-right"f>l>tip>',
+			//'bServerSide':true,
+			'sAjaxSource': '/supplier/',
+			'sAjaxDataProp': 'data',
+			"aoColumns": [
+		            { "mData": "supplier_name" },
+		            { "mData": "supplier_address" },
+		            { "mData": "supplier_tel_no" },
+		            {
+		            	'mData': function(data){
+							var action = template.replace('\/\/serialize\/\/',JSON.stringify(data))
+								.replace('\\supplier_id\\', data.supplier_id);
+		            		return action;
+		            		
+		            	}
+		            }]
+		} );
+			
+		var supplier = {};
+		var add = ['/supplier/add','Add','Add Supplier','add-supplier'];
+		var edit = ['/supplier/edit','Save Changes','Edit Supplier', 'edit-supplier'];
+		var view = ['','Ok','View Supplier', 'view-supplier'];
+		
+		function changeModal(action) {
+			$('#supplier-modal-form').attr('action', action[0]);
+			var modal_action = $('#supplier-modal-form').parents('div.modal-content')
+				.find('span.modal-form-action');
+			modal_action.html(action[1]);
+			$('#supplier-modal-form').attr('name', action[3]).parents('div.modal-content')
+				.find('#my-modal-label').html(action[2]);
 		}
-	})
-	
-	$('.view-supplier').on('click', function() {
-		changeModal(view);
-		var supplier = JSON.parse($(this).parents('tr').attr('data'));
-		if(supplier) {
-			$.each( Object.keys(supplier),function(i,e){
-				$('form[name="'+view[3]+'"] input[name="'+e+'"]').val(supplier[e]);		
-			})	
-		}
-	})
-	
+		
+		$('#add-supplier').on('click',function() {
+			changeModal(add);
+		});
+		
+		$(document).on('click', '.edit-supplier', function() {
+			console.log('hey');
+			changeModal(edit);
+			var supplier = JSON.parse($(this).parents('td:first').find('input:hidden').val().trim());
+			var form = $('form[name="'+edit[3]+'"]');
+			$.each(Object.keys(supplier), function(i, e){
+				form.find('input[name="'+e+'"]').val(supplier[e]);
+				form.find('textarea[name="'+e+'"]').val(supplier[e]);
+			});
+		});
+		
+		$(document).on('click', '.view-supplier', function() {
+			changeModal(view);
+		});	
+	});
 })(jQuery);
 </script>

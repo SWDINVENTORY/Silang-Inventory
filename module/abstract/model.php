@@ -40,6 +40,14 @@ class Abstract_Model extends Eden_Sql_Model {
 		
 	}
 	
+	public function getBy($field, $keyword) {
+		return $this->search()
+			->setTable($this->_table)
+			->addFilter('('.$field.' = '.$keyword.')' )
+			->getRows();
+		
+	}
+	
 	public function add($data) {
 		return $this->_database
 				->insertRow($this->_table, $data)

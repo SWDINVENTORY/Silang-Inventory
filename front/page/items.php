@@ -41,9 +41,8 @@ class Front_Page_Items extends Front_Page {
 		}
 		
 		$this->_body['items'] = $this->items;
-		
-		$this->_body['error'] = $this->_errors;
 		$this->_body['fields'] = $this->fields;
+		$this->_body['error'] = $this->_errors;
 		
 		return $this->_page();
 	}
@@ -82,10 +81,18 @@ class Front_Page_Items extends Front_Page {
 		return $this;
 	}
 	
+	protected function _edit() {
+		$item = $this->post;
+		unset($item['edit']);
+		$this->Item()->model()->itemUpdate($item);
+		header('Location: /items');
+		return $this;
+	}
+	
 	protected function _search() {
 		$get = $this->get;
 		$post = $this->post;
-		$this->item = array();
+		$this->items = array();
 		
 		$field = NULL;
 		$value = NULL;
@@ -96,14 +103,21 @@ class Front_Page_Items extends Front_Page {
 				$value = $get['keyword'];
 			}
 		}
-		
-		if(!empty($post)) {
+		if(isset($post['search'])){
 			if(!empty($post['field']) && !empty($post['keyword'])) {
 				$field = $post['field'];
 				$value = $post['keyword'];
 			}
 		}
-		$this->suppliers = front()->Item()->get($field, $value);
+		if(isset($field) && isset($value)) {
+			$this->items = front()->Item()->getMatchBy($field, $value);
+			if(IS_AJAX){
+				header('Content-Type: application/javascript');
+				echo json_encode($this->items);
+				exit;
+			}
+		}
+		
 		return $this;
 	}
 	/* Private Methods

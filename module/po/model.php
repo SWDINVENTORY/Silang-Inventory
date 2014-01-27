@@ -17,15 +17,11 @@ class Po_Model extends Abstract_Model {
 	public static function i() {
 		return self::_getMultiple(__CLASS__);
 	}
-	
-	public function add($data) {
-		
-	}
 
 	/* Magic
 	-------------------------------*/
 	/* Public Methods
-	-------------------------------*/		
+	-------------------------------*/	
 	/* Private Methods
 	-------------------------------*/
 }
