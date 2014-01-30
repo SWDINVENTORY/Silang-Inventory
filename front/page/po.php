@@ -64,6 +64,9 @@ class Front_Page_Po extends Front_Page {
 			case 'furnish':
 					$this->_add();
 				break;
+			case 'edit':
+					$this->_edit();
+				break;
 			default:
 				break;
 		}
@@ -124,6 +127,10 @@ class Front_Page_Po extends Front_Page {
 		return $this;
 	}
 	
+	protected function _edit() {
+		front()->output($this->post);
+		exit;
+	}
 	/* Private Methods
 	-------------------------------*/
 }

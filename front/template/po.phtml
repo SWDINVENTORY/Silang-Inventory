@@ -5,12 +5,17 @@
 	.po .border {
 		margin-top: 10px;
 	}
-	/*.po td {
-		text-align: right;
-	}*/
 
 	#po-table td:first-child {
 		text-align: left;
+	}
+	
+	#po-table th:first-child {
+		width: 15%;
+	}
+	
+	#po-table th:nth-child(2), #po-table th:nth-child(3), #po-table th:nth-child(4) {
+		width: 10%;
 	}
 </style>
 <div class="row">
@@ -28,7 +33,7 @@
 </div>
 <div class="form-inline row">
 	<div class="col-sm-offset-10 col-sm-2">
-		<button type="button" class="btn btn-primary" id="add-to-purchase"
+		<button type="button" class="btn btn-primary" id="create-po"
 			data-backdrop="static" data-keyboard="false"
 				data-toggle="modal" data-target="#po-modal">
 			Create Order
@@ -68,7 +73,7 @@
 				</h4>
 			</div>
 			<div class="modal-body">
-				<form method="post" action="/po/furnish/">
+				<form method="post" action="/po/furnish/" id="po-modal-form">
 					<div class="border">
 						<div class="form-horizontal row">
 							<div class="col-sm-7">
@@ -96,7 +101,7 @@
 								<div class="form-group">
 									<label class="col-sm-4 control-label">Date</label>
 									<div class="col-sm-5">
-										<input type="text" class="form-control"  value="<?php echo date('F j, Y'); ?>" disabled>
+										<input type="date" class="form-control" name="po_created" value="<?php echo date('F j, Y'); ?>" >
 									</div>
 								</div>
 								<div class="form-group">
@@ -119,7 +124,7 @@
 								</div>
 								<div class="form-group">
 									<label class="col-sm-2 control-label">Delivery Date</label>
-									<div class="col-sm-4">
+									<div class="col-sm-6">
 										<input type="date" class="form-control" placeholder="Date" name="po_deliv_date">
 									</div>
 								</div>
@@ -144,7 +149,7 @@
 					<div class="border">
 						<div class="row item-input col-sm-12">
 							<div class="col-sm-offset-11 col-sm-1">
-								<button type="button" class="btn btn-primary intent-add-detail" id="add-to-purchase"
+								<button type="button" class="btn btn-primary" id="add-to-purchase"
 								data-toggle="modal" data-target="#po-dtl-modal" data-backdrop="static" data-keyboard="false">
 									Add Item
 								</button>
@@ -173,7 +178,7 @@
 						</div>
 					</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">
+					<button type="button" class="btn btn-default secondary" data-dismiss="modal">
 						Close
 					</button>
 					<button type="submit" class="btn btn-primary" name="furnish">
@@ -220,7 +225,7 @@
 					</div>
 
 					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">
+						<button type="button" class="btn btn-default secondary" data-dismiss="modal">
 							Close
 						</button>
 						<button type="button" class="btn btn-primary" name="">
@@ -234,13 +239,14 @@
 </form>
 <?php include __DIR__.'/action.phtml'; ?>
 <script type="text/javascript" src="/assets/js/autocomplete.js"></script>
+<script type="text/javascript" src="/assets/js/modal_control.js"></script>
 <script type="text/javascript">
 	(function($) {
+		cache = {};
 		$('document').ready(function() {
-			var actionTemplate = $('#action_tpl')
-				.text()
-				.trim();
-				
+			var actionTemplate = $('#action_tpl').text().trim();
+			cache['po']={};
+			
 			var poTable = $('#po-table').dataTable({
 				'sPaginationType' : "two_button",
 				"iDisplayLength" : 10,
@@ -251,7 +257,9 @@
 			            { "mData": "supplier_name" },
 			            { "mData": "po_no" },
 			            { "mData": function(data) {
-			            	return (new Date(data.po_created).toDateString());
+			            	return (new Date(new Date(data.po_created.split(' ')[0])
+			            					.toDateString()+' '+data.po_created.split(' ')[1])
+			            					.toDateString());
 			            	}},
 			            { "mData": "po_proc_mod" },
 			            { "mData": "po_total" },
@@ -267,16 +275,18 @@
 			            		var model_id = new RegExp('/model_id/','g'); 
 			            		var target_modal = new RegExp('//target-modal//','g'); 
 								var action = actionTemplate
-									.replace('\/\/serialize\/\/',JSON.stringify(data))
 									.replace(model, 'po')
 									.replace(target_modal, 'po-modal')
 									.replace(model_id, data.po_id);
+								if(typeof(cache['po'][data.po_id]) == "undefined") {
+									cache['po'][data.po_id] = data;
+								}
 			            		return action;
 			            	}
 			            }]
 			});
 
-			poDtlTable = $('#po-dtl-table').dataTable({
+			var poDtlTable = $('#po-dtl-table').dataTable({
 				"sPaginationType" : "two_button",
 				"iDisplayLength" : 2,
 				"sDom" : '<"pad-it"<"pull-right"f>l>tip>'
@@ -306,5 +316,83 @@
 				}
 			});
 		});
+		
+		$(document).on('click','a',function(){
+			if($(this).hasClass('edit-po')) {
+				var actionHandle = $(this);
+				changeModal({
+					'action':'/po/edit',
+					'model':'po',
+					'submit_name': 'edit-po',
+					'pr_button':'Save Changes',
+					'modal_label': 'Edit Purchase Order',
+					'run': function(){
+						$('#add-to-purchase, .secondary').show();
+						var po = actionHandle.parents('td:first').find('input[name="po_id"]').val();
+						po = cache['po'][po];
+						populate({
+							'data': cache['po'][po.po_id],
+							'name':'po',
+							'map': function(v, o) {
+									if(v == 'po_created') {
+										var dateIs = new Date(o[v].split(' ')[0]).toDateString();
+										return dateIs;
+									}
+									if(v == 'po_deliv_date') {
+										return (new Date(o[v]).toLocaleDateString());
+									}
+									return o[v];
+								}
+						});	
+					}
+				});
+			}
+			if($(this).hasClass('view-po')){
+				changeModal({
+					'action':'#',
+					'model':'po',
+					'submit_name': 'view-po',
+					'pr_button':'Back To List',
+					'modal_label': 'View Purchase Order',
+					'run': function(){
+						$('#add-to-purchase').hide();
+						$('.secondary').hide();
+						var po = actionHandle.parents('td:first').find('input[name="po_id"]').val();
+						po = cache['po'][po];
+						populate({
+							'data': cache['po'][po.po_id],
+							'name':'po',
+							'map': function(v, o) {
+									if(v == 'po_created') {
+										var dateIs = new Date(o[v].split(' ')[0]).toDateString();
+										return dateIs;
+									}
+									if(v == 'po_deliv_date') {
+										return (new Date(o[v]).toLocaleDateString());
+									}
+									return o[v];
+								}
+						});
+					}
+				});
+			}
+		});
+		
+		$('#create-po').click(function(){
+			changeModal({
+					'action':'#',
+					'model':'po',
+					'submit_name': 'furnish',
+					'pr_button':'Furnish Order',
+					'modal_label': 'Add Purchase Order',
+					'run': function(){
+						$('#add-to-purchase').show();
+						clear_form('po', function(){
+							$('input[name="po_created"]').val(new Date());
+						});
+					}
+				});
+		});
+		
 	})(jQuery);
 </script>

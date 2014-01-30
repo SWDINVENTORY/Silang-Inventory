@@ -8,6 +8,10 @@
 	opacity: .92;
 }
 
+.centered {
+	text-align: center;
+}
+
 label input {
 	display: inline;
 	width: 76%;
@@ -21,6 +25,23 @@ label input {
 	background-image: none;
 	border: 1px solid #cccccc;
 	border-radius: 4px;
+}
+
+.paginate_enabled_next, .paginate_enabled_previous {
+	display: inline-block;
+	padding: 5px 14px;
+	background-color: #ffffff;
+	border: 1px solid #dddddd;
+	border-radius: 15px;
+}
+
+.paginate_enabled_previous {
+	float:right;
+}
+
+.paging_two_button > a:hover, .paging_two_button > a:focus {
+	text-decoration: none;
+	background-color: #eeeeee;
 }
 
 .paginate_disabled_next, .paginate_disabled_previous {

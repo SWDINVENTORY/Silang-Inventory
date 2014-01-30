@@ -100,6 +100,7 @@
 </script>
 <script type="text/javascript">
 (function($) {
+	
 	var tableHandle;
 	//tableHandle._fnAjaxUpdate() <-- TO GET FROM SERVER
 	//tableHandle.fnDraw()   <-- TO DRAW
@@ -107,7 +108,7 @@
 		var actionTemplate = $('#action_tpl')
 			.text()
 			.trim();
-		
+			
 		tableHandle = $('#supplier-list').dataTable( {
 			'sPaginationType': 'two_button',
 			'iDisplayLength': 10,
@@ -121,7 +122,7 @@
 		            {
 		            	'mData': function(data){
 							var action = actionTemplate
-								.replace('\/\/serialize\/\/',JSON.stringify(data))
+								//.replace('\/\/serialize\/\/',JSON.stringify(data))
 								.replace('\\supplier_id\\', data.supplier_id);
 		            		return action;
 		            		
