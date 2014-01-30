@@ -29,8 +29,9 @@ class Front_Page_Po extends Front_Page {
 		$this->request = front()->registry()->get('request', 'variables','0');
 		$this->get = front()->registry()->get('get')->getArray();
 		$this->po = $this->Po()->getAll();
-		//front()->output($this->po);
-		//exit;
+		
+		//front()->output($this->Po()->model(6));exit;
+		
 		if(isset($this->post)) {
 			$this->_setErrors();
 			
@@ -40,8 +41,15 @@ class Front_Page_Po extends Front_Page {
 		}
 		
 		$this->_body['pos'] = $this->po;
-		
 		$this->_body['error'] = $this->_errors;
+		
+		if(IS_AJAX) {
+			$po = array();
+			$po['data'] = $this->po;
+			header('Content-Type: application/javascript');
+			echo json_encode($po);
+			exit;
+		}
 		return $this->_page();
 	}
 	

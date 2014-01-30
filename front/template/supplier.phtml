@@ -40,34 +40,7 @@
 							<th>Action</th>
 						</tr>
 					</thead>
-					<tbody>
-						<?php if(empty($suppliers)): ?>
-						<?php foreach ($suppliers as $supplier):?>
-						<tr>
-							<td><?php echo $supplier['supplier_name']; ?></td>
-							<td><?php echo $supplier['supplier_address']; ?></td>
-							<td><?php echo $supplier['supplier_tel_no']; ?></td>
-							<td>
-								<input type="hidden" name="supplier_serialize" value='
-								<?php echo json_encode($supplier); ?>'/>
-								
-								<div class="btn-group">
-								  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-								    Action <span class="caret"></span>
-								  </button>
-								  <ul class="dropdown-menu" role="menu">
-								    <li><a href="#" data-toggle="modal" data-target="#supplier-modal" 
-								    	data-backdrop="static" data-keyboard="false" class="edit-supplier">Edit</a></li>
-								    <li><a href="/supplier/delete/<?php echo $supplier['supplier_id']; ?>" class="delete-supplier">Delete</a></li>
-								    <li><a href="#" data-toggle="modal" data-target="#supplier-modal"
-								    	data-backdrop="static" data-keyboard="false"class="view-supplier" >View</a></li>
-								  </ul>
-								</div>
-							</td>
-						</tr>
-						<?php endforeach; ?>
-						<?php endif; ?>
-					</tbody>
+					<tbody></tbody>
 				</table>
 			</div>
 		</div>
@@ -131,13 +104,14 @@
 	//tableHandle._fnAjaxUpdate() <-- TO GET FROM SERVER
 	//tableHandle.fnDraw()   <-- TO DRAW
 	$(document).ready(function() {
-		var template = $('#action_tpl').text().trim();
+		var actionTemplate = $('#action_tpl')
+			.text()
+			.trim();
 		
 		tableHandle = $('#supplier-list').dataTable( {
 			'sPaginationType': 'two_button',
 			'iDisplayLength': 10,
-			'sDom': '<"pad-it"<"pull-right"f>l>tip>',
-			//'bServerSide':true,
+			'sDom': '<"pad-it"<"pull-right"f>l>t<"pull-right"i>p>',
 			'sAjaxSource': '/supplier/',
 			'sAjaxDataProp': 'data',
 			"aoColumns": [
@@ -146,7 +120,8 @@
 		            { "mData": "supplier_tel_no" },
 		            {
 		            	'mData': function(data){
-							var action = template.replace('\/\/serialize\/\/',JSON.stringify(data))
+							var action = actionTemplate
+								.replace('\/\/serialize\/\/',JSON.stringify(data))
 								.replace('\\supplier_id\\', data.supplier_id);
 		            		return action;
 		            		
@@ -161,10 +136,12 @@
 		
 		function changeModal(action) {
 			$('#supplier-modal-form').attr('action', action[0]);
-			var modal_action = $('#supplier-modal-form').parents('div.modal-content')
+			var modal_action = $('#supplier-modal-form')
+				.parents('div.modal-content')
 				.find('span.modal-form-action');
 			modal_action.html(action[1]);
-			$('#supplier-modal-form').attr('name', action[3]).parents('div.modal-content')
+			$('#supplier-modal-form').attr('name', action[3])
+				.parents('div.modal-content')
 				.find('#my-modal-label').html(action[2]);
 		}
 		
@@ -175,11 +152,17 @@
 		$(document).on('click', '.edit-supplier', function() {
 			console.log('hey');
 			changeModal(edit);
-			var supplier = JSON.parse($(this).parents('td:first').find('input:hidden').val().trim());
+			var supplier = JSON.parse($(this)
+				.parents('td:first')
+				.find('input:hidden')
+				.val()
+				.trim());
 			var form = $('form[name="'+edit[3]+'"]');
 			$.each(Object.keys(supplier), function(i, e){
-				form.find('input[name="'+e+'"]').val(supplier[e]);
-				form.find('textarea[name="'+e+'"]').val(supplier[e]);
+				form.find('input[name="'+e+'"]')
+					.val(supplier[e]);
+				form.find('textarea[name="'+e+'"]')
+					.val(supplier[e]);
 			});
 		});
 		

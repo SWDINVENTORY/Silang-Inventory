@@ -25,10 +25,10 @@ class Supplier_Model extends Abstract_Model {
 		$filter 	= array();
 		$filter[]	= array(Supplier::SUPPLIER_ID.'=%s',
 						$data[Supplier::SUPPLIER_ID]);
-		
+
 		$this->_database->updateRows($this->_table, $data, $filter);
 	}
-
+	
 	/* Magic
 	-------------------------------*/
 	/* Public Methods

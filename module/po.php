@@ -24,6 +24,7 @@ class Po extends Abstract_Model {
 	const PO_FUNDS_OFF = 'po_funds_off';
 	const PO_AMOUNT = 'po_amount';
 	const PO_ALOBS_NO = 'po_alobs_no';
+	const PO_IS_FURNISHED = 'po_is_furnished';
 	const PO_CREATED = 'po_created';
 	
 	const PO_DTL_TABLE = 'po_dtl';
@@ -73,7 +74,7 @@ class Po extends Abstract_Model {
 			->setModel($this->_model);
 	}
 
-	public function model($value = NULL, $key = 'user_id') {
+	public function model($value = NULL, $key = 'po_id') {
 		$model = $this->Po_Model()->setDatabase($this->_database);
 		
 		if(!is_null($value)) {
@@ -86,8 +87,16 @@ class Po extends Abstract_Model {
 	
 	public function getAll() {
 		return $this->_getAll('*')
-			->innerJoinOn(Po::SUPPLIER_TABLE,'po_supplier_id=supplier_id')
+			->innerJoinOn(Po::SUPPLIER_TABLE, 'po_supplier_id=supplier_id')
 			->sortByPoNo('ASC')
+			->getRows();
+	}
+	
+	public function getDetail($id) {
+		return $this
+			->_getAll('*')
+			->addFilter('po_id = %s', $id)
+			->leftJoinOn(Po::PO_DTL_TABLE, 'po_id = po_dtl_po_id')
 			->getRows();
 	}
 	/* Protected Methods
