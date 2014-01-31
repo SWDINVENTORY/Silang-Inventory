@@ -27,10 +27,9 @@ class Front_Page_Po extends Front_Page {
 	public function render() {
 		$this->post = front()->registry()->get('post')->getArray();
 		$this->request = front()->registry()->get('request', 'variables','0');
+		$this->variables = front()->registry()->get('request', 'variables')->getArray();
 		$this->get = front()->registry()->get('get')->getArray();
 		$this->po = $this->Po()->getAll();
-		
-		//front()->output($this->Po()->model(6));exit;
 		
 		if(isset($this->post)) {
 			$this->_setErrors();
@@ -67,6 +66,8 @@ class Front_Page_Po extends Front_Page {
 			case 'edit':
 					$this->_edit();
 				break;
+			case 'delete':
+					$this->_delete();
 			default:
 				break;
 		}
@@ -131,6 +132,24 @@ class Front_Page_Po extends Front_Page {
 		front()->output($this->post);
 		exit;
 	}
+
+	protected function _delete() {
+		$po = $this->post;
+		$variables = $this->variables;
+		if(!empty($po)) {
+			$id = $po[Po::PO_SUPPLIER_ID];
+		}
+		if(isset($variables[1])) {
+			$id = $variables[1];
+		}
+		front()->database()
+			->deleteRows('po', array(
+				array('po_supplier_id=%s',$id)
+			));
+		header('Location: /po');
+		return $this;
+	}
+	
 	/* Private Methods
 	-------------------------------*/
 }

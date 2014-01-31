@@ -17,6 +17,15 @@
 	#po-table th:nth-child(2), #po-table th:nth-child(3), #po-table th:nth-child(4) {
 		width: 10%;
 	}
+	
+	#po-dtl-modal .modal-content {
+    	margin-top: 30%;
+	}
+	
+	#po-dtl-modal .modal-footer {
+    	margin-top: 40%;
+	}
+	
 </style>
 <div class="row">
 	<div class="col-sm-12">
@@ -79,14 +88,14 @@
 							<div class="col-sm-7">
 								<div class="form-group">
 									<label class="col-sm-2 control-label">Supplier</label>
-									<div class="col-sm-8">
+									<div class="col-sm-10">
 										<input type="input" class="form-control" placeholder="Name" id="supplier_name">
 										<input type="hidden" name="po_supplier_id" >
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="col-sm-2 control-label">Address</label>
-									<div class="col-sm-8">
+									<div class="col-sm-10">
 										<input type="input" class="form-control" placeholder="Address" id="supplier_address" disabled>
 									</div>
 								</div>
@@ -191,58 +200,67 @@
 	</div>
 </div>
 
-<form class="form-horizontal" id="po-modal-form">
-	<div class="modal fade" id="po-dtl-modal" tabindex="-1" role="dialog" aria-labelledby="mymodallabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h4 class="modal-title" id="my-modal-label"><span class="modal-form-state">Action Here</span></h4>
+<div class="modal fade" id="po-dtl-modal" tabindex="-1" role="dialog" aria-labelledby="mymodallabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" id="my-modal-label"><span class="modal-form-state">Action Here</span></h4>
+			</div>
+			<div class="modal-body">
+				<div class="border">
+					<form id="po_dtl-modal-form" action='#'>
+							<div class="border">
+								<div class="col-sm-12">
+									<label for="input-name" class="col-sm-2 control-label">Desc</label>
+									<div class="form-group col-sm-10">	
+										<input type="text" class="form-control" placeholder="Desc"
+											name="po_dtl_item_desc" required="required">
+									</div>
+								</div>
+								<div class="col-sm-12">
+									<label for="input-address" class="col-sm-2 control-label">Unit</label>
+									<div class="form-group col-sm-3">
+										<input type="text" class="form-control" placeholder="Unit"
+											name="po_dtl_item_unit" required="required">
+									</div>
+								</div>
+								<div class="col-sm-12">
+									<label for="input-tel" class="col-sm-2 control-label">Qty</label>
+									<div class="form-group col-sm-3">
+										<input type="text" class="form-control" placeholder="QTY"
+											name="po_dtl_item_qty" required="required">
+									</div>
+								</div>
+								<div class="col-sm-12">
+									<label for="input-tel" class="col-sm-2 control-label">Cost</label>
+									<div class="form-group col-sm-3" required="required">
+										<input type="text" class="form-control" placeholder="Unit Cost" name="po_dtl_item_cost">
+									</div>
+								</div>
+							</div>
 				</div>
-				<div class="modal-body">
-					<div class="form-group ">
-						<label for="input-name" class="col-sm-2 control-label">Desc:</label>
-						<div class="col-sm-10">
-							<input type="text" class="form-control" placeholder="Desc" name="po_dtl[po_dtl_item_desc]" id='po-dtl-desc' required="required">
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="input-address" class="col-sm-2 control-label">Unit:</label>
-						<div class="col-sm-3">
-							<input type="text" class="form-control" id="po-dtl-unit" placeholder="Unit" name="po_dtl[po_dtl_item_unit]" required="required">
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="input-tel" class="col-sm-2 control-label">Qty :</label>
-						<div class="col-sm-4">
-							<input type="text" class="form-control" id="po-dtl-qty" placeholder="QTY" name="po_dtl[po_dtl_item_qty]">
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="input-tel" class="col-sm-2 control-label">Cost :</label>
-						<div class="col-sm-4">
-							<input type="text" class="form-control" placeholder="Unit Cost" id="po-dtl-cost" name="po_dtl[po_dtl_item_cost]">
-						</div>
-					</div>
-
-					<div class="modal-footer">
-						<button type="button" class="btn btn-default secondary" data-dismiss="modal">
-							Close
-						</button>
-						<button type="button" class="btn btn-primary" name="">
-							<span class="modal-form-action" >Save changes</span>
-						</button>
-					</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default secondary" data-dismiss="modal">
+						Close
+					</button>
+					<button type="submit" class="btn btn-primary" name="">
+						<span class="modal-form-action" >Save changes</span>
+					</button>
 				</div>
+				</form>
 			</div>
 		</div>
 	</div>
-</form>
+</div>
 <?php include __DIR__.'/action.phtml'; ?>
 <script type="text/javascript" src="/assets/js/autocomplete.js"></script>
 <script type="text/javascript" src="/assets/js/modal_control.js"></script>
 <script type="text/javascript">
 	(function($) {
 		cache = {};
+		po_dtl_counter = 0;
+		current_po = 'new';
+		poDtlTable = {};
 		$('document').ready(function() {
 			var actionTemplate = $('#action_tpl').text().trim();
 			cache['po']={};
@@ -286,7 +304,7 @@
 			            }]
 			});
 
-			var poDtlTable = $('#po-dtl-table').dataTable({
+			poDtlTable = $('#po-dtl-table').dataTable({
 				"sPaginationType" : "two_button",
 				"iDisplayLength" : 2,
 				"sDom" : '<"pad-it"<"pull-right"f>l>tip>'
@@ -315,11 +333,12 @@
 					};
 				}
 			});
+			
 		});
 		
 		$(document).on('click','a',function(){
-			if($(this).hasClass('edit-po')) {
-				var actionHandle = $(this);
+			var actionHandle = $(this);
+			if(actionHandle.hasClass('edit-po')) {
 				changeModal({
 					'action':'/po/edit',
 					'model':'po',
@@ -329,6 +348,7 @@
 					'run': function(){
 						$('#add-to-purchase, .secondary').show();
 						var po = actionHandle.parents('td:first').find('input[name="po_id"]').val();
+						current_po = po;
 						po = cache['po'][po];
 						populate({
 							'data': cache['po'][po.po_id],
@@ -347,7 +367,7 @@
 					}
 				});
 			}
-			if($(this).hasClass('view-po')){
+			if(actionHandle.hasClass('view-po')){
 				changeModal({
 					'action':'#',
 					'model':'po',
@@ -357,6 +377,8 @@
 					'run': function(){
 						$('#add-to-purchase').hide();
 						$('.secondary').hide();
+						
+						
 						var po = actionHandle.parents('td:first').find('input[name="po_id"]').val();
 						po = cache['po'][po];
 						populate({
@@ -370,9 +392,13 @@
 									if(v == 'po_deliv_date') {
 										return (new Date(o[v]).toLocaleDateString());
 									}
+									$('#po-modal-form').find('input[name="'+v+'"]')
+										.attr('disabled', 'disabled');
+									$('#input[name="'+v+'"]').attr('disabled', 'disabled');
 									return o[v];
-								}
-						});
+								}}
+						);
+						
 					}
 				});
 			}
@@ -387,12 +413,46 @@
 					'modal_label': 'Add Purchase Order',
 					'run': function(){
 						$('#add-to-purchase').show();
+						current_po = 'new';
+						cache['po'][current_po] = {};
+						cache['po'][current_po]['po_dtl'] ={};
 						clear_form('po', function(){
-							$('input[name="po_created"]').val(new Date());
+							$('input[name="po_created"]').val(new Date().toDateString());
 						});
 					}
 				});
 		});
 		
+		$('#add-to-purchase').click(function(){
+			changeModal({
+					'action':'#',
+					'model':'po_dtl',
+					'submit_name': 'create-po_dtl',
+					'pr_button':'Add To Purchase Order',
+					'modal_label': 'Add Item',
+					'run': function(){} 
+				});
+		});
+		
+		$('#po_dtl-modal-form').submit(function(e){
+			e.preventDefault();
+			var inputs = $(this).find('input[name]');
+			var po_dtl = {};
+			$.each(inputs, function(i, o){
+				po_dtl[$(o).attr('name')] = $(o).val();
+			});
+			var row = [];
+			row.push(po_dtl_counter+1);
+			row.push(po_dtl['po_dtl_item_unit']);
+			row.push(po_dtl['po_dtl_item_qty']);
+			row.push(po_dtl['po_dtl_item_desc']);
+			row.push(po_dtl['po_dtl_item_cost']);
+			row.push(po_dtl['po_dtl_item_qty']*po_dtl['po_dtl_item_cost']);
+			//TODO: 
+			row.push('Action');
+			cache['po'][current_po]['po_dtl'][po_dtl_counter]=row;
+			poDtlTable.fnAddData(row);
+			po_dtl_counter+=1
+		});
 	})(jQuery);
 </script>
