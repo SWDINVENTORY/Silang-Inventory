@@ -42,6 +42,12 @@ class Front_Page_Po extends Front_Page {
 		$this->_body['pos'] = $this->po;
 		$this->_body['error'] = $this->_errors;
 		
+		if(!empty($this->get)) {
+			front()->output($this->get);
+			exit;
+			front()->output($_SERVER);
+			exit;
+		}
 		if(IS_AJAX) {
 			$po = array();
 			$po['data'] = $this->po;
@@ -150,6 +156,9 @@ class Front_Page_Po extends Front_Page {
 		return $this;
 	}
 	
+	protected function _search() {
+		
+	}
 	/* Private Methods
 	-------------------------------*/
 }

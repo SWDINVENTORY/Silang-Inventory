@@ -261,8 +261,10 @@
 		po_dtl_counter = 0;
 		current_po = 'new';
 		poDtlTable = {};
+		var actionTemplate = $('#action_tpl').text().trim();
+		
 		$('document').ready(function() {
-			var actionTemplate = $('#action_tpl').text().trim();
+			
 			cache['po']={};
 			
 			var poTable = $('#po-table').dataTable({
@@ -303,7 +305,7 @@
 			            	}
 			            }]
 			});
-
+			
 			poDtlTable = $('#po-dtl-table').dataTable({
 				"sPaginationType" : "two_button",
 				"iDisplayLength" : 2,
@@ -367,7 +369,7 @@
 					}
 				});
 			}
-			if(actionHandle.hasClass('view-po')){
+			if(actionHandle.hasClass('view-po')) {
 				changeModal({
 					'action':'#',
 					'model':'po',
@@ -395,6 +397,58 @@
 									$('#po-modal-form').find('input[name="'+v+'"]')
 										.attr('disabled', 'disabled');
 									$('#input[name="'+v+'"]').attr('disabled', 'disabled');
+									return o[v];
+								}}
+						);
+						
+					}
+				});
+			}
+			if(actionHandle.hasClass('edit-po_dtl')) {
+				changeModal({
+					'action':'#',
+					'model':'po_dtl',
+					'submit_name': 'edit-po_dtl',
+					'pr_button':'Save Changes',
+					'modal_label': 'Edit Item',
+					'run': function() {					
+						var po_dtl = actionHandle.parents('td:first').find('input[name="po_dtl_id"]').val();
+						po_dtl = cache['po'][current_po]['po_dtl'][po_dtl];
+						console.log(po_dtl)
+						populate({
+							'data': po_dtl[7],
+							'name':'po_dtl',
+							'map': function(v, o) {
+									if(v == 'po_dtl_item_created') {
+										var dateIs = new Date(o[v].split(' ')[0]).toDateString();
+										return dateIs;
+									}
+									return o[v];
+								}}
+						);
+						
+					}
+				});
+			}
+			if(actionHandle.hasClass('view-po_dtl')) {
+				changeModal({
+					'action':'#',
+					'model':'po_dtl',
+					'submit_name': 'view-po_dtl',
+					'pr_button':'Back to Order',
+					'modal_label': 'View Item',
+					'run': function() {					
+						var po_dtl = actionHandle.parents('td:first').find('input[name="po_dtl_id"]').val();
+						po_dtl = cache['po'][current_po]['po_dtl'][po_dtl];
+						console.log(po_dtl)
+						populate({
+							'data': po_dtl[7],
+							'name':'po_dtl',
+							'map': function(v, o) {
+									if(v == 'po_dtl_item_created') {
+										var dateIs = new Date(o[v].split(' ')[0]).toDateString();
+										return dateIs;
+									}
 									return o[v];
 								}}
 						);
@@ -441,6 +495,7 @@
 			$.each(inputs, function(i, o){
 				po_dtl[$(o).attr('name')] = $(o).val();
 			});
+			
 			var row = [];
 			row.push(po_dtl_counter+1);
 			row.push(po_dtl['po_dtl_item_unit']);
@@ -448,8 +503,17 @@
 			row.push(po_dtl['po_dtl_item_desc']);
 			row.push(po_dtl['po_dtl_item_cost']);
 			row.push(po_dtl['po_dtl_item_qty']*po_dtl['po_dtl_item_cost']);
-			//TODO: 
-			row.push('Action');
+						
+			var model = new RegExp('//model//','g');
+			var model_id = new RegExp('/model_id/','g'); 
+			var target_modal = new RegExp('//target-modal//','g'); 
+			var action = actionTemplate
+				.replace(model, 'po_dtl')
+				.replace(target_modal, 'po-dtl-modal')
+				.replace(model_id, po_dtl_counter);
+			
+			row.push(action);
+			row.push(po_dtl);
 			cache['po'][current_po]['po_dtl'][po_dtl_counter]=row;
 			poDtlTable.fnAddData(row);
 			po_dtl_counter+=1

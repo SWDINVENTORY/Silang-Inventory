@@ -78,7 +78,6 @@ class Po extends Abstract_Model {
 		$model = $this->Po_Model()->setDatabase($this->_database);
 		
 		if(!is_null($value)) {
-			
 			$model->load($value, $key);
 		}
 		
@@ -94,9 +93,27 @@ class Po extends Abstract_Model {
 	
 	public function getDetail($id) {
 		return $this
-			->_getAll('*')
+			->_getAll(array(
+				Po::PO_DTL_ID,
+				Po::PO_DTL_PO_ID,
+				Po::PO_DTL_ITEM_NO,
+				Po::PO_DTL_ITEM_UNIT,
+				Po::PO_DTL_ITEM_QTY,
+				Po::PO_DTL_ITEM_DESC,
+				Po::PO_DTL_ITEM_COST,
+				Po::PO_DTL_ITEM_CREATED
+			))
 			->addFilter('po_id = %s', $id)
 			->leftJoinOn(Po::PO_DTL_TABLE, 'po_id = po_dtl_po_id')
+			->getRows();
+	}
+	
+	public function getItemMatch($name = NULL) {
+		return $this->_database
+			->search()
+			->setTable(Po::PO_DTL_TABLE)
+			->setColumns(array(Po::PO_DTL_ITEM_DESC))
+			->addFilter('(po_dtl_item_desc LIKE %s )', '%'.$name.'%')
 			->getRows();
 	}
 	/* Protected Methods
