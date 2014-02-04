@@ -303,7 +303,16 @@
 								}
 			            		return action;
 			            	}
-			            }]
+			            }],
+				"fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {
+				  oSettings.jqXHR = $.ajax( {
+					"dataType": 'json',
+					"type": "GET",
+					"url": sSource,
+					"data": {po:'all'},
+					"success": fnCallback
+				  } );
+				}
 			});
 			
 			poDtlTable = $('#po-dtl-table').dataTable({

@@ -43,18 +43,22 @@ class Front_Page_Po extends Front_Page {
 		$this->_body['error'] = $this->_errors;
 		
 		if(!empty($this->get)) {
-			front()->output($this->get);
-			exit;
+			$get = $this->get;
+			if(isset($get['po'])){
+				if(strtolower($get['po']) == 'all') {
+					if(IS_AJAX) {
+						$po = array();
+						$po['data'] = $this->po;
+						header('Content-Type: application/javascript');
+						echo json_encode($po);
+						exit;
+					}
+				}
+			}
 			front()->output($_SERVER);
 			exit;
 		}
-		if(IS_AJAX) {
-			$po = array();
-			$po['data'] = $this->po;
-			header('Content-Type: application/javascript');
-			echo json_encode($po);
-			exit;
-		}
+		
 		return $this->_page();
 	}
 	
