@@ -11,15 +11,21 @@ function changeModal(action) {
 	action.run();
 }
 
-function populate(model){
+function populate(model, callback){
 	Object.keys(model.data).forEach(function(v,i,a) {
 		var value = model.map(v, model.data);
 		$('#'+model.name+'-modal-form').find('input[name="'+v+'"]').val(value);
-		$('#'+v).val(value);
-	});	
+		$('#'+model.name+'-modal-form'+' #'+v).val(value);
+	});
+	if(typeof callback != 'undefined' && typeof(callback) == 'function') {
+		callback();
+	}
+	
 }
 
 function clear_form(model, callback) {
 	$('#'+model+'-modal-form').find('input').val('');
-	callback();
+	if(typeof callback != 'undefined' && typeof(callback) == 'function') {
+		callback();
+	}
 }

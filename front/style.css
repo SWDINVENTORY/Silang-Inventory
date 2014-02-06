@@ -8,6 +8,10 @@
 	opacity: .92;
 }
 
+.modal {
+	overflow-y: auto;
+}
+
 .centered {
 	text-align: center;
 }

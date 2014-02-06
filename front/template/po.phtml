@@ -1,30 +1,17 @@
 <style>
-	.po-modal-dialog {
-		width: 75%;
-	}
-	.po .border {
-		margin-top: 10px;
-	}
-
-	#po-table td:first-child {
-		text-align: left;
-	}
+	.po-modal-dialog { width: 75%; }
 	
-	#po-table th:first-child {
-		width: 15%;
-	}
+	.po .border { margin-top: 10px; }
+
+	#po-table td:first-child { text-align: left; }
+	
+	#po-table th:first-child { width: 15%; }
 	
 	#po-table th:nth-child(2), #po-table th:nth-child(3), #po-table th:nth-child(4) {
 		width: 10%;
 	}
 	
-	#po-dtl-modal .modal-content {
-    	margin-top: 30%;
-	}
-	
-	#po-dtl-modal .modal-footer {
-    	margin-top: 40%;
-	}
+	#po_dtl-modal .modal-content { margin-top: 30%; }
 	
 </style>
 <div class="row">
@@ -109,8 +96,12 @@
 								</div>
 								<div class="form-group">
 									<label class="col-sm-4 control-label">Date</label>
-									<div class="col-sm-5">
-										<input type="date" class="form-control" name="po_created" value="<?php echo date('F j, Y'); ?>" >
+									<div class="col-sm-6">
+										<div class='input-group date po-created'>
+											<input type='text' name="po_created" class="form-control" />
+											<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+											</span>
+										</div>
 									</div>
 								</div>
 								<div class="form-group">
@@ -133,8 +124,12 @@
 								</div>
 								<div class="form-group">
 									<label class="col-sm-2 control-label">Delivery Date</label>
-									<div class="col-sm-6">
-										<input type="date" class="form-control" placeholder="Date" name="po_deliv_date">
+									<div class="col-sm-4">
+										<div class='input-group date deliv-date'>
+											<input type='text' name="po_deliv_date" class="form-control" />
+											<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+											</span>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -159,7 +154,7 @@
 						<div class="row item-input col-sm-12">
 							<div class="col-sm-offset-11 col-sm-1">
 								<button type="button" class="btn btn-primary" id="add-to-purchase"
-								data-toggle="modal" data-target="#po-dtl-modal" data-backdrop="static" data-keyboard="false">
+								data-toggle="modal" data-target="#po_dtl-modal" data-backdrop="static" data-keyboard="false">
 									Add Item
 								</button>
 							</div>
@@ -186,29 +181,29 @@
 							</div>
 						</div>
 					</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default secondary" data-dismiss="modal">
-						Close
-					</button>
-					<button type="submit" class="btn btn-primary" name="furnish">
-						<span class="modal-form-action">Furnish</span>
-					</button>
-				</div>
-			</form>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default secondary" data-dismiss="modal">
+							Close
+						</button>
+						<button type="submit" class="btn btn-primary" name="furnish">
+							<span class="modal-form-action">Furnish</span>
+						</button>
+					</div>
+				</form>
 			</div>
 		</div>
 	</div>
 </div>
 
-<div class="modal fade" id="po-dtl-modal" tabindex="-1" role="dialog" aria-labelledby="mymodallabel" aria-hidden="true">
+<div class="modal fade" id="po_dtl-modal" tabindex="-1" role="dialog" aria-labelledby="mymodallabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h4 class="modal-title" id="my-modal-label"><span class="modal-form-state">Action Here</span></h4>
 			</div>
 			<div class="modal-body">
-				<div class="border">
-					<form id="po_dtl-modal-form" action='#'>
+				<form id="po_dtl-modal-form" action='#'>
+				<div class="row border">
 							<div class="border">
 								<div class="col-sm-12">
 									<label for="input-name" class="col-sm-2 control-label">Desc</label>
@@ -260,14 +255,23 @@
 		cache = {};
 		po_dtl_counter = 0;
 		current_po = 'new';
+		current_po_dtl = null;
+		current_po_dtl_row = null;
 		poDtlTable = {};
-		var actionTemplate = $('#action_tpl').text().trim();
+		poTable = {};
+		actionTemplate = $('#action_tpl').text().trim();
 		
 		$('document').ready(function() {
+			$('.po-created').datetimepicker({
+				
+			});
 			
-			cache['po']={};
+			$('.deliv-date').datetimepicker({
+				pickTime: false
+			});
 			
-			var poTable = $('#po-table').dataTable({
+			//PO INIT
+			poTable = $('#po-table').dataTable({
 				'sPaginationType' : "two_button",
 				"iDisplayLength" : 10,
 				"sDom" : '<"pad-it"<"pull-right"f>l>t<"pull-right"i>p>',
@@ -296,18 +300,15 @@
 			            		var target_modal = new RegExp('//target-modal//','g'); 
 								var action = actionTemplate
 									.replace(model, 'po')
-									.replace(target_modal, 'po-modal')
+									.replace(target_modal, 'po')
 									.replace(model_id, data.po_id);
-								if(typeof(cache['po'][data.po_id]) == "undefined") {
-									cache['po'][data.po_id] = data;
-								}
 			            		return action;
 			            	}
 			            }],
 				"fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {
 				  oSettings.jqXHR = $.ajax( {
 					"dataType": 'json',
-					"type": "GET",
+					"type": "POST",
 					"url": sSource,
 					"data": {po:'all'},
 					"success": fnCallback
@@ -315,12 +316,15 @@
 				}
 			});
 			
+			//PO DETAIL INIT
 			poDtlTable = $('#po-dtl-table').dataTable({
 				"sPaginationType" : "two_button",
-				"iDisplayLength" : 2,
-				"sDom" : '<"pad-it"<"pull-right"f>l>tip>'
+				"iDisplayLength" : 3,
+				"sDom" : '<"pad-it"<"pull-right"f>l>tip>',
+				"bAutoWidth": false
 			});
-
+			
+			//AUTOCOMPLETE
 			$('#supplier_name').autocomplete({
 				serviceUrl : '/supplier/search',
 				params : {
@@ -349,7 +353,15 @@
 		
 		$(document).on('click','a',function(){
 			var actionHandle = $(this);
+			var row = actionHandle.parents('tr:first');
+			var po_id;
+			//EDIT PO
 			if(actionHandle.hasClass('edit-po')) {
+				poDtlTable.fnClearTable();
+				var rowPosition = poTable.fnGetPosition(row[0]); 
+				var rowData = poTable.fnGetData(row[0]);
+				current_po = rowData;
+				current_po_row = rowPosition;
 				changeModal({
 					'action':'/po/edit',
 					'model':'po',
@@ -358,11 +370,8 @@
 					'modal_label': 'Edit Purchase Order',
 					'run': function(){
 						$('#add-to-purchase, .secondary').show();
-						var po = actionHandle.parents('td:first').find('input[name="po_id"]').val();
-						current_po = po;
-						po = cache['po'][po];
 						populate({
-							'data': cache['po'][po.po_id],
+							'data': current_po,
 							'name':'po',
 							'map': function(v, o) {
 									if(v == 'po_created') {
@@ -374,13 +383,67 @@
 									}
 									return o[v];
 								}
+						}, function() {
+							poDtlTable = $('#po-dtl-table').dataTable({
+								"sPaginationType" : "two_button",
+								"iDisplayLength" : 3,
+								"sDom" : '<"pad-it"<"pull-right"f>l>tip>',
+								'sAjaxSource': '/po/',
+								'sAjaxDataProp': 'data',
+								"bDestroy" : true,
+								"bAutoWidth": false,
+								"aoColumns": [
+							            { "mData": "po_dtl_item_no" },
+							            { "mData": "po_dtl_item_unit" },
+							            { "mData": "po_dtl_item_qty" },
+							            { "mData": "po_dtl_item_desc" },
+							            { "mData": "po_dtl_item_cost" },
+							            { "mData": function(data) {
+							            	var amount = data.po_dtl_item_qty*data.po_dtl_item_cost;
+											return amount;
+							            }},
+							            { 
+											'mData': function(data){
+												var model = new RegExp('//model//','g');
+												var model_id = new RegExp('/model_id/','g'); 
+												var target_modal = new RegExp('//target-modal//','g'); 
+												
+												var action = actionTemplate
+													.replace(model, 'po_dtl')
+													.replace(target_modal, 'po_dtl')
+													.replace(model_id, data.po_dtl_id);
+												action = $(action).clone();
+												var hid = $(action).find('.hidden_data');
+												var data = data;
+												(Object.keys(data)).forEach(function(e,i,a) {
+													hid.append('<input type="hidden" name="po_dtl[!]['+e+']" value="'+data[e]+'" />')
+												});
+												action = $(action).html();
+												return action;
+											}
+										},
+							            ],
+								"fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {
+								  oSettings.jqXHR = $.ajax( {
+									"dataType": 'json',
+									"type": "POST",
+									"url": sSource,
+									"data": {po:current_po['po_id']},
+									"success": fnCallback
+								  } );
+								}
+							});
 						});	
 					}
 				});
 			}
 			if(actionHandle.hasClass('view-po')) {
+				var rowPosition = poTable.fnGetPosition(row[0]); 
+				var rowData = poTable.fnGetData(row[0]);
+				current_po = rowData;
+				current_po_row = rowPosition;
 				changeModal({
-					'action':'#',
+					'action':'/po',
 					'model':'po',
 					'submit_name': 'view-po',
 					'pr_button':'Back To List',
@@ -389,11 +452,8 @@
 						$('#add-to-purchase').hide();
 						$('.secondary').hide();
 						
-						
-						var po = actionHandle.parents('td:first').find('input[name="po_id"]').val();
-						po = cache['po'][po];
 						populate({
-							'data': cache['po'][po.po_id],
+							'data': current_po,
 							'name':'po',
 							'map': function(v, o) {
 									if(v == 'po_created') {
@@ -402,30 +462,68 @@
 									}
 									if(v == 'po_deliv_date') {
 										return (new Date(o[v]).toLocaleDateString());
-									}
+									}									
+									return o[v];
+						}}, function(){
+								$.each(Object.keys(current_po), function(i, v){
 									$('#po-modal-form').find('input[name="'+v+'"]')
 										.attr('disabled', 'disabled');
-									$('#input[name="'+v+'"]').attr('disabled', 'disabled');
-									return o[v];
-								}}
-						);
-						
+									$('#'+v)
+										.attr('disabled', 'disabled');
+								});
+								poDtlTable = $('#po-dtl-table').dataTable({
+										"sPaginationType" : "two_button",
+										"iDisplayLength" : 3,
+										"sDom" : '<"pad-it"<"pull-right"f>l>tip>',
+										'sAjaxSource': '/po/',
+										'sAjaxDataProp': 'data',
+										"bDestroy" : true,
+										"bAutoWidth": false,
+										"aoColumns": [
+												{ "mData": "po_dtl_item_no" },
+												{ "mData": "po_dtl_item_unit" },
+												{ "mData": "po_dtl_item_qty" },
+												{ "mData": "po_dtl_item_desc" },
+												{ "mData": "po_dtl_item_cost" },
+												{ "mData": function(data) {
+													var amount = data.po_dtl_item_qty*data.po_dtl_item_cost;
+													return amount;
+												}},
+												{ 'mData': function(data) {return " ";}},
+											],
+										"fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {
+										  oSettings.jqXHR = $.ajax( {
+											"dataType": 'json',
+											"type": "POST",
+											"url": sSource,
+											"data": {po:current_po['po_id']},
+											"success": fnCallback
+										  } );
+										}
+									});
+						});
 					}
 				});
 			}
+			//IF EDITING DETAIL
 			if(actionHandle.hasClass('edit-po_dtl')) {
+				var rowPosition = poDtlTable.fnGetPosition(row[0]); 
+				var rowData = poDtlTable.fnGetData(row[0]);
+				current_po_dtl = rowData;
+				current_po_dtl_row = rowPosition;
+				
+				//MODIFY MODAL FOR EDIT MODE
 				changeModal({
-					'action':'#',
+					'action':'/po/#',
 					'model':'po_dtl',
 					'submit_name': 'edit-po_dtl',
 					'pr_button':'Save Changes',
 					'modal_label': 'Edit Item',
-					'run': function() {					
-						var po_dtl = actionHandle.parents('td:first').find('input[name="po_dtl_id"]').val();
-						po_dtl = cache['po'][current_po]['po_dtl'][po_dtl];
-						console.log(po_dtl)
+					'run': function() {
+						
+						//POPULATE TO THE FORM
 						populate({
-							'data': po_dtl[7],
+							'data': rowData,
 							'name':'po_dtl',
 							'map': function(v, o) {
 									if(v == 'po_dtl_item_created') {
@@ -439,19 +537,21 @@
 					}
 				});
 			}
+			//IF VIEWING DETAIL
 			if(actionHandle.hasClass('view-po_dtl')) {
+				var rowPosition = poDtlTable.fnGetPosition(row[0]); 
+				var rowData = poDtlTable.fnGetData(row[0]);
+				current_po_dtl = rowData;
+				current_po_dtl_row = rowPosition;
 				changeModal({
 					'action':'#',
 					'model':'po_dtl',
 					'submit_name': 'view-po_dtl',
 					'pr_button':'Back to Order',
 					'modal_label': 'View Item',
-					'run': function() {					
-						var po_dtl = actionHandle.parents('td:first').find('input[name="po_dtl_id"]').val();
-						po_dtl = cache['po'][current_po]['po_dtl'][po_dtl];
-						console.log(po_dtl)
+					'run': function() {
 						populate({
-							'data': po_dtl[7],
+							'data': current_po_dtl,
 							'name':'po_dtl',
 							'map': function(v, o) {
 									if(v == 'po_dtl_item_created') {
@@ -459,33 +559,74 @@
 										return dateIs;
 									}
 									return o[v];
-								}}
+							}}, function(){
+								$('#po_dtl-modal-form .secondary').hide();
+								$('#po_dtl-modal-form').find('input').attr('disabled','disabled');
+							}
 						);
+						
 						
 					}
 				});
 			}
 		});
 		
+		//CREATE PO
 		$('#create-po').click(function(){
+			poDtlTable.fnClearTable();
 			changeModal({
-					'action':'#',
+					'action':'/po/furnish',
 					'model':'po',
 					'submit_name': 'furnish',
 					'pr_button':'Furnish Order',
-					'modal_label': 'Add Purchase Order',
+					'modal_label': 'Create Purchase Order',
 					'run': function(){
 						$('#add-to-purchase').show();
-						current_po = 'new';
-						cache['po'][current_po] = {};
-						cache['po'][current_po]['po_dtl'] ={};
 						clear_form('po', function(){
 							$('input[name="po_created"]').val(new Date().toDateString());
 						});
+						poDtlTable = $('#po-dtl-table').dataTable({
+								"sPaginationType" : "two_button",
+								"iDisplayLength" : 3,
+								"sDom" : '<"pad-it"<"pull-right"f>l>tip>',
+								"bDestroy" : true,
+								"bAutoWidth": false,
+								"aoColumns": [
+							            { "mData": "po_dtl_item_no" },
+							            { "mData": "po_dtl_item_unit" },
+							            { "mData": "po_dtl_item_qty" },
+							            { "mData": "po_dtl_item_desc" },
+							            { "mData": "po_dtl_item_cost" },
+							            { "mData": function(data) {
+							            	var amount = data.po_dtl_item_qty*data.po_dtl_item_cost;
+											return amount;
+							            }},
+							            { 'mData': function(data){
+												var model = new RegExp('//model//','g');
+												var model_id = new RegExp('/model_id/','g'); 
+												var target_modal = new RegExp('//target-modal//','g'); 
+												
+												var action = actionTemplate
+													.replace(model, 'po_dtl')
+													.replace(target_modal, 'po_dtl')
+													.replace(model_id, data.po_dtl_id);
+												action = $(action).clone();
+												var hid = $(action).find('.hidden_data');
+												var data = data;
+												(Object.keys(data)).forEach(function(e,i,a) {
+													hid.append('<input type="hidden" name="po_dtl[!]['+e+']" value="'+data[e]+'" />')
+												});
+												action = $(action).html();
+												return action;
+											}
+										},
+									]
+								});
 					}
 				});
 		});
 		
+		//ADD ITEM
 		$('#add-to-purchase').click(function(){
 			changeModal({
 					'action':'#',
@@ -493,39 +634,57 @@
 					'submit_name': 'create-po_dtl',
 					'pr_button':'Add To Purchase Order',
 					'modal_label': 'Add Item',
-					'run': function(){} 
+					'run': function(){
+						clear_form('po_dtl');
+					} 
 				});
 		});
 		
-		$('#po_dtl-modal-form').submit(function(e){
-			e.preventDefault();
-			var inputs = $(this).find('input[name]');
-			var po_dtl = {};
-			$.each(inputs, function(i, o){
-				po_dtl[$(o).attr('name')] = $(o).val();
+		//HEADER SUBMIT HANDLER
+		$('#po-modal-form').submit(function(e){
+			//e.preventDefault();
+			hidden = $('#po-dtl-table .hidden_data');
+			console.log($('#po-dtl-table .hidden_data'));
+			$.each(hidden, function(i,o){
+				var inputs = $(o).find('input:hidden');
+				$.each(inputs, function(i1, o1){
+					var input_name = $(o1).attr('name');
+					$(o1).attr('name', input_name.replace('!',i));
+				});
 			});
+		});
+				
+		//DETAIL SUBMIT HANDLER
+		$('#po_dtl-modal-form').submit(function(e){
+			var form = $(this);
+			var button_action = form.find('.btn-primary').attr('name');
+			e.preventDefault();
 			
-			var row = [];
-			row.push(po_dtl_counter+1);
-			row.push(po_dtl['po_dtl_item_unit']);
-			row.push(po_dtl['po_dtl_item_qty']);
-			row.push(po_dtl['po_dtl_item_desc']);
-			row.push(po_dtl['po_dtl_item_cost']);
-			row.push(po_dtl['po_dtl_item_qty']*po_dtl['po_dtl_item_cost']);
-						
-			var model = new RegExp('//model//','g');
-			var model_id = new RegExp('/model_id/','g'); 
-			var target_modal = new RegExp('//target-modal//','g'); 
-			var action = actionTemplate
-				.replace(model, 'po_dtl')
-				.replace(target_modal, 'po-dtl-modal')
-				.replace(model_id, po_dtl_counter);
-			
-			row.push(action);
-			row.push(po_dtl);
-			cache['po'][current_po]['po_dtl'][po_dtl_counter]=row;
-			poDtlTable.fnAddData(row);
-			po_dtl_counter+=1
+			var inputs = form.find('input[name]');
+												
+			switch(button_action){
+				case 'edit-po_dtl':	
+					$.each(inputs, function(i, o) {
+						if (current_po_dtl[$(o).attr('name')]!= 'undefined') {
+							current_po_dtl[$(o).attr('name')] = $(o).val();
+						}
+					});
+					poDtlTable.fnUpdate(current_po_dtl, current_po_dtl_row);
+					break;
+				case 'create-po_dtl':
+					current_po_dtl = {};
+					$.each(inputs, function(i, o) {
+						current_po_dtl[$(o).attr('name')] = $(o).val();
+					});
+					current_po_dtl['po_dtl_item_no'] = poDtlTable.fnGetData().length+1; 
+					current_po_dtl['po_dtl_item_created'] = (new Date()).toLocaleString();
+					poDtlTable.fnAddData(current_po_dtl);
+					break;
+				default:
+					break;
+			};
+			$('#po_dtl-modal').modal('hide');
+			$('#po_dtl-modal-form').find('input').removeAttr('disabled');
 		});
 	})(jQuery);
 </script>

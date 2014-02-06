@@ -4,6 +4,6 @@ return array (
 		'host' 	=> '127.0.0.1',
 		'name' 	=> 'swdinventory',
 		'user' 	=> 'root',
-		'pass' 	=> 'qwerty123!',
+		'pass' 	=> '',
 		'type' 	=> 'mysql',
 		'default' => true));
