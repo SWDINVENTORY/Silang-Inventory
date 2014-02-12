@@ -16,6 +16,8 @@
 	text-align: center;
 }
 
+/*-------Table Styles -----*/
+
 label input {
 	display: inline;
 	width: 76%;
@@ -52,7 +54,17 @@ label input {
 	display: none;
 }
 
+.dataTables_empty {
+	text-align: center;	
+}
+
+/*----- End Of Table Style -----*/
+ 
 .autocomplete-suggestions { border: 1px solid #999; background: #FFF; overflow: auto; }
 .autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
 .autocomplete-selected { background: #F0F0F0; }
 .autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }
+
+.dataTables_empty {
+	text-align: center;	
+}

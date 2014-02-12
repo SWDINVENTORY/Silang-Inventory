@@ -1,18 +1,39 @@
 <style>
-	.po-modal-dialog { width: 75%; }
-	
-	.po .border { margin-top: 10px; }
+	.po-modal-dialog {
+		width: 75%;
+	}
 
-	#po-table td:first-child { text-align: left; }
-	
-	#po-table th:first-child { width: 15%; }
-	
+	.po .border {
+		margin-top: 10px;
+	}
+
+	#po-table th:first-child {
+		width: 20%;
+		text-align: left;
+	}
+
 	#po-table th:nth-child(2), #po-table th:nth-child(3), #po-table th:nth-child(4) {
 		width: 10%;
 	}
-	
-	#po_dtl-modal .modal-content { margin-top: 30%; }
-	
+	#po-table th:last-child {
+		width: 5%;
+	}
+
+	#po-table td:nth-child(2), #po-table td:nth-child(3), #po-table td:nth-child(4), #po-table td:nth-child(5), #po-table td:nth-child(7), #po-table td:nth-child(8), #po-table td:nth-child(9) {
+		text-align: right;
+	}
+
+	#po-dtl-table td:nth-child(1) {
+		text-align: center;
+	}
+	#po-dtl-table td:nth-child(2), #po-dtl-table td:nth-child(3), #po-dtl-table td:nth-child(5), #po-dtl-table td:nth-child(6) {
+		text-align: right;
+	}
+
+	#po_dtl-modal .modal-content {
+		margin-top: 30%;
+	}
+
 </style>
 <div class="row">
 	<div class="col-sm-12">
@@ -25,6 +46,7 @@
 				<i class="icon-file-alt"></i> Purchase Order
 			</li>
 		</ol>
+		<?php include(dirname(__FILE__).'\_message.phtml'); ?>
 	</div>
 </div>
 <div class="form-inline row">
@@ -70,6 +92,7 @@
 			</div>
 			<div class="modal-body">
 				<form method="post" action="/po/furnish/" id="po-modal-form">
+					<input type="hidden" name="po_id"/>
 					<div class="border">
 						<div class="form-horizontal row">
 							<div class="col-sm-7">
@@ -252,26 +275,22 @@
 <script type="text/javascript" src="/assets/js/modal_control.js"></script>
 <script type="text/javascript">
 	(function($) {
-		cache = {};
-		po_dtl_counter = 0;
-		current_po = 'new';
-		current_po_dtl = null;
-		current_po_dtl_row = null;
-		poDtlTable = {};
-		poTable = {};
-		actionTemplate = $('#action_tpl').text().trim();
+		var current_po = 'new';
+		var current_po_dtl = null;
+		var current_po_dtl_row = null;
+		var po_detail_table = {};
+		var po_table = {};
+		var action_template = $('#action_tpl').text().trim();
 		
 		$('document').ready(function() {
-			$('.po-created').datetimepicker({
-				
-			});
+			$('.po-created').datetimepicker({});
 			
 			$('.deliv-date').datetimepicker({
 				pickTime: false
 			});
 			
 			//PO INIT
-			poTable = $('#po-table').dataTable({
+			po_table = $('#po-table').dataTable({
 				'sPaginationType' : "two_button",
 				"iDisplayLength" : 10,
 				"sDom" : '<"pad-it"<"pull-right"f>l>t<"pull-right"i>p>',
@@ -281,15 +300,15 @@
 			            { "mData": "supplier_name" },
 			            { "mData": "po_no" },
 			            { "mData": function(data) {
-			            	return (new Date(new Date(data.po_created.split(' ')[0])
-			            					.toDateString()+' '+data.po_created.split(' ')[1])
-			            					.toDateString());
-			            	}},
+			            	return moment(data.po_created).format('ddd, MMM Do YYYY');
+			       		}},
 			            { "mData": "po_proc_mod" },
-			            { "mData": "po_total" },
+			            { "mData": function(data){
+			            		return parseFloat(data['po_total']).moneyFormat();
+			            }},
 			            { "mData": "po_deliv_place" },
 			            { "mData": function(data) {
-			            	return (new Date(data.po_deliv_date).toDateString());
+			            	return moment(data.po_deliv_date).format('ddd, MMM Do YYYY');
 			            	}},
 			            { "mData": "po_deliv_term" },
 			            { "mData": "po_pay_term" },
@@ -298,7 +317,7 @@
 			            		var model = new RegExp('//model//','g');
 			            		var model_id = new RegExp('/model_id/','g'); 
 			            		var target_modal = new RegExp('//target-modal//','g'); 
-								var action = actionTemplate
+								var action = action_template
 									.replace(model, 'po')
 									.replace(target_modal, 'po')
 									.replace(model_id, data.po_id);
@@ -317,7 +336,7 @@
 			});
 			
 			//PO DETAIL INIT
-			poDtlTable = $('#po-dtl-table').dataTable({
+			po_detail_table = $('#po-dtl-table').dataTable({
 				"sPaginationType" : "two_button",
 				"iDisplayLength" : 3,
 				"sDom" : '<"pad-it"<"pull-right"f>l>tip>',
@@ -352,16 +371,16 @@
 		});
 		
 		$(document).on('click','a',function(){
-			var actionHandle = $(this);
-			var row = actionHandle.parents('tr:first');
+			var action_handle = $(this);
+			var row = action_handle.parents('tr:first');
 			var po_id;
 			//EDIT PO
-			if(actionHandle.hasClass('edit-po')) {
-				poDtlTable.fnClearTable();
-				var rowPosition = poTable.fnGetPosition(row[0]); 
-				var rowData = poTable.fnGetData(row[0]);
-				current_po = rowData;
-				current_po_row = rowPosition;
+			if(action_handle.hasClass('edit-po')) {
+				po_detail_table.fnClearTable();
+				var row_position = po_table.fnGetPosition(row[0]); 
+				var row_data = po_table.fnGetData(row[0]);
+				current_po = row_data;
+				current_po_row = row_position;
 				changeModal({
 					'action':'/po/edit',
 					'model':'po',
@@ -384,7 +403,7 @@
 									return o[v];
 								}
 						}, function() {
-							poDtlTable = $('#po-dtl-table').dataTable({
+							po_detail_table = $('#po-dtl-table').dataTable({
 								"sPaginationType" : "two_button",
 								"iDisplayLength" : 3,
 								"sDom" : '<"pad-it"<"pull-right"f>l>tip>',
@@ -397,10 +416,12 @@
 							            { "mData": "po_dtl_item_unit" },
 							            { "mData": "po_dtl_item_qty" },
 							            { "mData": "po_dtl_item_desc" },
-							            { "mData": "po_dtl_item_cost" },
+							            { "mData": function(data){ 
+							            	return parseFloat(data['po_dtl_item_cost']).moneyFormat();
+							            }},
 							            { "mData": function(data) {
-							            	var amount = data.po_dtl_item_qty*data.po_dtl_item_cost;
-											return amount;
+							            	var amount = parseFloat(data.po_dtl_item_qty*data.po_dtl_item_cost);
+											return amount.moneyFormat();
 							            }},
 							            { 
 											'mData': function(data){
@@ -408,7 +429,7 @@
 												var model_id = new RegExp('/model_id/','g'); 
 												var target_modal = new RegExp('//target-modal//','g'); 
 												
-												var action = actionTemplate
+												var action = action_template
 													.replace(model, 'po_dtl')
 													.replace(target_modal, 'po_dtl')
 													.replace(model_id, data.po_dtl_id);
@@ -437,11 +458,12 @@
 					}
 				});
 			}
-			if(actionHandle.hasClass('view-po')) {
-				var rowPosition = poTable.fnGetPosition(row[0]); 
-				var rowData = poTable.fnGetData(row[0]);
-				current_po = rowData;
-				current_po_row = rowPosition;
+			//VIEW PO
+			if(action_handle.hasClass('view-po')) {
+				var row_position = po_table.fnGetPosition(row[0]); 
+				var row_data = po_table.fnGetData(row[0]);
+				current_po = row_data;
+				current_po_row = row_position;
 				changeModal({
 					'action':'/po',
 					'model':'po',
@@ -471,7 +493,7 @@
 									$('#'+v)
 										.attr('disabled', 'disabled');
 								});
-								poDtlTable = $('#po-dtl-table').dataTable({
+								po_detail_table = $('#po-dtl-table').dataTable({
 										"sPaginationType" : "two_button",
 										"iDisplayLength" : 3,
 										"sDom" : '<"pad-it"<"pull-right"f>l>tip>',
@@ -484,11 +506,13 @@
 												{ "mData": "po_dtl_item_unit" },
 												{ "mData": "po_dtl_item_qty" },
 												{ "mData": "po_dtl_item_desc" },
-												{ "mData": "po_dtl_item_cost" },
-												{ "mData": function(data) {
-													var amount = data.po_dtl_item_qty*data.po_dtl_item_cost;
-													return amount;
-												}},
+												{ "mData": function(data){ 
+									            	return parseFloat(data['po_dtl_item_cost']).formatMoney(2,',','.');
+									            }},
+									            { "mData": function(data) {
+									            	var amount = parseFloat(data.po_dtl_item_qty*data.po_dtl_item_cost);
+													return amount.formatMoney(2,',','.');
+									            }},
 												{ 'mData': function(data) {return " ";}},
 											],
 										"fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {
@@ -506,11 +530,11 @@
 				});
 			}
 			//IF EDITING DETAIL
-			if(actionHandle.hasClass('edit-po_dtl')) {
-				var rowPosition = poDtlTable.fnGetPosition(row[0]); 
-				var rowData = poDtlTable.fnGetData(row[0]);
-				current_po_dtl = rowData;
-				current_po_dtl_row = rowPosition;
+			if(action_handle.hasClass('edit-po_dtl')) {
+				var row_position = po_detail_table.fnGetPosition(row[0]); 
+				var row_data = po_detail_table.fnGetData(row[0]);
+				current_po_dtl = row_data;
+				current_po_dtl_row = row_position;
 				
 				//MODIFY MODAL FOR EDIT MODE
 				changeModal({
@@ -523,7 +547,7 @@
 						
 						//POPULATE TO THE FORM
 						populate({
-							'data': rowData,
+							'data': row_data,
 							'name':'po_dtl',
 							'map': function(v, o) {
 									if(v == 'po_dtl_item_created') {
@@ -538,11 +562,11 @@
 				});
 			}
 			//IF VIEWING DETAIL
-			if(actionHandle.hasClass('view-po_dtl')) {
-				var rowPosition = poDtlTable.fnGetPosition(row[0]); 
-				var rowData = poDtlTable.fnGetData(row[0]);
-				current_po_dtl = rowData;
-				current_po_dtl_row = rowPosition;
+			if(action_handle.hasClass('view-po_dtl')) {
+				var row_position = po_detail_table.fnGetPosition(row[0]); 
+				var row_data = po_detail_table.fnGetData(row[0]);
+				current_po_dtl = row_data;
+				current_po_dtl_row = row_position;
 				changeModal({
 					'action':'#',
 					'model':'po_dtl',
@@ -573,7 +597,7 @@
 		
 		//CREATE PO
 		$('#create-po').click(function(){
-			poDtlTable.fnClearTable();
+			po_detail_table.fnClearTable();
 			changeModal({
 					'action':'/po/furnish',
 					'model':'po',
@@ -585,7 +609,7 @@
 						clear_form('po', function(){
 							$('input[name="po_created"]').val(new Date().toDateString());
 						});
-						poDtlTable = $('#po-dtl-table').dataTable({
+						po_detail_table = $('#po-dtl-table').dataTable({
 								"sPaginationType" : "two_button",
 								"iDisplayLength" : 3,
 								"sDom" : '<"pad-it"<"pull-right"f>l>tip>',
@@ -596,17 +620,19 @@
 							            { "mData": "po_dtl_item_unit" },
 							            { "mData": "po_dtl_item_qty" },
 							            { "mData": "po_dtl_item_desc" },
-							            { "mData": "po_dtl_item_cost" },
+							            { "mData": function(data) {
+							            		return parseFloat(data["po_dtl_item_cost"]).moneyFormat();
+							            } },
 							            { "mData": function(data) {
 							            	var amount = data.po_dtl_item_qty*data.po_dtl_item_cost;
-											return amount;
+											return parseFloat(amount).moneyFormat();
 							            }},
 							            { 'mData': function(data){
 												var model = new RegExp('//model//','g');
 												var model_id = new RegExp('/model_id/','g'); 
 												var target_modal = new RegExp('//target-modal//','g'); 
 												
-												var action = actionTemplate
+												var action = action_template
 													.replace(model, 'po_dtl')
 													.replace(target_modal, 'po_dtl')
 													.replace(model_id, data.po_dtl_id);
@@ -669,16 +695,16 @@
 							current_po_dtl[$(o).attr('name')] = $(o).val();
 						}
 					});
-					poDtlTable.fnUpdate(current_po_dtl, current_po_dtl_row);
+					po_detail_table.fnUpdate(current_po_dtl, current_po_dtl_row);
 					break;
 				case 'create-po_dtl':
 					current_po_dtl = {};
 					$.each(inputs, function(i, o) {
 						current_po_dtl[$(o).attr('name')] = $(o).val();
 					});
-					current_po_dtl['po_dtl_item_no'] = poDtlTable.fnGetData().length+1; 
+					current_po_dtl['po_dtl_item_no'] = po_detail_table.fnGetData().length+1; 
 					current_po_dtl['po_dtl_item_created'] = (new Date()).toLocaleString();
-					poDtlTable.fnAddData(current_po_dtl);
+					po_detail_table.fnAddData(current_po_dtl);
 					break;
 				default:
 					break;

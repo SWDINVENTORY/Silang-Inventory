@@ -66,7 +66,33 @@ abstract class Front_Page extends Eden_Class {
 	-------------------------------*/
 	protected function _page() {
 		$this->_head['page'] = $this->_class;
-		$tpl 	= front()->path('template');
+		//session_destroy();
+		//if logged out
+		if(!isset($_SESSION['hello'])){
+			$_SESSION['hello'] = 'hi';	
+		}
+				
+		if(isset($_GET['logout'])) {
+			session_destroy();
+			front()->output('logged out');
+			exit;
+			header('Location: /');
+			exit;
+		}
+		
+		//get the messages
+		if(isset($_SESSION['messages']) && is_array($_SESSION['messages'])) {
+			foreach($_SESSION['messages'] as $message) {
+				$this->_addMessage($message['message'], $message['type']);
+			}
+			//front()->output($this->_messages);
+			//exit;
+			unset($_SESSION['messages']);
+		}
+		
+		$this->_body['messages'] = $this->_messages;
+		$tpl = front()->path('template');
+		
 		$head = front()->trigger('head')->template($tpl.'/_head.phtml', $this->_head);
 		$body = front()->trigger('body')->template($tpl.$this->_template, $this->_body);
 		$foot = front()->trigger('foot')->template($tpl.'/_foot.phtml', $this->_foot);
@@ -79,6 +105,16 @@ abstract class Front_Page extends Eden_Class {
 			'head'			=> $head,
 			'body'			=> $body,
 			'foot'			=> $foot));
+	}
+	
+	protected function _addMessage($message, $type = NULL, $flash = false) {
+		if($flash) {
+			$_SESSION['messages'][] = array('type' => $type, 'message' => $message);
+			return $this;
+		}
+		
+		$this->_messages[] = array('type' => $type, 'message' => $message);
+		return $this;
 	}
 	
 	/* Private Methods

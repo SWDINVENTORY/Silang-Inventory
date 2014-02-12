@@ -50,11 +50,10 @@ class Abstract_Model extends Eden_Sql_Model {
 	
 	public function add($data) {
 		return $this->_database
-				->insertRow($this->_table, $data)
-				->getLastInsertedId();
+			->insertRow($this->_table, $data)
+			->getLastInsertedId();
 	}
 	
-		
 	protected function _getAll($fields) {
 		return $this->search()
 			->setColumns($fields);

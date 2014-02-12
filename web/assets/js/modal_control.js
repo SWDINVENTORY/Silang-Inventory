@@ -16,6 +16,9 @@ function populate(model, callback){
 		var value = model.map(v, model.data);
 		$('#'+model.name+'-modal-form').find('input[name="'+v+'"]').val(value);
 		$('#'+model.name+'-modal-form'+' #'+v).val(value);
+		if(!$('#'+model.name+'-modal-form'+' #'+v).is('input')) {
+			$('#'+model.name+'-modal-form'+' #'+v).text(value);
+		}
 	});
 	if(typeof callback != 'undefined' && typeof(callback) == 'function') {
 		callback();

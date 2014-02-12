@@ -5,9 +5,7 @@
 	.ia .border {
 		margin-top: 10px;
 	}
-	.ia td {
-		text-align: right;
-	}
+	
 	.ia .request-dept {
 		padding-top: 10px;
 	}
@@ -29,7 +27,7 @@
 </div>
 <div class="row">
 	<div class="col-xs-offset-10 col-xs-2">
-		<button type="button" class="btn btn-primary" id="add-to-purchase"
+		<button type="button" class="btn btn-primary" id="create-ia"
 			data-backdrop="static" data-keyboard="false"
 				data-toggle="modal" data-target="#ia-modal">
 			Create IAR
@@ -68,100 +66,96 @@
 				<h4 class="modal-title" id="my-modal-label"><span class="modal-form-state">Action Here</span></h4>
 			</div>
 			<div class="modal-body">
+				<form method="post" action="/po/furnish/" id="ia-modal-form">
 				<!---IA Proper -->
 				<div class="border">
 					<!--Page body-->
 					<div class="form-horizontal row">
-						<div class="col-md-6">
+						<div class="col-md-8">
 							<div class="form-group">
-								<label class="col-sm-2 control-label">Supplier</label>
-								<div class="col-sm-10">
-									<input type="input" class="form-control" placeholder="Name">
+								<label class="col-sm-1 control-label">Supplier</label>
+								<div class="col-sm-9">
+									<input type="input" class="form-control" placeholder="Name" id="supplier_name" disabled="disabled">
 									<input type="hidden" name="po_supplier_id">
 								</div>
 							</div>
 						</div>
-						<div class="col-md-6">
+						<div class="col-md-3">
 							<div class="form-group">
-								<label class="col-sm-2 control-label">IAR No.</label>
-								<div class="col-sm-4">
-									<input type="input" class="form-control" placeholder="Name">
-									<input type="hidden" name="po_supplier_id">
+								<label class="col-sm-3 control-label">IAR No.</label>
+								<div class="col-sm-5">
+									<input type="input" class="form-control" placeholder="IAR No." name="ia_no" disabled="disabled">
 								</div>
 							</div>
 						</div>
 					</div>
 					<div class="form-horizontal row">
-						<div class="col-md-3">
-							<label class="control-label col-md-4">PO No.:</label>
-							<div class="col-md-8">
-								<input type="input" class="form-control" placeholder="Name">
+						<div class="col-md-2">
+							<label class="control-label col-md-5">PO No.</label>
+							<div class="col-md-7">
+								<input type="input" class="form-control" placeholder="PO No." name="po_no">
 							</div>
 						</div>
 						<div class="col-md-2">
 							<label class="control-label col-md-3">Date:</label>
 							<div class="col-md-9">
-								<input type="input" class="form-control" placeholder="Name">
+								<input type="input" class="form-control" placeholder="Date" id="po_created" disabled="disabled">
 							</div>
 						</div>
 						<div class="col-md-3">
-							<label class="control-label col-md-3">Inv. No:</label>
-							<div class="col-md-9">
-								<input type="input" class="form-control" placeholder="Name">
+							<label class="control-label col-md-4">Inv. No:</label>
+							<div class="col-md-8">
+								<input type="input" class="form-control" placeholder="Inv No." name="ia_inv_no">
+								<input type="hidden" name="ia_po_id">
 							</div>
 						</div>
 						<div class="col-md-2">
-							<label class="control-label col-md-5">DR No.:</label>
+							<label class="control-label col-md-5">DR No.</label>
 							<div class="col-md-7">
-								<input type="input" class="form-control" placeholder="Name">
+								<input type="input" class="form-control" placeholder="Dr No." name="ia_dr_no">
 							</div>
 						</div>
 						<div class="col-md-2">
 							<label class=" control-label col-md-3">Date:</label>
 							<div class="col-md-9">
-								<input type="input" class="form-control" placeholder="Name"/>
+								<input type="input" class="form-control" placeholder="Date" name="ia_created"/>
 							</div>
 						</div>
 					</div>
 					<div class="form-inline row request-dept">
 						<div class="col-sm-11">
-							<label class="col-sm-2 control-label">Requesitioning Office/Dept:</label>
+							<label class="col-sm-3 control-label">Requesitioning Office/Dept:</label>
 							<div class="col-sm-6">
-								<input type="input" class="form-control" placeholder="Name">
-								<input type="hidden" name="po_supplier_id">
+								<input type="input" class="form-control" placeholder="Office/Dept">
+								<input type="hidden" name="ia_req_dept">
 							</div>
 						</div>
 					</div>
 				</div>
+				<hr/>
 				<div class="row item-list border-space">
 					<div class="col-lg-12">
-						<h4 align="center">Inspection/Acceptance List</h4>
+						<h4 align="center">Inspected/Accepted List</h4>
 						<div class="table-responsive">
-							<table class="table table-hover table-striped table-bordered tablesorter">
+							<table class="table table-hover table-striped table-bordered tablesorter" id="ia-dtl-table">
 								<thead>
 									<tr>
-										<th class="header">Stock No. <i class="fa fa-sort"></i></th>
-										<th class="header">Unit <i class="fa fa-sort"></i></th>
-										<th class="header">Description <i class="fa fa-sort"></i></th>
-										<th class="header">Unit Cost <i class="fa fa-sort"></i></th>
-										<th class="header">Total Amount <i class="fa fa-sort"></i></th>
+										<th>Stock No.</th>
+										<th>Unit</th>
+										<th>Qty</th>
+										<th>Description</th>
+										<th>Unit Cost</th>
+										<th>Total Amount</th>
+										<th>Action</th>
 									</tr>
 								</thead>
 								<tfoot>
 									<tr>
-										<td colspan="4" align="center">TOTAL</td>
-										<td >228.00</td>
+										<td colspan="5" align="center">TOTAL</td>
+										<td id="ia_total_amount">0.00</td>
 									</tr>
 								</tfoot>
-								<tbody>
-									<tr>
-										<td>1</td>
-										<td>bag</td>
-										<td>50</td>
-										<td>Portland Cement</td>
-										<td>228.00</td>
-									</tr>
-								</tbody>
+								<tbody></tbody>
 							</table>
 						</div>
 					</div>
@@ -175,7 +169,300 @@
 						<span class="modal-form-action">Furnish</span>
 					</button>
 				</div>
+				</form>
 			</div>
 		</div>
 	</div>
 </div>
+<?php include __DIR__.'/action.phtml'; ?>
+<script type="text/javascript" src="/assets/js/modal_control.js"></script>
+<script type="text/javascript">
+(function(){
+	$('document').ready(function(){
+		ia_table = {};
+		ia_dtl_table = {};
+		action_template = $('#action_tpl').text().trim();
+		
+		ia_columns = [
+			            { "mData": "supplier_name" },
+			            { "mData": "po_no" },
+			            { "mData": function(data) {
+			            	return moment(data.po_created).format('ddd, MMM Do YYYY');
+			            }},
+			            { "mData": "ia_no" },
+			            { "mData": 'ia_inv_no'},
+			            { "mData": 'ia_dr_no' },
+			            { "mData": 'ia_created'},
+			            { "mData": "ia_req_dept_id" },
+			            { "mData": function(data){
+			            	return parseFloat(data.ia_total_amount).moneyFormat();	
+			            } },
+			            {
+			            	'mData': function(data){
+			            		var model = new RegExp('//model//','g');
+			            		var model_id = new RegExp('/model_id/','g'); 
+			            		var target_modal = new RegExp('//target-modal//','g'); 
+								var action = action_template
+									.replace(model, 'ia')
+									.replace(target_modal, 'ia')
+									.replace(model_id, data.ia_id);
+			            		return action;
+			            	}
+			            }];
+		
+		ia_dtl_columns = [ { "mData": function(data){
+					return " ";
+				} },
+	            { "mData": "po_dtl_item_unit" },
+	            { "mData": "ia_dtl_item_qty" },
+	            { "mData": "po_dtl_item_desc" },
+	            { "mData": function(data){ 
+	            	return parseFloat(data.po_dtl_item_cost).moneyFormat();
+	            }},
+	            { "mData": function(data) {
+	            	console.log(data.ia_dtl_item_qty, data.po_dtl_item_cost);
+	            	var amount = parseFloat(data.ia_dtl_item_qty*parseFloat(data.po_dtl_item_cost));
+					return amount.moneyFormat();
+	            }},
+	            { 
+					'mData': function(data){
+						var model = new RegExp('//model//','g');
+						var model_id = new RegExp('/model_id/','g'); 
+						var target_modal = new RegExp('//target-modal//','g'); 
+						
+						var action = action_template
+							.replace(model, 'ia_dtl')
+							.replace(target_modal, 'ia_dtl')
+							.replace(model_id, data.ia_dtl_id);
+						action = $(action).clone();
+						var hid = $(action).find('.hidden_data');
+						var data = data;
+						(Object.keys(data)).forEach(function(e,i,a) {
+							hid.append('<input type="hidden" name="ia[!]['+e+']" value="'+data[e]+'" />')
+						});
+						action = $(action).html();
+						return action;
+					}
+				}];
+		
+		ia_mapping = function(value, obj) {
+			switch(value) {
+				case 'ia_date_inspected':
+					return moment(obj[value]).format('ddd, MMM Do YYYY');
+				case 'ia_date_received':
+					return moment(obj[value]).format('ddd, MMM Do YYYY');
+				case 'ia_created':
+					return moment(obj[value]).format('M/D/YYYY');
+				case 'po_created':
+					return moment(obj[value]).format('M/D/YYYY');
+				default:
+					return obj[value];
+			};
+		};
+		
+		ia_table = $('#ia-table').dataTable({
+				'sPaginationType' : "two_button",
+				"iDisplayLength" : 10,
+				"sDom" : '<"pad-it"<"pull-right"f>l>t<"pull-right"i>p>',
+				'sAjaxSource': '/ia/',
+				'sAjaxDataProp': 'data',
+				"aoColumns": ia_columns,
+				"fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {
+				  oSettings.jqXHR = $.ajax( {
+					"dataType": 'json',
+					"type": "POST",
+					"url": sSource,
+					"data": {ia:'all'},
+					"success": fnCallback
+				  } );
+				}
+		})
+		
+		
+		
+		//IA DETAIL INIT
+		ia_dtl_table = $('#ia-dtl-table').dataTable({
+			"sPaginationType" : "two_button",
+			"iDisplayLength" : 3,
+			"sDom" : '<"pad-it"<"pull-right"f>l>tip>',
+			"bAutoWidth": false
+		});
+
+		$(document).on('click','a',function(){
+			var action_handle = $(this);
+			var row = action_handle.parents('tr:first');
+			var  ia_id;
+			//EDIT  IA
+			if(action_handle.hasClass('edit-ia')) {
+				ia_dtl_table.fnClearTable();
+				var row_position = ia_table.fnGetPosition(row[0]); 
+				var row_data = ia_table.fnGetData(row[0]);
+				current_ia = row_data;
+				current_ia_row = row_position;
+				changeModal({
+					'action':'/ia/edit',
+					'model':'ia',
+					'submit_name': 'edit-ia',
+					'pr_button':'Save Changes',
+					'modal_label': 'Edit Inspection/Acceptance',
+					'run': function(){
+						$('#add-to-list .secondary').show();
+						populate({
+							'data': current_ia,
+							'name':'ia',
+							'map': ia_mapping, 
+						}, function() {
+							ia_dtl_table = $('#ia-dtl-table').dataTable({
+								"sPaginationType" : "two_button",
+								"iDisplayLength" : 3,
+								"sDom" : '<"pad-it"<"pull-right"f>l>tip>',
+								'sAjaxSource': '/ia/',
+								'sAjaxDataProp': 'data',
+								"bDestroy" : true,
+								"bAutoWidth": false,
+								"aoColumns": ia_dtl_columns,
+								"fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {
+								  oSettings.jqXHR = $.ajax( {
+									"dataType": 'json',
+									"type": "POST",
+									"url": sSource,
+									"data": {ia:current_ia['ia_id']},
+									"success": fnCallback
+								  } );
+								}
+							});
+						});	
+					}
+				});
+			}
+			//VIEW IA
+			if(action_handle.hasClass('view-ia')) {
+				var row_position = ia_table.fnGetPosition(row[0]); 
+				var row_data = ia_table.fnGetData(row[0]);
+				current_ia = row_data;
+				current_ia_row = row_position;
+				changeModal({
+					'action':'/ia',
+					'model':'ia',
+					'submit_name': 'view-ia',
+					'pr_button':'Back To List',
+					'modal_label': 'View Inspection/Acceptance',
+					'run': function(){
+						$('#add-to-list').hide();
+						$('.secondary').hide();
+						
+						populate({
+							'data': current_ia,
+							'name':'ia',
+							'map': ia_mapping },
+							function(){
+								$.each(Object.keys(current_ia), function(i, v){
+									$('#ia-modal-form').find('input[name="'+v+'"]')
+										.attr('disabled', 'disabled');
+									$('#'+v)
+										.attr('disabled', 'disabled');
+								});
+								ia_dtl_table = $('#ia-dtl-table').dataTable({
+										"sPaginationType" : "two_button",
+										"iDisplayLength" : 3,
+										"sDom" : '<"pad-it"<"pull-right"f>l>tip>',
+										'sAjaxSource': '/ia/',
+										'sAjaxDataProp': 'data',
+										"bDestroy" : true,
+										"bAutoWidth": false,
+										"aoColumns": ia_dtl_columns,
+										"fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {
+										  oSettings.jqXHR = $.ajax( {
+											"dataType": 'json',
+											"type": "POST",
+											"url": sSource,
+											"data": {ia:current_ia['ia_id']},
+											"success": fnCallback
+										  } );
+										}
+									});
+						});
+					}
+				});
+			}
+			//IF EDITING DETAIL
+			if(action_handle.hasClass('edit-ia_dtl')) {
+				var row_position = ia_dtl_table.fnGetPosition(row[0]); 
+				var row_data = ia_dtl_table.fnGetData(row[0]);
+				current_ia_dtl = row_data;
+				current_ia_dtl_row = row_position;
+				
+				//MODIFY MODAL FOR EDIT MODE
+				changeModal({
+					'action':'/ia/#',
+					'model':'ia_dtl',
+					'submit_name': 'edit-ia_dtl',
+					'pr_button':'Save Changes',
+					'modal_label': 'Edit Inspected/Accepted Item',
+					'run': function() {
+						
+						//POPULATE TO THE FORM
+						populate({
+							'data': row_data,
+							'name':'ia_dtl',
+							'map': function(v, o) {	return o[v]; }});
+					}
+				});
+			}
+			//IF VIEWING DETAIL
+			if(action_handle.hasClass('view-ia_dtl')) {
+				var row_position = ia_dtl_table.fnGetPosition(row[0]); 
+				var row_data = ia_dtl_table.fnGetData(row[0]);
+				current_ia_dtl = row_data;
+				current_ia_dtl_row = row_position;
+				changeModal({
+					'action':'#',
+					'model':'ia_dtl',
+					'submit_name': 'view-ia_dtl',
+					'pr_button':'Back to Inspection/Acceptance',
+					'modal_label': 'View Inspected/Accepted Item',
+					'run': function() {
+						populate({
+							'data': current_ia_dtl,
+							'name':'ia_dtl',
+							'map': function(v, o) { return o[v]; }},
+						function(){
+								$('#ia_dtl-modal-form .secondary').hide();
+								$('#ia_dtl-modal-form').find('input').attr('disabled','disabled');
+							}
+						);
+						
+						
+					}
+				});
+			}
+		});		
+	
+		//CREATE PO
+		$('#create-ia').click(function(){
+			ia_dtl_table.fnClearTable();
+			changeModal({
+					'action':'/ia/furnish',
+					'model':'ia',
+					'submit_name': 'furnish',
+					'pr_button':'Furnish Report',
+					'modal_label': 'Create Inspection/Acceptance',
+					'run': function(){
+						clear_form('ia', function(){
+							$('input[name="ia_created"]').val(new Date().toDateString());
+						});
+						ia_dtl_table = $('#ia-dtl-table').dataTable({
+								"sPaginationType" : "two_button",
+								"iDisplayLength" : 3,
+								"sDom" : '<"pad-it"<"pull-right"f>l>tip>',
+								"bDestroy" : true,
+								"bAutoWidth": false,
+								"aoColumns": ia_dtl_columns
+								});
+					}
+				});
+		});
+	});
+	
+}(jQuery));
+</script>

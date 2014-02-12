@@ -1,11 +1,5 @@
 <?php //-->
-/*
- * This file is part a custom application package.
- */
 
-/**
- * Default logic to output a page
- */
 class Front_Page_Po extends Front_Page {
 	/* Constants
 	-------------------------------*/
@@ -72,8 +66,8 @@ class Front_Page_Po extends Front_Page {
 		$post = $this->post;
 		unset($post['po-dtl-table_length']);
 		
-		if(!isset($post['po_id'])) {
-			if($post['po_dtl'] && is_array($post['po_dtl']) && !empty($post['po_dtl'])) {
+		if(isset($post['po_id']) && empty($post['po_id'])) {
+			if(isset($post['po_dtl']) && is_array($post['po_dtl']) && !empty($post['po_dtl'])) {
 				$po_dtl = $post['po_dtl'];
 				unset($post['po_dtl']);
 				
@@ -97,37 +91,106 @@ class Front_Page_Po extends Front_Page {
 					$dtl['po_dtl_id'] = $dtl_id;
 					array_push($po_details, $dtl);
 				}
-				if(IS_AJAX) {
-					$status = array();
+				
+				$status = array();
 					$status['status'] = 1;
-					$status['msg'] = 'Success';
+					$status['msg'] = 'Successfully Created Purchase Order '.$post[Po::PO_NO].'!';
 					$status['data'] = array(
 							'po_id' => $po_id,
 							'po' => $post,
 							'po_dtl' => $po_details );
+				if(IS_AJAX) {
 					header('Content-Type: application/json');
 					echo json_encode($status);
 					exit;
 				}
+				$this->_addMessage($status['msg'], 'success', true);
+				header('Location: /po');
+				exit;
 			}
+			
+			$status = array();
+			$status['status'] = 0;
+			$status['msg'] = 'Sorry, Unable to furnish purchase order';
+			
 			if(IS_AJAX) {
-					$status = array();
-					$status['status'] = 0;
-					$status['msg'] = 'Failed';
-					header('Content-Type: application/json');
-					echo json_encode($status);
-					exit;
+				header('Content-Type: application/json');
+				echo json_encode($status);
+				exit;
 			}
+			
+			$this->_addMessage($status['msg'], 'danger', true);
+			header('Location: /po');
+			exit;
 		}
-		header('Location: /po');
 		return $this;
 	}
 	
 	protected function _edit() {
-		front()->output($this->post);
-		exit;
 		$post = $this->post;
-		if(isset($post[Po::PO_]))
+		unset($post['po-dtl-table_length']);
+
+		if(!empty($post[Po::PO_ID]) && isset($post['edit-po'])) {
+			if($post['po_dtl'] && is_array($post['po_dtl']) && !empty($post['po_dtl'])) {
+				$po_id = $post[Po::PO_ID]; 	
+				$post['po_created'] = date('Y-m-d H:i:s',strtotime($post['po_created']));
+				$po_dtl = $post['po_dtl'];
+				unset($post['po_dtl']);
+				
+				$total_amount = null;
+				foreach ($po_dtl as $dtl) {
+					$total_amount = ($dtl['po_dtl_item_cost']*$dtl['po_dtl_item_qty'])+$total_amount;
+				}
+				
+				$post['po_total'] = $total_amount;
+				$post = array_filter($post);
+				$post[Po::PO_DELIV_DATE] = date('Y-m-d', strtotime(str_replace('-', '/', $post[Po::PO_DELIV_DATE])));
+				$filter [] = array('po_id=%s', $post[Po::PO_ID]);
+				front()->database()
+					->updateRows(Po::PO_TABLE, $post, $filter);
+				$po_details = array();
+				foreach ($po_dtl as $dtls) {
+					$dtl = $dtls;
+					unset($filter);
+					$filter[] = array('po_dtl_id=%s', $dtl[Po::PO_DTL_ID]); 
+					unset($dtl[Po::PO_DTL_ITEM_CREATED]);
+					unset($dtl[Po::PO_DTL_ID]);
+					front()->database()
+						->updateRows(Po::PO_DTL_TABLE, $dtl, $filter);
+					array_push($po_details, $dtl);
+				}
+
+				$status = array();
+					$status['status'] = 1;
+					$status['msg'] = 'Saved Changes Successfully on P.O. No.'.$post[Po::PO_NO];
+					$status['data'] = array(
+							'po_id' => $po_id,
+							'po' => $post,
+							'po_dtl' => $po_details );
+							
+				if(IS_AJAX) {
+					header('Content-Type: application/json');
+					echo json_encode($status);
+					exit;
+				}
+				$this->_addMessage($status['msg'], 'success', true);
+				header('Location: /po');
+				exit;
+			}
+		}
+		$status = array();
+		$status['status'] = 0;
+		$status['msg'] = 'Sorry, Unable to save changes on purchase order';
+		
+		if(IS_AJAX) {
+			header('Content-Type: application/json');
+			echo json_encode($status);
+			exit;
+		}
+		
+		$this->_addMessage($status['msg'], 'danger', true);
+		header('Location: /po');
+		exit;
 	}
 
 	protected function _delete() {
@@ -143,8 +206,9 @@ class Front_Page_Po extends Front_Page {
 			->deleteRows('po', array(
 				array('(po_id = %s)',$id)
 			));
+		$this->_addMessage('Purchase Order Deleted', 'success', true);
 		header('Location: /po');
-		return $this;
+		exit;
 	}
 
 	protected function _search() {}

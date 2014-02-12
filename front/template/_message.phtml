@@ -1,0 +1,14 @@
+<?php if(!empty($messages)) : ?>
+<div class="message-queque">
+<?php foreach($messages as $message) : ?>
+<div class="alert alert-<?php echo $message['type']; ?> alert-dismissable">
+	<?php echo $message['message']; ?>
+</div>
+<?php endforeach; ?>
+</div>
+<?php endif; ?>
+<script type="text/javascript">
+	setTimeout(function() {
+		$('div.message-queque').fadeOut();
+	}, 5000);
+</script>
