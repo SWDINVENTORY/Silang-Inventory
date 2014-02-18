@@ -1,82 +1,32 @@
 <style>
-	.item .border {
-		border: 1px solid #a1a1a1;
-		margin-bottom: 7px;
-		border-radius: 5px; 
+.items .border {
+		margin-top: 10px;
 	}
-	.item .border-space{ padding: 5px 5px; }
-	
-	#addItem a { text-decoration: none; }
-	
-	
 </style>
 <div class="row">
 	<div class="col-md-12">
-		<h3>Item(s) <small>Supplies / Materials </small></h3>
+		<h3>Items <small>Supplies / Materials </small></h3>
 		<ol class="breadcrumb">
 			<li>
-				<a href="/"><i class="icon-dashboard"></i> Inventory</a>
+				<a href="/">
+					<i class="icon-dashboard"></i>
+					Inventory
+				</a>
 			</li>
 			<li class="active">
-				<i class="icon-file-alt"></i> Item(s)
+				<i class="icon-file-alt"></i>
+				Item
 			</li>
 		</ol>
 	</div>
 </div>
-<div class="border-space">
-	<button class="btn btn-primary" data-toggle="modal" data-target="#item-modal" 
-		data-backdrop="static" data-keyboard="false" id="add-item">Add Item</button>
-</div>
-<div class="border">
-	<div class="row search border-space">
-		<div class="col-sm-10">
-			<form role="form" action="/item/search/" method="post" name="item-search">
-				<div class="row">
-					<label for="inputEmail3" class="col-sm-2 control-label">Search By:</label>
-					<div class="col-xs-3">
-						<?php if (isset($error['field'])) : ?>
-						<div class="form-group has-error">
-							<label class="control-label" for="inputError">
-								<?php echo $error['field']; ?>
-							</label>
-						<?php endif; ?>
-							<select class="form-control" name="field" required="required">
-								<option value="">Select One</option>
-								<?php foreach($fields as $field => $value): ?>
-								<option value="<?php echo $value; ?>"><?php echo $field; ?></option>
-								<?php endforeach; ?>
-							</select>
-						<?php if (isset($error['field'])) : ?>
-							</div>
-						<?php endif; ?>
-					</div>
-					<div class="col-xs-3">
-							<?php if (isset($error['keyword'])) : ?>
-							<div class="form-group has-error">
-								<label class="control-label" for="inputError">
-									<?php echo $error['keyword']; ?>
-								</label>
-							<?php endif; ?>
-								<input type="input" placeholder="Keyword" name="keyword" class="form-control" required="required">
-							<?php if (isset($error['keyword'])) : ?>
-								</div>
-							<?php endif; ?>
-					</div>
-					<div class="col-xs-2">
-						<button type="submit" class="btn btn-default" name="search">Search</button>
-					</div>
-					
-				</div>
-			</form>
-		</div>
-		<div class="col-sm-2">
-			<form action="/item" method="post">
-				<div class="col-xs-4">
-					<button type="submit" class="btn btn-default" name="show-all">Show All</button>
-				</div>
-			</form>
-			
-		</div>
+<div class="row">
+	<div class="col-xs-offset-10 col-xs-2">
+		<button type="button" class="btn btn-primary" id="create-item"
+			data-backdrop="static" data-keyboard="false"
+				data-toggle="modal" data-target="#item-modal">
+			Create
+		</button>
 	</div>
 </div>
 <div class="border">
@@ -84,57 +34,21 @@
 		<div class="col-md-12">
 			<h4 align="center">Items List</h4>
 			<div class="table-responsive">
-				<table class="table table-hover table-striped table-bordered tablesorter" id="item-list">
+				<table class="table table-hover table-striped table-bordered tablesorter" id="item-table">
 					<thead>
 						<tr>
 							<th>Article</th>
 							<th>Description</th>
-							<th>Stock Number</th>
+							<th>Stock No.</th>
 							<th>Type</th>
 							<th>Unit Of Measure</th>
 							<th>Qty</th>
 							<th>Cost</th>
 							<th>Remarks</th>
-							<th>Action(s)</th>
+							<th>Actions</th>
 						</tr>
 					</thead>
-					<tbody>
-						<?php if(!empty($items)):?>
-						<?php foreach ($items as $item):?>
-						<tr>
-							<td><?php echo $item['item_article']; ?></td>
-							<td><?php echo $item['item_desc']; ?></td>
-							<td><?php echo $item['item_stock_no']; ?></td>
-							<td><?php echo $item['item_item_type']; ?></td>
-							<td><?php echo $item['item_unit_measure']; ?></td>
-							<td><?php echo $item['item_qty']; ?></td>
-							<td><?php echo 'P 10.00'; ?></td>
-							<td><?php echo $item['item_remarks']; ?></td>
-							<td>
-								<input type="hidden" name="item_serialize" value='
-								<?php echo json_encode($item); ?>'/>
-								<div class="btn-group">
-								  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-								    Action <span class="caret"></span>
-								  </button>
-								  <ul class="dropdown-menu" role="menu">
-								    <li><a href="#" data-toggle="modal" data-target="#item-modal" 
-								    	data-backdrop="static" data-keyboard="false" class="edit-item">Edit</a></li>
-								    <li><a href="/item/delete/<?php echo $item['item_id']; ?>" class="delete-item">Delete</a></li>
-								    <li><a href="#" data-toggle="modal" data-target="#item-modal"
-								    	data-backdrop="static" data-keyboard="false" class="view-item" >View</a></li>
-								  </ul>
-								</div>
-							</td>
-						</tr>
-						<?php endforeach; ?>
-						<?php endif; ?>
-						<?php if(empty($items)): ?>
-							<tr>
-								<td colspan="8" align="center">No items found<!/td>
-							</tr>
-						<?php endif; ?>
-					</tbody>
+					<tbody></tbody>
 				</table>
 			</div>
 		</div>
@@ -147,9 +61,9 @@
       <div class="modal-header">
         <h4 class="modal-title" id="my-modal-label"><span class="modal-form-state">Action Here</span></h4>
       </div>
-      <div class="modal-body">
-      	<form class="form-horizontal" role="form" action="" method="post" name="add-item" id="item-modal-form">
-      		<input type="hidden" name="item_id"/>
+      <form class="form-horizontal" role="form" action="" method="post" name="add-item" id="item-modal-form">
+	  <div class="modal-body">
+			<input type="hidden" name="item_id"/>
 		  <div class="form-group ">
 		    <label for="input-name" class="col-md-2 control-label">Desc:</label>
 		    <div class="col-md-10">
@@ -203,51 +117,6 @@
 </div>
 <script type="text/javascript">
 (function($) {
-	$('document').ready(function(){
-			$('#item-list').dataTable( {
-			"sPaginationType": "two_button",
-			"iDisplayLength": 10,
-			"sDom": '<"pad-it"<"pull-right"f>l>tip>'
-			} );
-			
-		});
-	
-	var item = {};
-	add = ['/items/add','Add','Add Item','add-item', 'add', '#add'];
-	edit = ['/items/edit','Save Changes','Edit Item', 'edit-item', 'edit'];
-	view = ['#','Ok','View item', 'view-item', 'view'];
-	
-	
-	add = {action:'/items/add', primebutton:}
-	
-	function changeModal(action) {
-		$('#item-modal-form').attr('action', action[0]);
-		var modal_action = $('#item-modal-form').parents('div.modal-content')
-			.find('span.modal-form-action');
-		modal_action.parent().attr('name',action[4]);
-		modal_action.html(action[1]);
-		$('#item-modal-form').attr('name', action[3]).parents('div.modal-content')
-			.find('#my-modal-label').html(action[2])
-	}
-	
-	$('#add-item').on('click', function() {
-		changeModal(add);
-	});
-	
-	$('.edit-item').on('click', function() {
-		changeModal(edit);
-		var item = JSON.parse($(this).parents('td:first').find('input:hidden').val().trim());
-		var form = $('form[name="'+edit[3]+'"]'); 
-		$.each(Object.keys(item), function(i, e){
-			form.find('input[name="'+e+'"]').val(item[e]);
-			form.find('textarea[name="'+e+'"]').val(item[e]);
-		});
-		console.log(item);
-	});
-	
-	$('.view-item').on('click', function() {
-		changeModal(view);
-	});
 	
 })(jQuery);
 </script>

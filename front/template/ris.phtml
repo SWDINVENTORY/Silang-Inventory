@@ -1,3 +1,8 @@
+<style>
+.ris .border {
+		margin-top: 10px;
+	}
+</style>
 <div class="row">
 	<div class="col-lg-12">
 		<h3>Requisition / Issuance <small>Request and issue of supplies and materials</small></h3>
@@ -11,3 +16,34 @@
 		</ol>
 	</div>
 </div><!-- /.row -->
+<div class="row">
+	<div class="col-xs-offset-10 col-xs-2">
+		<button type="button" class="btn btn-primary" id="create-ris"
+			data-backdrop="static" data-keyboard="false"
+				data-toggle="modal" data-target="#ris-modal">
+			Create
+		</button>
+	</div>
+</div>
+<div class="row border">
+	<div class="col-sm-12">
+		<div class="table-responsive">
+			<table class="table table-hover table-striped table-bordered tablesorter" id="ris-table">
+				<thead>
+					<tr>
+						<th>Division</th>
+						<th>Office</th>
+						<th>Responsibility Code</th>
+						<th>RIS No</th>
+						<th>RIS Date</th>
+						<th>SAI No</th>
+						<th>SAI Date</th>
+						<th>Purpose</th>
+						<th>Action</th>
+					</tr>
+				</thead>
+				<tbody></tbody>
+			</table>
+		</div>
+	</div>
+</div>

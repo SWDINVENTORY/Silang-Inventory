@@ -22,8 +22,8 @@ class Front_Page_Supplier extends Front_Page {
 		$this->post = front()->registry()->get('post')->getArray();
 		$this->request = front()->registry()->get('request', 'variables','0');
 		$this->get = front()->registry()->get('get')->getArray();
-		
 		$this->suppliers = $this->Supplier()->getAll();
+		
 		if(isset($this->post)) {
 			$this->_setErrors();
 			
@@ -33,17 +33,8 @@ class Front_Page_Supplier extends Front_Page {
 		}
 		
 		$this->_body['suppliers'] = $this->suppliers;
-		
 		$this->_body['error'] = $this->_errors;
 		
-		if(IS_AJAX) {
-			
-			$suppliers = array();
-			$suppliers['data'] = $this->suppliers;
-			header('Content-Type: application/javascript');
-			echo json_encode($suppliers);
-			exit;
-		}
 		return $this->_page();
 	}
 	
@@ -88,26 +79,85 @@ class Front_Page_Supplier extends Front_Page {
 					$this->_search();
 				break;
 			default:
+					$this->_supplier();
 				break;
 		}
 	}
 	
 	protected function _add() {
 		$supplier = $this->post;
+		unset($supplier['create-supplier']);
 		$supplier[Supplier::SUPPLIER_CREATED] = date('Y-m-d H:i:s');
 		$supplier[Supplier::SUPPLIER_UPDATED] = date('Y-m-d H:i:s');
 		unset($supplier['id']);
+		if(empty($supplier['id'])){
+			$this->Supplier()->add($supplier);
+			
+			$status = array();
+			$status['status'] = 0;
+			$status['msg'] = 'Supplier successfully added!';
+			
+			if(IS_AJAX) {
+				header('Content-Type: application/json');
+				echo json_encode($status);
+				exit;
+			}
+				
+			$this->_addMessage($status['msg'], 'success', true);
+			header('Location: /supplier');
+			exit;
+		}
 		
-		$this->Supplier()->add($supplier);
+		$status = array();
+		$status['status'] = 0;
+		$status['msg'] = 'Sorry, Unable to add supplier';
+		
+		if(IS_AJAX) {
+			header('Content-Type: application/json');
+			echo json_encode($status);
+			exit;
+		}
+			
+		$this->_addMessage($status['msg'], 'danger', true);
 		header('Location: /supplier');
+		exit;
+		
 		return $this;
 	}
 	
 	protected function _edit() {
 		$supplier = $this->post;
+		$status = array();
+		unset($supplier['edit-supplier']);
+		
+		if(isset($supplier['supplier_id']) && !empty($supplier['supplier_id'])) {
+			if($this->Supplier()->model()->supplierUpdate($supplier)) {
+				$status['status'] = 0;
+				$status['msg'] = 'Successfully saved changes on supplier';
 				
-		$this->Supplier()->model()->supplierUpdate($supplier);
-		header('Location: /supplier');
+				if(IS_AJAX) {
+					header('Content-Type: application/json');
+					echo json_encode($status);
+					exit;
+				}
+				
+				$this->_addMessage($status['msg'], 'success', true);
+				header('Location: /supplier/');
+				exit;
+			}
+		}
+		$status['status'] = 0;
+		$status['msg'] = 'Successfully saved changes on supplier!';
+		
+		if(IS_AJAX) {
+			header('Content-Type: application/json');
+			echo json_encode($status);
+			exit;
+		}
+		
+		$this->_addMessage($status['msg'], 'success', true);
+		header('Location: /supplier/');
+		exit;
 		return $this;
 	}
 	
@@ -154,6 +204,41 @@ class Front_Page_Supplier extends Front_Page {
 		
 		return $this;
 	}
+	
+	protected function _delete() {
+		$supplier = $this->post;
+		$variables = $this->variables;
+		
+		if(!empty($supplier)) {
+			$id = $supplier[Supplier::SUPPLIER_ID];
+		}
+		if(isset($variables[1])) {
+			$id = $variables[1];
+		}
+		front()->database()
+			->deleteRows('supplier', array(
+				array('(supplier_id = %s)',$id)
+			));
+			
+		$this->_addMessage('Supplier Deleted', 'success', true);
+		header('Location: /supplier');
+		exit;
+	}
+	
+	protected function _supplier() {
+		$post = $this->post;
+		$suppliers = $this->suppliers;
+		
+		if(IS_AJAX) {
+				header('Content-Type: application/json');
+				$ret = array();
+				$ret['data'] = $suppliers;
+				echo json_encode($ret);
+				exit;
+			}
+		return $this;
+	}
+	
 	/* Private Methods
 	-------------------------------*/
 }

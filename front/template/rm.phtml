@@ -1,13 +1,44 @@
 <div class="row">
 	<div class="col-lg-12">
-		<h3>Purchase Order <small>P.O.</small></h3>
+		<h3>Returned Materials <small>Return of materials and supplies</small></h3>
 		<ol class="breadcrumb">
 			<li>
 				<a href="/"><i class="icon-dashboard"></i> Inventory</a>
 			</li>
 			<li class="active">
-				<i class="icon-file-alt"></i> Purchase Order
+				<i class="icon-file-alt"></i> Returned Materials
 			</li>
 		</ol>
 	</div>
 </div><!-- /.row -->
+<div class="row">
+	<div class="col-xs-offset-10 col-xs-2">
+		<button type="button" class="btn btn-primary" id="create-rm"
+			data-backdrop="static" data-keyboard="false"
+				data-toggle="modal" data-target="#rm-modal">
+			Create
+		</button>
+	</div>
+</div>
+<div class="row border">
+	<div class="col-sm-12">
+		<div class="table-responsive">
+			<table class="table table-hover table-striped table-bordered tablesorter" id="rm-table">
+				<thead>
+					<tr>
+						<th>Division</th>
+						<th>Office</th>
+						<th>Responsibility Code</th>
+						<th>RIS No</th>
+						<th>RIS Date</th>
+						<th>SAI No</th>
+						<th>SAI Date</th>
+						<th>Purpose</th>
+						<th>Action</th>
+					</tr>
+				</thead>
+				<tbody></tbody>
+			</table>
+		</div>
+	</div>
+</div>

@@ -18,12 +18,14 @@ class Front_Page_Ia extends Front_Page {
 	/* Public Methods
 	 -------------------------------*/
 	public function render() {
-		$this -> post = front() -> registry() -> get('post') -> getArray();
-		$this -> request = front() -> registry() -> get('request', 'variables', '0');
+		$this -> post = front()->registry()->get('post')-> getArray();
+		$this -> request = front()->registry()->get('request', 'variables', '0');
 		$this -> variables = front() -> registry() -> get('request', 'variables') -> getArray();
 		$this -> get = front() -> registry() -> get('get') -> getArray();
 		$this -> ia = $this -> Ia() -> getAll();
-
+		$this->dept = $this->Dept()-> getAll();
+		$this->article = $this->Article()-> getAll();
+		
 		if (isset($this -> post)) {
 			$this -> _setErrors();
 			//-> post validation
@@ -35,8 +37,9 @@ class Front_Page_Ia extends Front_Page {
 		}
 
 		$this -> _body['ias'] = $this -> ia;
+		$this -> _body['depts'] = $this->dept;
+		$this -> _body['articles'] = $this->article;
 		$this -> _body['error'] = $this -> _errors;
-
 		return $this -> _page();
 	}
 
@@ -48,8 +51,9 @@ class Front_Page_Ia extends Front_Page {
 
 	protected function _process() {
 		$request = strtolower($this -> request);
+		unset($this->post['ia-dtl-table_length']);
 		switch ($request) {
-			case 'furnish' :
+			case 'furnish':
 				$this -> _add();
 				break;
 			case 'edit' :
@@ -66,36 +70,36 @@ class Front_Page_Ia extends Front_Page {
 
 	protected function _add() {
 		$post = $this -> post;
-		unset($post['ia-dtl-table_length']);
-
 		if (isset($post['ia_id']) && empty($post['ia_id'])) {
 			if (isset($post['ia_dtl']) && is_array($post['ia_dtl']) && !empty($post['ia_dtl'])) {
 				$ia_dtl = $post['ia_dtl'];
 				unset($post['ia_dtl']);
-
-				$total_amount = null;
-				foreach ($ia_dtl as $dtl) {
-					$total_amount = ($dtl['ia_dtl_item_cost'] * $dtl['ia_dtl_item_qty']) + $total_amount;
+				$this->_computeTotalAmount();
+				$post['ia_is_partial'] = $this->is_partial;
+				$post['ia_partial_qty'] = $this->partial_count;
+				$post['ia_total_amount'] = $this->total_amount;
+				if(!$is_partial){
+					unset($post['ia_is_partial']);
+					unset($post['ia_partial_qty']);
 				}
-
-				$post['ia_total'] = $total_amount;
 				$post = array_filter($post);
-				$post[Po::PO_CREATED] = date('Y-m-d H:i:s');
-				$post[Po::PO_DELIV_DATE] = date('Y-m-d', strtotime(str_replace('-', '/', $post[Po::PO_DELIV_DATE])));
-				$ia_id = $this -> Ia() -> add($post);
+				$post[Ia::IA_CREATED] = date('Y-m-d H:i:s');
+				$ia_id = $this->Ia()->add($post);
 				$ia_details = array();
 				foreach ($ia_dtl as $dtls) {
 					$dtl = $dtls;
-					$dtl[Po::PO_DTL_PO_ID] = $ia_id;
-					$dtl[Po::PO_DTL_ITEM_CREATED] = date('Y-m-d H:i:s');
-					$dtl_id = front() -> database() -> insertRow(Po::PO_DTL_TABLE, $dtl);
+					$dtl[Ia::IA_DTL_IA_ID] = $ia_id;
+					unset($dtl['po_dtl_item_qty']);
+					unset($dtl['po_dtl_item_cost']);
+					$dtl[Ia::IA_DTL_ITEM_CREATED] = date('Y-m-d H:i:s');
+					$dtl_id = front() -> database() -> insertRow(Ia::IA_DTL_TABLE, $dtl);
 					$dtl['ia_dtl_id'] = $dtl_id;
 					array_push($ia_details, $dtl);
 				}
 
 				$status = array();
 				$status['status'] = 1;
-				$status['msg'] = 'Successfully Created Purchase Order ' . $post[Po::PO_NO] . '!';
+				$status['msg'] = 'Successfully Inspected and Accepted Order '; //. $post[Ia:] . '!';
 				$status['data'] = array('ia_id' => $ia_id, 'ia' => $post, 'ia_dtl' => $ia_details);
 				if (IS_AJAX) {
 					header('Content-Type: application/json');
@@ -127,38 +131,43 @@ class Front_Page_Ia extends Front_Page {
 	protected function _edit() {
 		$post = $this -> post;
 		unset($post['ia-dtl-table_length']);
-
-		if (!empty($post[Po::PO_ID]) && isset($post['edit-ia'])) {
+		
+		if (!empty($post[Ia::IA_ID]) && isset($post['edit-ia'])) {
 			if ($post['ia_dtl'] && is_array($post['ia_dtl']) && !empty($post['ia_dtl'])) {
-				$ia_id = $post[Po::PO_ID];
+				$ia_id = $post[Ia::IA_ID];
 				$post['ia_created'] = date('Y-m-d H:i:s', strtotime($post['ia_created']));
 				$ia_dtl = $post['ia_dtl'];
 				unset($post['ia_dtl']);
-
-				$total_amount = null;
-				foreach ($ia_dtl as $dtl) {
-					$total_amount = ($dtl['ia_dtl_item_cost'] * $dtl['ia_dtl_item_qty']) + $total_amount;
-				}
-
-				$post['ia_total'] = $total_amount;
+				$this->_computeTotalAmount();
+				$post['ia_total_amount'] = $this->total_amount;
+				$post['ia_partial_qty'] = $this->partial_count;
+				$post['ia_is_partial'] = $this->is_partial;
 				$post = array_filter($post);
-				$post[Po::PO_DELIV_DATE] = date('Y-m-d', strtotime(str_replace('-', '/', $post[Po::PO_DELIV_DATE])));
-				$filter[] = array('ia_id=%s', $post[Po::PO_ID]);
-				front() -> database() -> updateRows(Po::PO_TABLE, $post, $filter);
+				$filter[] = array('ia_id=%s', $post[Ia::IA_ID]);
+				front() -> database() -> updateRows(Ia::IA_TABLE, $post, $filter);
 				$ia_details = array();
 				foreach ($ia_dtl as $dtls) {
 					$dtl = $dtls;
-					unset($filter);
-					$filter[] = array('ia_dtl_id=%s', $dtl[Po::PO_DTL_ID]);
-					unset($dtl[Po::PO_DTL_ITEM_CREATED]);
-					unset($dtl[Po::PO_DTL_ID]);
-					front() -> database() -> updateRows(Po::PO_DTL_TABLE, $dtl, $filter);
+					if(isset($dtl[Ia::IA_DTL_ID]) && !empty($dtl[Ia::IA_DTL_ID])){
+						unset($filter);
+						$filter[] = array('ia_dtl_id=%s', $dtl[Ia::IA_DTL_ID]);
+						unset($dtl[Po::PO_DTL_ITEM_QTY]);
+						unset($dtl[Po::PO_DTL_ITEM_COST]);
+						front() -> database() -> updateRows(Ia::IA_DTL_TABLE, $dtl, $filter);
+					}
+					if(!isset($dtl[Ia::IA_DTL_ID])){
+						unset($dtl[Po::PO_DTL_ITEM_QTY]);
+						unset($dtl[Po::PO_DTL_ITEM_COST]);
+						unset($dtl[Ia::IA_DTL_ITEM_CREATED]);
+						$dtl_id = front() -> database() -> insertRow(Ia::IA_DTL_TABLE, $dtl);
+						$dtl['ia_dtl_id'] = $dtl_id;
+					}
 					array_push($ia_details, $dtl);
 				}
 
 				$status = array();
-				$status['status'] = 1;
-				$status['msg'] = 'Saved Changes Successfully on P.O. No.' . $post[Po::PO_NO];
+				$status['status'] = 0;
+				$status['msg'] = 'Saved Changes Successfully on Inspection / Acceptance' . $post[Po::PO_NO];
 				$status['data'] = array('ia_id' => $ia_id, 'ia' => $post, 'ia_dtl' => $ia_details);
 
 				if (IS_AJAX) {
@@ -199,8 +208,7 @@ class Front_Page_Ia extends Front_Page {
 		exit ;
 	}
 
-	protected function _search() {
-	}
+	protected function _search() {}
 
 	protected function _ia() {
 		$post = $this -> post;
@@ -226,4 +234,17 @@ class Front_Page_Ia extends Front_Page {
 
 	/* Private Methods
 	 -------------------------------*/
+	 
+	private function _computeTotalAmount(){
+		$this->total_amount = null;
+		$this->partial_count = 0;
+		$this->is_partial = 0;
+		foreach ($this->post['ia_dtl'] as $dtl) {
+			if($dtl['ia_dtl_item_qty'] < $dtl['po_dtl_item_qty']){
+				$this->is_partial = 1;
+				$this->partial_count+=(($dtl['po_dtl_item_qty'] - $dtl['ia_dtl_item_qty']));
+			}
+			$this->total_amount = ($dtl['po_dtl_item_cost'] * $dtl['ia_dtl_item_qty']) + $this->total_amount;
+		}
+	}
 }

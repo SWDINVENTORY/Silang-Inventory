@@ -91,6 +91,14 @@ class Po extends Abstract_Model {
 			->getRows();
 	}
 	
+	public function getByPoNo($value) {
+		return $this->search()
+			->setColumns('*')
+			->filterByPoNo($value)
+			->innerJoinOn(Po::SUPPLIER_TABLE, 'po_supplier_id=supplier_id')
+			->getRow();	
+	}
+	
 	public function getDetail($id) {
 		return $this
 			->_getAll(array(

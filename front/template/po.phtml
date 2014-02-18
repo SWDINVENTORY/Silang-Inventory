@@ -54,7 +54,7 @@
 		<button type="button" class="btn btn-primary" id="create-po"
 			data-backdrop="static" data-keyboard="false"
 				data-toggle="modal" data-target="#po-modal">
-			Create Order
+			Create
 		</button>
 	</div>
 </div>
@@ -204,6 +204,7 @@
 							</div>
 						</div>
 					</div>
+					<div id="hidden_data"></div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default secondary" data-dismiss="modal">
 							Close
@@ -275,12 +276,12 @@
 <script type="text/javascript" src="/assets/js/modal_control.js"></script>
 <script type="text/javascript">
 	(function($) {
-		var current_po = 'new';
-		var current_po_dtl = null;
-		var current_po_dtl_row = null;
-		var po_detail_table = {};
-		var po_table = {};
-		var action_template = $('#action_tpl').text().trim();
+		current_po = 'new';
+		current_po_dtl = null;
+		current_po_dtl_row = null;
+		po_detail_table = {};
+		po_table = {};
+		action_template = $('#action_tpl').text().trim();
 		
 		$('document').ready(function() {
 			$('.po-created').datetimepicker({});
@@ -433,13 +434,6 @@
 													.replace(model, 'po_dtl')
 													.replace(target_modal, 'po_dtl')
 													.replace(model_id, data.po_dtl_id);
-												action = $(action).clone();
-												var hid = $(action).find('.hidden_data');
-												var data = data;
-												(Object.keys(data)).forEach(function(e,i,a) {
-													hid.append('<input type="hidden" name="po_dtl[!]['+e+']" value="'+data[e]+'" />')
-												});
-												action = $(action).html();
 												return action;
 											}
 										},
@@ -636,13 +630,6 @@
 													.replace(model, 'po_dtl')
 													.replace(target_modal, 'po_dtl')
 													.replace(model_id, data.po_dtl_id);
-												action = $(action).clone();
-												var hid = $(action).find('.hidden_data');
-												var data = data;
-												(Object.keys(data)).forEach(function(e,i,a) {
-													hid.append('<input type="hidden" name="po_dtl[!]['+e+']" value="'+data[e]+'" />')
-												});
-												action = $(action).html();
 												return action;
 											}
 										},
@@ -669,14 +656,14 @@
 		//HEADER SUBMIT HANDLER
 		$('#po-modal-form').submit(function(e){
 			//e.preventDefault();
-			hidden = $('#po-dtl-table .hidden_data');
-			console.log($('#po-dtl-table .hidden_data'));
-			$.each(hidden, function(i,o){
-				var inputs = $(o).find('input:hidden');
-				$.each(inputs, function(i1, o1){
-					var input_name = $(o1).attr('name');
-					$(o1).attr('name', input_name.replace('!',i));
-				});
+			$('#hidden_data').html('');
+			var data = po_detail_table.fnGetData();
+			var hidden_aggregation = $('#hidden_data');
+			$.each(data, function(index, o){
+				Object.keys(o).forEach(function(v,i,a){
+					hidden_aggregation.append(
+						'<input type="hidden" name="po_dtl['+index+']['+v+']" value="'+o[v]+'"/>');
+					});
 			});
 		});
 				

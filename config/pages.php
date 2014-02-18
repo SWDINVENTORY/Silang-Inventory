@@ -1,4 +1,4 @@
 <?php //-->
 return array(
-	 '/supplier/*'              => 'Front_Page_Supplier'
+	 '/supplier/*'              => 'Front_Page_Supplier',
 );

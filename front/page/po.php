@@ -139,9 +139,8 @@ class Front_Page_Po extends Front_Page {
 				
 				$total_amount = null;
 				foreach ($po_dtl as $dtl) {
-					$total_amount = ($dtl['po_dtl_item_cost']*$dtl['po_dtl_item_qty'])+$total_amount;
+					$total_amount = (floatval($dtl['po_dtl_item_cost'])*floatval($dtl['po_dtl_item_qty']))+$total_amount;
 				}
-				
 				$post['po_total'] = $total_amount;
 				$post = array_filter($post);
 				$post[Po::PO_DELIV_DATE] = date('Y-m-d', strtotime(str_replace('-', '/', $post[Po::PO_DELIV_DATE])));
@@ -151,12 +150,22 @@ class Front_Page_Po extends Front_Page {
 				$po_details = array();
 				foreach ($po_dtl as $dtls) {
 					$dtl = $dtls;
-					unset($filter);
-					$filter[] = array('po_dtl_id=%s', $dtl[Po::PO_DTL_ID]); 
-					unset($dtl[Po::PO_DTL_ITEM_CREATED]);
-					unset($dtl[Po::PO_DTL_ID]);
-					front()->database()
-						->updateRows(Po::PO_DTL_TABLE, $dtl, $filter);
+					if(!isset($dtl[Po::PO_DTL_ID])){
+						$dtl[Po::PO_DTL_PO_ID] = $po_id;
+						$dtl[Po::PO_DTL_ITEM_CREATED] = date('Y-m-d H:i:s'); 
+						$dtl_id = front()->database()
+							->insertRow(Po::PO_DTL_TABLE, $dtl)
+							->getLastInsertedId();
+						$dtl['po_dtl_id'] = $dtl_id;
+					}
+					if(isset($dtl[Po::PO_DTL_ID])) {
+						unset($filter);
+						$filter[] = array('po_dtl_id=%s', $dtl[Po::PO_DTL_ID]); 
+						unset($dtl[Po::PO_DTL_ITEM_CREATED]);
+						unset($dtl[Po::PO_DTL_ID]);
+						front()->database()
+							->updateRows(Po::PO_DTL_TABLE, $dtl, $filter);
+					}
 					array_push($po_details, $dtl);
 				}
 
@@ -215,23 +224,27 @@ class Front_Page_Po extends Front_Page {
 	
 	protected function _po() {
 		$post = $this->post;
-		if(isset($post['po'])) {
-			$po = $this->po;
-			if($post['po']!= 'all') {
-				$id = $post['po'];
-				if(is_numeric($id)) {
-					$po = $this->Po()->getDetail($id);
-				}		
+		$po = $this->po;
+		if(isset($post['po']) && $post['po']!= 'all') {
+			$id = $post['po'];
+			if(is_numeric($id)) {
+				$po = $this->Po()->getDetail($id);
 			}
-			
-			if(IS_AJAX) {
+		}
+		
+		if(isset($post['po_no']) && !empty($post['po_no'])) {
+			$po_no = $post['po_no'];
+			$po = $this->Po()->getByPoNo($po_no);
+			$po_detail = $this->Po()->getDetail($po['po_id']);
+			$po['po_dtl'] = $po_detail;  
+		}
+		if(IS_AJAX) {
 				header('Content-Type: application/json');
 				$ret = array();
 				$ret['data'] = $po;
 				echo json_encode($ret);
 				exit;
 			}
-		}
 		return $this;
 	}
 	

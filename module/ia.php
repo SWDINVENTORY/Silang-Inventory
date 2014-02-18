@@ -15,8 +15,9 @@ class Ia extends Abstract_Model {
 	const IA_PO_ID = 'ia_po_id';
 	const IA_INV_NO = 'ia_inv_no';
 	const IA_DR_NO = 'ia_dr_no';
-	const IA_REQ_DEPT_ID = 'ia_req_dept_id';
+	const IA_DEPT_ID = 'ia_dept_id';
 	const IA_TOTAL_AMOUNT = 'ia_total_amount';
+	const IA_ARTICLE_ID = 'ia_article_id';
 	const IA_STATUS = 'ia_status';
 	const IA_DATE_INSPECTED = 'ia_date_inspected';
 	const IA_DATE_IS_VERIFIED = 'ia_date_is_verified';
@@ -28,6 +29,7 @@ class Ia extends Abstract_Model {
 	const IA_DTL_TABLE = 'ia_dtl';
 	
 	const IA_DTL_ID = 'ia_dtl_id';
+	const IA_DTL_IA_ID = 'ia_dtl_ia_id';
 	const IA_DTL_PO_DTL_ID = 'ia_dtl_po_dtl_id';
 	const IA_DTL_ITEM_QTY= 'ia_dtl_item_qty';
 	const IA_DTL_ITEM_COST= 'ia_dtl_item_cost';
@@ -83,6 +85,7 @@ class Ia extends Abstract_Model {
 		return $this->_getAll('*')
 			->innerJoinOn(Po::PO_TABLE, 'po_id=ia_po_id')
 			->innerJoinOn(Supplier::SUPPLIER_TABLE, 'po_supplier_id= supplier_id')
+			->innerJoinOn('dept', 'dept_id=ia_dept_id')
 			->sortByIaNo('ASC')
 			->getRows();
 	}

@@ -1,32 +1,27 @@
 <?php //-->
-/*
- * This file is part a custom application package.
- */
 
-/**
- * Default logic to output a page
- */
-class Front_Page_Rm extends Front_Page {
+class Article_Collection extends Abstract_Collection {
 	/* Constants
 	-------------------------------*/
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_title = 'SWD-Inventory : Returned Materials';
-	protected $_class = 'rm';
-	protected $_template = '/rm.phtml';
+	protected $_model 	= Article::MODEL;
+	protected $_table	= Article::DEPT_TABLE;
 	
 	/* Private Properties
 	-------------------------------*/
+	/* Get
+	-------------------------------*/
+	public static function i() {
+		return self::_getMultiple(__CLASS__);
+	}
+	
 	/* Magic
 	-------------------------------*/
 	/* Public Methods
 	-------------------------------*/
-	public function render() {
-		return $this->_page();
-	}
-	
 	/* Protected Methods
 	-------------------------------*/
 	/* Private Methods
