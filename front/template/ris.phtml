@@ -1,7 +1,39 @@
 <style>
-.ris .border {
+	.ris-modal-dialog {
+		width: 75%;
+	}
+
+	.ris .border {
 		margin-top: 10px;
 	}
+
+	#ris-table th:first-child {
+		width: 20%;
+		text-align: left;
+	}
+
+	#ris-table th:nth-child(2), #ris-table th:nth-child(3), #ris-table th:nth-child(4) {
+		width: 10%;
+	}
+	#ris-table th:last-child {
+		width: 5%;
+	}
+
+	#ris-table td:nth-child(2), #ris-table td:nth-child(3), #ris-table td:nth-child(4), #ris-table td:nth-child(5), #ris-table td:nth-child(7), #ris-table td:nth-child(8), #ris-table td:nth-child(9) {
+		text-align: right;
+	}
+
+	#ris-dtl-table td:nth-child(1) {
+		text-align: center;
+	}
+	#ris-dtl-table td:nth-child(2), #ris-dtl-table td:nth-child(3), #ris-dtl-table td:nth-child(5), #ris-dtl-table td:nth-child(6) {
+		text-align: right;
+	}
+
+	#ris_dtl-modal .modal-content {
+		margin-top: 30%;
+	}
+
 </style>
 <div class="row">
 	<div class="col-lg-12">
@@ -27,18 +59,18 @@
 </div>
 <div class="row border">
 	<div class="col-sm-12">
-		<div class="table-responsive">
+		<div class="table-resrisnsive">
 			<table class="table table-hover table-striped table-bordered tablesorter" id="ris-table">
 				<thead>
 					<tr>
 						<th>Division</th>
 						<th>Office</th>
-						<th>Responsibility Code</th>
+						<th>Resrisnsibility Code</th>
 						<th>RIS No</th>
 						<th>RIS Date</th>
 						<th>SAI No</th>
 						<th>SAI Date</th>
-						<th>Purpose</th>
+						<th>Purrisse</th>
 						<th>Action</th>
 					</tr>
 				</thead>
@@ -47,3 +79,608 @@
 		</div>
 	</div>
 </div>
+
+
+<div class="modal fade" id="ris-modal" tabindex="-1" role="dialog" 
+	aria-labelledby="mymodallabel" aria-hidden="true">
+	<div class="modal-dialog ris-modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" id="my-modal-label">
+					<span class="modal-form-state">Action Here</span>
+				</h4>
+			</div>
+			<div class="modal-body">
+				<form method="risst" action="/ris/furnish/" id="ris-modal-form">
+					<input type="hidden" name="ris_id"/>
+					<div class="border">
+						<div class="form-horizontal row">
+							<div class="col-sm-7">
+								<div class="form-group">
+									<label class="col-sm-2 control-label">Supplier</label>
+									<div class="col-sm-10">
+										<input type="input" class="form-control" placeholder="Name" id="supplier_name">
+										<input type="hidden" name="ris_supplier_id" >
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">Address</label>
+									<div class="col-sm-10">
+										<input type="input" class="form-control" placeholder="Address" id="supplier_address" disabled>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-5">
+								<div class="form-group">
+									<label class="col-sm-4 control-label">P.O. No.</label>
+									<div class="col-sm-4">
+										<input type="text" class="form-control" name="ris_no" placeholder="P.O. No.">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-4 control-label">Date</label>
+									<div class="col-sm-6">
+										<div class='input-group date ris-created'>
+											<input type='text' name="ris_created" class="form-control" />
+											<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+											</span>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-4 control-label">Mode of Procurement</label>
+									<div class="col-sm-5">
+										<input type="text" class="form-control" placeholder="Mode" name="ris_proc_mod">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="border">
+						<div class="form-horizontal row">
+							<div class="col-sm-7">
+								<div class="form-group">
+									<label class="col-sm-2 control-label">Delivery Place</label>
+									<div class="col-sm-4">
+										<input type="input" class="form-control" placeholder="Place" name="ris_deliv_place">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">Delivery Date</label>
+									<div class="col-sm-4">
+										<div class='input-group date deliv-date'>
+											<input type='text' name="ris_deliv_date" class="form-control" />
+											<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+											</span>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-5">
+								<div class="form-group">
+									<label class="col-sm-4 control-label">Delivery Term</label>
+									<div class="col-sm-4">
+										<input type="text" class="form-control" placeholder="Term" name="ris_deliv_term">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-4 control-label">Payment Term</label>
+									<div class="col-sm-4">
+										<input type="text" class="form-control" placeholder="Term" name="ris_pay_term">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<hr/>
+					<div class="border">
+						<div class="row item-input col-sm-12">
+							<div class="col-sm-offset-11 col-sm-1">
+								<button type="button" class="btn btn-primary" id="add-to-purchase"
+								data-toggle="modal" data-target="#ris_dtl-modal" data-backdrop="static" data-keyboard="false">
+									Add Item
+								</button>
+							</div>
+						</div>
+					</div>
+					<div class="row border-space">
+						<div class="col-sm-12">
+							<h4 align="center">Purchase List</h4>
+							<div class="table-resrisnsive">
+								<table class="table table-hover table-striped table-bordered tablesorter" id="ris-dtl-table">
+									<thead>
+										<tr>
+											<th>Item No.</th>
+											<th>Item Unit</th>
+											<th>Quantity</th>
+											<th>Description</th>
+											<th>Unit Cost</th>
+											<th>Amount</th>
+											<th>Action</th>
+										</tr>
+									</thead>
+									<tbody></tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<div id="hidden_data"></div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default secondary" data-dismiss="modal">
+							Close
+						</button>
+						<button type="submit" class="btn btn-primary" name="furnish">
+							<span class="modal-form-action">Furnish</span>
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="ris_dtl-modal" tabindex="-1" role="dialog" aria-labelledby="mymodallabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" id="my-modal-label"><span class="modal-form-state">Action Here</span></h4>
+			</div>
+			<div class="modal-body">
+				<form id="ris_dtl-modal-form" action='#'>
+				<div class="row border">
+							<div class="border">
+								<div class="col-sm-12">
+									<label for="input-name" class="col-sm-2 control-label">Desc</label>
+									<div class="form-group col-sm-10">	
+										<input type="text" class="form-control" placeholder="Desc"
+											name="ris_dtl_item_desc" required="required">
+									</div>
+								</div>
+								<div class="col-sm-12">
+									<label for="input-address" class="col-sm-2 control-label">Unit</label>
+									<div class="form-group col-sm-3">
+										<input type="text" class="form-control" placeholder="Unit"
+											name="ris_dtl_item_unit" required="required">
+									</div>
+								</div>
+								<div class="col-sm-12">
+									<label for="input-tel" class="col-sm-2 control-label">Qty</label>
+									<div class="form-group col-sm-3">
+										<input type="text" class="form-control" placeholder="QTY"
+											name="ris_dtl_item_qty" required="required">
+									</div>
+								</div>
+								<div class="col-sm-12">
+									<label for="input-tel" class="col-sm-2 control-label">Cost</label>
+									<div class="form-group col-sm-3" required="required">
+										<input type="text" class="form-control" placeholder="Unit Cost" name="ris_dtl_item_cost">
+									</div>
+								</div>
+							</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default secondary" data-dismiss="modal">
+						Close
+					</button>
+					<button type="submit" class="btn btn-primary" name="">
+						<span class="modal-form-action" >Save changes</span>
+					</button>
+				</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<?php include __DIR__.'/action.phtml'; ?>
+<script type="text/javascript" src="/assets/js/autocomplete.js"></script>
+<script type="text/javascript" src="/assets/js/modal_control.js"></script>
+<script type="text/javascript">
+	(function($) {
+		current_ris = 'new';
+		current_ris_dtl = null;
+		current_ris_dtl_row = null;
+		ris_dtl_table = {};
+		ris_table = {};
+		action_template = $('#action_tpl').text().trim();
+		ris_columns = [  { "mData": "supplier_name" },
+			            { "mData": "ris_no" },
+			            { "mData": function(data) {
+			            	return moment(data.ris_created).format('ddd, MMM Do YYYY');
+			       		}},
+			            { "mData": "ris_proc_mod" },
+			            { "mData": function(data){
+			            		return parseFloat(data['ris_total']).moneyFormat();
+			            }},
+			            { "mData": "ris_deliv_place" },
+			            { "mData": function(data) {
+			            	return moment(data.ris_deliv_date).format('ddd, MMM Do YYYY');
+			            	}},
+			            { "mData": "ris_deliv_term" },
+			            { "mData": "ris_pay_term" },
+			            {
+			            	'mData': function(data){
+			            		var model = new RegExp('//model//','g');
+			            		var model_id = new RegExp('/model_id/','g'); 
+			            		var target_modal = new RegExp('//target-modal//','g'); 
+								var action = action_template
+									.replace(model, 'ris')
+									.replace(target_modal, 'ris')
+									.replace(model_id, data.ris_id);
+			            		return action;
+			            	}
+			            }];
+		
+		ris_dtl_columns = [{ "mData": "ris_dtl_item_no" },
+			{ "mData": "ris_dtl_item_unit" },
+			{ "mData": "ris_dtl_item_qty" },
+			{ "mData": "ris_dtl_item_desc" },
+			{ "mData": function(data){ 
+				return parseFloat(data['ris_dtl_item_cost']).moneyFormat();
+			}},
+			{ "mData": function(data) {
+				var amount = parseFloat(data.ris_dtl_item_qty*data.ris_dtl_item_cost);
+				return amount.moneyFormat();
+			}},
+			{ 
+				'mData': function(data){
+					var model = new RegExp('//model//','g');
+					var model_id = new RegExp('/model_id/','g'); 
+					var target_modal = new RegExp('//target-modal//','g'); 
+					
+					var action = action_template
+						.replace(model, 'ris_dtl')
+						.replace(target_modal, 'ris_dtl')
+						.replace(model_id, data.ris_dtl_id);
+					
+					action = $(action).clone();
+					$(action).find('a.delete-ris_dtl').attr('href', '#').removeAttr('onclick');
+					action = $(action).html();
+					return action;
+				}
+			},
+		];
+		
+		$('document').ready(function() {
+			$('.ris-created').datetimepicker({});
+			
+			$('.deliv-date').datetimepicker({
+				pickTime: false
+			});
+			
+			//ris INIT
+			ris_table = $('#ris-table').dataTable({
+				'sPaginationType' : "two_button",
+				"iDisplayLength" : 10,
+				"sDom" : '<"pad-it"<"pull-right"f>l>t<"pull-right"i>p>',
+				'sAjaxSource': '/ris/',
+				'sAjaxDataProp': 'data',
+				"aoColumns": ris_columns,
+				"fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {
+				  oSettings.jqXHR = $.ajax( {
+					"dataType": 'json',
+					"type": "risST",
+					"url": sSource,
+					"data": {ris:'all'},
+					"success": fnCallback
+				  } );
+				}
+			});
+			
+			//ris DETAIL INIT
+			ris_detail_table = $('#ris-dtl-table').dataTable({
+				"sPaginationType" : "two_button",
+				"iDisplayLength" : 3,
+				"sDom" : '<"pad-it"<"pull-right"f>l>tip>',
+				"bAutoWidth": false
+			});
+			
+			//AUTOCOMPLETE
+			$('#supplier_name').autocomplete({
+				serviceUrl : '/supplier/search',
+				params : {
+					field : 'supplier_name',
+					keyword : $(this).val()
+				},
+				paramName : 'keyword',
+				onSelect : function(suggestion) {
+					$('#supplier_address').val(suggestion.data.supplier_address);
+					$('input[name="ris_supplier_id"]').val(suggestion.data.supplier_id);
+				},
+				transformResult : function(resrisnse) {
+					resrisnse = JSON.parse(resrisnse);
+					return {
+						suggestions : $.map(resrisnse, function(dataItem) {
+							return {
+								value : dataItem.value,
+								data : dataItem.data
+							};
+						})
+					};
+				}
+			});
+			
+		});
+		
+		//ACTION HANDLER
+		$(document).on('click','a',function(){
+			var action_handle = $(this);
+			var row = action_handle.parents('tr:first');
+			var ris_id;
+			//EDIT ris
+			if(action_handle.hasClass('edit-ris')) {
+				ris_detail_table.fnClearTable();
+				var row_rissition = ris_table.fnGetrissition(row[0]); 
+				var row_data = ris_table.fnGetData(row[0]);
+				current_ris = row_data;
+				current_ris_row = row_rissition;
+				changeModal({
+					'action':'/ris/edit',
+					'model':'ris',
+					'submit_name': 'edit-ris',
+					'pr_button':'Save Changes',
+					'modal_label': 'Edit Purchase Order',
+					'run': function(){
+						$('#add-to-purchase, .secondary').show();
+						rispulate({
+							'data': current_ris,
+							'name':'ris',
+							'map': function(v, o) {
+									if(v == 'ris_created') {
+										var dateIs = new Date(o[v].split(' ')[0]).toDateString();
+										return dateIs;
+									}
+									if(v == 'ris_deliv_date') {
+										return (new Date(o[v]).toLocaleDateString());
+									}
+									return o[v];
+								}
+						}, function() {
+							ris_detail_table = $('#ris-dtl-table').dataTable({
+								"sPaginationType" : "two_button",
+								"iDisplayLength" : 3,
+								"sDom" : '<"pad-it"<"pull-right"f>l>tip>',
+								'sAjaxSource': '/ris/',
+								'sAjaxDataProp': 'data',
+								"bDestroy" : true,
+								"bAutoWidth": false,
+								"aoColumns": ris_dtl_columns,
+								"fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {
+								  oSettings.jqXHR = $.ajax( {
+									"dataType": 'json',
+									"type": "risST",
+									"url": sSource,
+									"data": {ris:current_ris['ris_id']},
+									"success": fnCallback
+								  } );
+								}
+							});
+						});	
+					}
+				});
+			}
+			//VIEW ris
+			if(action_handle.hasClass('view-ris')) {
+				var row_rissition = ris_table.fnGetrissition(row[0]); 
+				var row_data = ris_table.fnGetData(row[0]);
+				current_ris = row_data;
+				current_ris_row = row_rissition;
+				changeModal({
+					'action':'/ris',
+					'model':'ris',
+					'submit_name': 'view-ris',
+					'pr_button':'Back To List',
+					'modal_label': 'View Purchase Order',
+					'run': function(){
+						$('#add-to-purchase').hide();
+						$('.secondary').hide();
+						
+						rispulate({
+							'data': current_ris,
+							'name':'ris',
+							'map': function(v, o) {
+									if(v == 'ris_created') {
+										var dateIs = new Date(o[v].split(' ')[0]).toDateString();
+										return dateIs;
+									}
+									if(v == 'ris_deliv_date') {
+										return (new Date(o[v]).toLocaleDateString());
+									}									
+									return o[v];
+						}}, function(){
+								$.each(Object.keys(current_ris), function(i, v){
+									$('#ris-modal-form').find('input[name="'+v+'"]')
+										.attr('disabled', 'disabled');
+									$('#'+v)
+										.attr('disabled', 'disabled');
+								});
+								ris_detail_table = $('#ris-dtl-table').dataTable({
+										"sPaginationType" : "two_button",
+										"iDisplayLength" : 3,
+										"sDom" : '<"pad-it"<"pull-right"f>l>tip>',
+										'sAjaxSource': '/ris/',
+										'sAjaxDataProp': 'data',
+										"bDestroy" : true,
+										"bAutoWidth": false,
+										"aoColumns": ris_dtl_columns,
+										"fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {
+										  oSettings.jqXHR = $.ajax( {
+											"dataType": 'json',
+											"type": "risST",
+											"url": sSource,
+											"data": {ris:current_ris['ris_id']},
+											"success": fnCallback
+										  } );
+										}
+									});
+						});
+					}
+				});
+			}
+			//IF EDITING DETAIL
+			if(action_handle.hasClass('edit-ris_dtl')) {
+				var row_rissition = ris_detail_table.fnGetrissition(row[0]); 
+				var row_data = ris_detail_table.fnGetData(row[0]);
+				current_ris_dtl = row_data;
+				current_ris_dtl_row = row_rissition;
+				
+				//MODIFY MODAL FOR EDIT MODE
+				changeModal({
+					'action':'/ris/#',
+					'model':'ris_dtl',
+					'submit_name': 'edit-ris_dtl',
+					'pr_button':'Save Changes',
+					'modal_label': 'Edit Item',
+					'run': function() {
+						
+						//risPULATE TO THE FORM
+						rispulate({
+							'data': row_data,
+							'name':'ris_dtl',
+							'map': function(v, o) {
+									if(v == 'ris_dtl_item_created') {
+										var dateIs = new Date(o[v].split(' ')[0]).toDateString();
+										return dateIs;
+									}
+									return o[v];
+								}}
+						);
+						
+					}
+				});
+			}
+			//IF VIEWING DETAIL
+			if(action_handle.hasClass('view-ris_dtl')) {
+				var row_rissition = ris_detail_table.fnGetrissition(row[0]); 
+				var row_data = ris_detail_table.fnGetData(row[0]);
+				current_ris_dtl = row_data;
+				current_ris_dtl_row = row_rissition;
+				changeModal({
+					'action':'#',
+					'model':'ris_dtl',
+					'submit_name': 'view-ris_dtl',
+					'pr_button':'Back to Order',
+					'modal_label': 'View Item',
+					'run': function() {
+						rispulate({
+							'data': current_ris_dtl,
+							'name':'ris_dtl',
+							'map': function(v, o) {
+									if(v == 'ris_dtl_item_created') {
+										var dateIs = new Date(o[v].split(' ')[0]).toDateString();
+										return dateIs;
+									}
+									return o[v];
+							}}, function(){
+								$('#ris_dtl-modal-form .secondary').hide();
+								$('#ris_dtl-modal-form').find('input').attr('disabled','disabled');
+							}
+						);
+						
+						
+					}
+				});
+			}
+			
+			//DELETING DETAIL
+			if(action_handle.hasClass('delete-ris_dtl')) {
+				var row_rissition = ris_detail_table.fnGetrissition(row[0]); 
+				var row_data = ris_detail_table.fnGetData(row[0]);
+				current_ris_dtl = row_data;
+				current_ris_dtl_row = row_rissition;
+				if(confirm(
+					'Are you sure you want to delete this??'
+				)){
+					ris_detail_table.fnDeleteRow(current_ris_dtl_row);
+					ris_detail_table.fnDraw();
+				}				
+			}
+		});
+		
+		//CREATE ris
+		$('#create-ris').click(function(){
+			//ris_dtl_table.fnClearTable();
+			changeModal({
+					'action':'/ris/furnish',
+					'model':'ris',
+					'submit_name': 'furnish',
+					'pr_button':'Furnish Order',
+					'modal_label': 'Create Purchase Order',
+					'run': function(){
+						/*$('#add-to-purchase').show();
+						clear_form('ris', function(){
+							$('input[name="ris_created"]').val(new Date().toDateString());
+						});
+						ris_dtl_table = $('#ris-dtl-table').dataTable({
+								"sPaginationType" : "two_button",
+								"iDisplayLength" : 3,
+								"sDom" : '<"pad-it"<"pull-right"f>l>tip>',
+								"bDestroy" : true,
+								"bAutoWidth": false,
+								"aoColumns": ris_dtl_columns
+								});*/
+					}
+				});
+		});
+		
+		//ADD ITEM
+		$('#add-to-purchase').click(function(){
+			changeModal({
+					'action':'#',
+					'model':'ris_dtl',
+					'submit_name': 'create-ris_dtl',
+					'pr_button':'Add To Purchase Order',
+					'modal_label': 'Add Item',
+					'run': function(){
+						clear_form('ris_dtl');
+					} 
+				});
+		});
+		
+		//HEADER SUBMIT HANDLER
+		$('#ris-modal-form').submit(function(e){
+			//e.preventDefault();
+			$('#hidden_data').html('');
+			var data = ris_detail_table.fnGetData();
+			var hidden_aggregation = $('#hidden_data');
+			$.each(data, function(index, o){
+				Object.keys(o).forEach(function(v,i,a){
+					hidden_aggregation.append(
+						'<input type="hidden" name="ris_dtl['+index+']['+v+']" value="'+o[v]+'"/>');
+					});
+			});
+		});
+				
+		//DETAIL SUBMIT HANDLER
+		$('#ris_dtl-modal-form').submit(function(e){
+			var form = $(this);
+			var button_action = form.find('.btn-primary').attr('name');
+			e.preventDefault();
+			
+			var inputs = form.find('input[name]');
+												
+			switch(button_action){
+				case 'edit-ris_dtl':	
+					$.each(inputs, function(i, o) {
+						if (current_ris_dtl[$(o).attr('name')]!= 'undefined') {
+							current_ris_dtl[$(o).attr('name')] = $(o).val();
+						}
+					});
+					ris_detail_table.fnUpdate(current_ris_dtl, current_ris_dtl_row);
+					break;
+				case 'create-ris_dtl':
+					current_ris_dtl = {};
+					$.each(inputs, function(i, o) {
+						current_ris_dtl[$(o).attr('name')] = $(o).val();
+					});
+					current_ris_dtl['ris_dtl_item_no'] = ris_detail_table.fnGetData().length+1; 
+					current_ris_dtl['ris_dtl_item_created'] = (new Date()).toLocaleString();
+					ris_detail_table.fnAddData(current_ris_dtl);
+					break;
+				default:
+					break;
+			};
+			$('#ris_dtl-modal').modal('hide');
+			$('#ris_dtl-modal-form').find('input').removeAttr('disabled');
+		});
+	})(jQuery);
+</script>
