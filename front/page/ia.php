@@ -1,5 +1,5 @@
 <?php //-->
-include(realpath(__DIR__.'/../../module/report/inspection_acceptance_sheet.php'));
+include(realpath(__DIR__.'/../../module/report/inspection_acceptance.php'));
 class Front_Page_Ia extends Front_Page {
 	/* Constants
 	 -------------------------------*/
@@ -215,12 +215,9 @@ class Front_Page_Ia extends Front_Page {
 			$ia_id = $this->variables[1];
 			$ia = $this->Ia()->getIa($ia_id);
 			$ia['detail'] = $this->Ia()->getDetail($ia_id);
-			front()->output($ia);
+			recieve_data($ia);
 			exit;
 		}
-		$report = new report();
-		$report->hdr()->data()->ftr()->output();
-		exit;
 	}
 
 	protected function _ia() {
