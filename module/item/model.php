@@ -23,7 +23,7 @@ class Item_Model extends Abstract_Model {
 		$filter 	= array();
 		$filter[]	= array(Item::ITEM_ID.'=%s',
 			$data[Item::ITEM_ID]);
-		
+		unset($data[Item::ITEM_ID]);
 		return $this->_database->updateRows($this->_table, $data, $filter);
 	}
 	/* Magic

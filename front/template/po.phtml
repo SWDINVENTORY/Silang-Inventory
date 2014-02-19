@@ -282,23 +282,7 @@
 		po_detail_table = {};
 		po_table = {};
 		action_template = $('#action_tpl').text().trim();
-		
-		$('document').ready(function() {
-			$('.po-created').datetimepicker({});
-			
-			$('.deliv-date').datetimepicker({
-				pickTime: false
-			});
-			
-			//PO INIT
-			po_table = $('#po-table').dataTable({
-				'sPaginationType' : "two_button",
-				"iDisplayLength" : 10,
-				"sDom" : '<"pad-it"<"pull-right"f>l>t<"pull-right"i>p>',
-				'sAjaxSource': '/po/',
-				'sAjaxDataProp': 'data',
-				"aoColumns": [
-			            { "mData": "supplier_name" },
+		po_columns = [  { "mData": "supplier_name" },
 			            { "mData": "po_no" },
 			            { "mData": function(data) {
 			            	return moment(data.po_created).format('ddd, MMM Do YYYY');
@@ -324,7 +308,53 @@
 									.replace(model_id, data.po_id);
 			            		return action;
 			            	}
-			            }],
+			            }];
+		
+		po_dtl_columns = [{ "mData": "po_dtl_item_no" },
+			{ "mData": "po_dtl_item_unit" },
+			{ "mData": "po_dtl_item_qty" },
+			{ "mData": "po_dtl_item_desc" },
+			{ "mData": function(data){ 
+				return parseFloat(data['po_dtl_item_cost']).moneyFormat();
+			}},
+			{ "mData": function(data) {
+				var amount = parseFloat(data.po_dtl_item_qty*data.po_dtl_item_cost);
+				return amount.moneyFormat();
+			}},
+			{ 
+				'mData': function(data){
+					var model = new RegExp('//model//','g');
+					var model_id = new RegExp('/model_id/','g'); 
+					var target_modal = new RegExp('//target-modal//','g'); 
+					
+					var action = action_template
+						.replace(model, 'po_dtl')
+						.replace(target_modal, 'po_dtl')
+						.replace(model_id, data.po_dtl_id);
+					
+					action = $(action).clone();
+					$(action).find('a.delete-po_dtl').attr('href', '#').removeAttr('onclick');
+					action = $(action).html();
+					return action;
+				}
+			},
+		];
+		
+		$('document').ready(function() {
+			$('.po-created').datetimepicker({});
+			
+			$('.deliv-date').datetimepicker({
+				pickTime: false
+			});
+			
+			//PO INIT
+			po_table = $('#po-table').dataTable({
+				'sPaginationType' : "two_button",
+				"iDisplayLength" : 10,
+				"sDom" : '<"pad-it"<"pull-right"f>l>t<"pull-right"i>p>',
+				'sAjaxSource': '/po/',
+				'sAjaxDataProp': 'data',
+				"aoColumns": po_columns,
 				"fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {
 				  oSettings.jqXHR = $.ajax( {
 					"dataType": 'json',
@@ -371,6 +401,7 @@
 			
 		});
 		
+		//ACTION HANDLER
 		$(document).on('click','a',function(){
 			var action_handle = $(this);
 			var row = action_handle.parents('tr:first');
@@ -412,32 +443,7 @@
 								'sAjaxDataProp': 'data',
 								"bDestroy" : true,
 								"bAutoWidth": false,
-								"aoColumns": [
-							            { "mData": "po_dtl_item_no" },
-							            { "mData": "po_dtl_item_unit" },
-							            { "mData": "po_dtl_item_qty" },
-							            { "mData": "po_dtl_item_desc" },
-							            { "mData": function(data){ 
-							            	return parseFloat(data['po_dtl_item_cost']).moneyFormat();
-							            }},
-							            { "mData": function(data) {
-							            	var amount = parseFloat(data.po_dtl_item_qty*data.po_dtl_item_cost);
-											return amount.moneyFormat();
-							            }},
-							            { 
-											'mData': function(data){
-												var model = new RegExp('//model//','g');
-												var model_id = new RegExp('/model_id/','g'); 
-												var target_modal = new RegExp('//target-modal//','g'); 
-												
-												var action = action_template
-													.replace(model, 'po_dtl')
-													.replace(target_modal, 'po_dtl')
-													.replace(model_id, data.po_dtl_id);
-												return action;
-											}
-										},
-							            ],
+								"aoColumns": po_dtl_columns,
 								"fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {
 								  oSettings.jqXHR = $.ajax( {
 									"dataType": 'json',
@@ -495,20 +501,7 @@
 										'sAjaxDataProp': 'data',
 										"bDestroy" : true,
 										"bAutoWidth": false,
-										"aoColumns": [
-												{ "mData": "po_dtl_item_no" },
-												{ "mData": "po_dtl_item_unit" },
-												{ "mData": "po_dtl_item_qty" },
-												{ "mData": "po_dtl_item_desc" },
-												{ "mData": function(data){ 
-									            	return parseFloat(data['po_dtl_item_cost']).formatMoney(2,',','.');
-									            }},
-									            { "mData": function(data) {
-									            	var amount = parseFloat(data.po_dtl_item_qty*data.po_dtl_item_cost);
-													return amount.formatMoney(2,',','.');
-									            }},
-												{ 'mData': function(data) {return " ";}},
-											],
+										"aoColumns": po_dtl_columns,
 										"fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {
 										  oSettings.jqXHR = $.ajax( {
 											"dataType": 'json',
@@ -587,6 +580,20 @@
 					}
 				});
 			}
+			
+			//DELETING DETAIL
+			if(action_handle.hasClass('delete-po_dtl')) {
+				var row_position = po_detail_table.fnGetPosition(row[0]); 
+				var row_data = po_detail_table.fnGetData(row[0]);
+				current_po_dtl = row_data;
+				current_po_dtl_row = row_position;
+				if(confirm(
+					'Are you sure you want to delete this??'
+				)){
+					po_detail_table.fnDeleteRow(current_po_dtl_row);
+					po_detail_table.fnDraw();
+				}				
+			}
 		});
 		
 		//CREATE PO
@@ -609,31 +616,7 @@
 								"sDom" : '<"pad-it"<"pull-right"f>l>tip>',
 								"bDestroy" : true,
 								"bAutoWidth": false,
-								"aoColumns": [
-							            { "mData": "po_dtl_item_no" },
-							            { "mData": "po_dtl_item_unit" },
-							            { "mData": "po_dtl_item_qty" },
-							            { "mData": "po_dtl_item_desc" },
-							            { "mData": function(data) {
-							            		return parseFloat(data["po_dtl_item_cost"]).moneyFormat();
-							            } },
-							            { "mData": function(data) {
-							            	var amount = data.po_dtl_item_qty*data.po_dtl_item_cost;
-											return parseFloat(amount).moneyFormat();
-							            }},
-							            { 'mData': function(data){
-												var model = new RegExp('//model//','g');
-												var model_id = new RegExp('/model_id/','g'); 
-												var target_modal = new RegExp('//target-modal//','g'); 
-												
-												var action = action_template
-													.replace(model, 'po_dtl')
-													.replace(target_modal, 'po_dtl')
-													.replace(model_id, data.po_dtl_id);
-												return action;
-											}
-										},
-									]
+								"aoColumns": po_dtl_columns
 								});
 					}
 				});

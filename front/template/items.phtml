@@ -18,6 +18,7 @@
 				Item
 			</li>
 		</ol>
+		<?php include(dirname(__FILE__).'\_message.phtml'); ?>
 	</div>
 </div>
 <div class="row">
@@ -43,7 +44,7 @@
 							<th>Type</th>
 							<th>Unit Of Measure</th>
 							<th>Qty</th>
-							<th>Cost</th>
+							<th>Unit Cost</th>
 							<th>Remarks</th>
 							<th>Actions</th>
 						</tr>
@@ -83,26 +84,37 @@
 		    </div>
 		  </div>
 		  <div class="form-group">
+		    <label class="col-md-2 control-label">Unit Cost:</label>
+		    <div class="col-md-4">
+		      <input type="text" class="form-control"  placeholder="00.00" name="item_cost_unit_cost" required="required">
+		    </div>
+		  </div>
+		  <div class="form-group">
 		    <label for="input-tel" class="col-md-2 control-label">Stock No.:</label>
 		    <div class="col-md-4">
 		      <input type="text" class="form-control" placeholder="Stock No" name="item_stock_no">
 		    </div>
 		  </div>
 		  <div class="form-group">
-		    <label for="input-tel" class="col-md-2 control-label">Type :</label>
-		    <div class="col-md-4">
-		      <input type="text" class="form-control" placeholder="Type" name="item_item_type">
-		    </div>
-		  </div>
-		  <div class="form-group">
 		    <label for="input-tel" class="col-md-2 control-label">Article:</label>
-		    <div class="col-md-4">
-		      <input type="text" class="form-control" placeholder="Article" name="item_article">
+		    <div class="col-md-10">
+		      <select class="form-control" name="item_article_id">
+					<option value="">
+						Select Article
+					</option>
+				<?php if(isset($articles) && !empty($articles)): ?>
+				<?php foreach($articles as $article): ?>
+					<option value="<?php echo $article['article_id']; ?>">
+						<?php echo $article['article_name']; ?>
+					</option>
+				<?php endforeach; ?>
+				<?php endif; ?>
+			  </select>
 		    </div>
 		  </div>
 		  <div class="form-group">
 		    <label for="input-tel" class="col-md-2 control-label">Remarks:</label>
-		    <div class="col-md-4">
+		    <div class="col-md-10">
 		      <textarea type="te" class="form-control" placeholder="Remarks" name="item_remarks"></textarea>
 		    </div>
 		  </div>		
@@ -115,8 +127,141 @@
     </div>
   </div>
 </div>
+<?php include __DIR__.'/action.phtml'; ?>
+<script type="text/javascript" src="/assets/js/autocomplete.js"></script>
+<script type="text/javascript" src="/assets/js/modal_control.js"></script>
 <script type="text/javascript">
 (function($) {
+	$('document').ready(function(){
+		current_item_row = {};
+		current_item = {} ;
+		action_template = $('#action_tpl').text().trim();
+		
+		item_columns = [
+			{ "mData": "article_name" },
+			{ "mData": "item_desc" },
+			{ "mData": "item_stock_no" },
+			{ 'mData': "article_inventory_type" }, 
+			{ 'mData': 'item_unit_measure'},
+			{ 'mData': 'item_qty' },
+			{ 'mData': function(data){ //ITEM UNIT COST
+				return parseFloat(data.item_cost_unit_cost).moneyFormat();
+			}},
+			{ 'mData': 'item_remarks' },
+			{ 'mData': function(data){
+					var model = new RegExp('//model//','g');
+					var model_id = new RegExp('/model_id/','g'); 
+					var target_modal = new RegExp('//target-modal//','g'); 
+					var action = action_template
+						.replace(model, 'item')
+						.replace(target_modal, 'item')
+						.replace(model_id, data.item_id);
+					return action;
+				}
+			}];
+		
+		item_tbl = $('#item-table').dataTable({
+				'sPaginationType' : "two_button",
+				"iDisplayLength" : 10,
+				"sDom" : '<"pad-it"<"pull-right"f>l>t<"pull-right"i>p>',
+				'sAjaxSource': '/items/',
+				'sAjaxDataProp': 'data',
+				"aoColumns": item_columns,
+				"fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {
+				  oSettings.jqXHR = $.ajax( {
+					"dataType": 'json',
+					"type": "POST",
+					"url": sSource,
+					"data": {item:'all'},
+					"success": fnCallback
+				  } );
+				}
+		});
 	
+		item_mapping = function(value, obj){
+			switch(value) {
+				case 'item_cost_unit_cost':
+					return parseFloat(obj[value]).moneyFormat();
+				default:
+					console.log('value -> ', value);
+					return obj[value];
+			};
+		}
+		
+		//ACTION HANDLER
+		$(document).on('click','a',function(){
+			var action_handle = $(this);
+			var row = action_handle.parents('tr:first');
+			clear_form('item');
+			//EDIT ITEM
+			if(action_handle.hasClass('edit-item')) {
+				var row_position = item_tbl.fnGetPosition(row[0]); 
+				var row_data = item_tbl.fnGetData(row[0]);
+				current_item = row_data;
+				current_item_row = row_position;
+				changeModal({
+					'action':'/item/edit',
+					'model':'item',
+					'submit_name': 'edit-item',
+					'pr_button':'Save Changes',
+					'modal_label': 'Edit Item',
+					'run': function(){
+						populate({
+							'data': current_item,
+							'name':'item',
+							'map': item_mapping, 
+						});	
+					}
+				});
+			}
+			//VIEW ITEM
+			if(action_handle.hasClass('view-item')) {
+				var row_position = item_tbl.fnGetPosition(row[0]); 
+				var row_data = item_tbl.fnGetData(row[0]);
+				current_item = row_data;
+				current_item_row = row_position;
+				changeModal({
+					'action':'/item/#',
+					'model':'item',
+					'submit_name': 'view-item',
+					'pr_button':'Back To List',
+					'modal_label': 'View Item',
+					'run': function(){
+						$('.secondary').hide();
+						
+						populate({
+							'data': current_item,
+							'name':'item',
+							'map': item_mapping },
+							function(){
+								$.each(Object.keys(current_item), function(i, v){
+									$('#item-modal-form').find('input[name="'+v+'"]')
+										.attr('disabled', 'disabled');
+									$('#item-modal-form').find('select[name="'+v+'"]')
+										.attr('disabled', 'disabled');
+									$('#item-modal-form').find('textarea[name="'+v+'"]')
+										.attr('disabled', 'disabled');
+									$('#'+v).attr('disabled', 'disabled');
+								});
+						});
+					}
+				});
+			}
+		});		
+	
+		//CREATE PO
+		$('#create-item').click(function(){
+			changeModal({
+					'action':'/item/create',
+					'model':'item',
+					'submit_name': '',
+					'pr_button':'Create',
+					'modal_label': 'Create Item',
+					'run': function(){
+						clear_form('item');
+					}
+				});
+		});
+	});	
 })(jQuery);
 </script>

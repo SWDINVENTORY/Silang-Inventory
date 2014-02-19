@@ -7,7 +7,7 @@ class Front_Page_Items extends Front_Page {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_title = 'SWD-Inventory : Item(s)';
+	protected $_title = 'SWD-Inventory : Items';
 	protected $_class = 'item';
 	protected $_template = '/items.phtml';
 	protected $_errors = array();
@@ -22,15 +22,7 @@ class Front_Page_Items extends Front_Page {
 		$this->post = front()->registry()->get('post')->getArray();
 		$this->request = front()->registry()->get('request', 'variables','0');
 		$this->get = front()->registry()->get('get')->getArray();
-		$this->fields = array(
-				'Description' => 'item_desc',
-				'Stock No' => 'item_stock_no',
-				'Remarks' => 'item_remark',
-				'Type' => 'item_type',
-				'Article' => 'item_article'
-				);
-		
-		$this->items = $this->Item()->getAll();
+		$article = $this->Article()->getAll();
 		
 		if(isset($this->post)) {
 			$this->_setErrors();
@@ -40,8 +32,7 @@ class Front_Page_Items extends Front_Page {
 			}
 		}
 		
-		$this->_body['items'] = $this->items;
-		$this->_body['fields'] = $this->fields;
+		$this->_body['articles'] = $article;
 		$this->_body['error'] = $this->_errors;
 		
 		return $this->_page();
@@ -54,7 +45,7 @@ class Front_Page_Items extends Front_Page {
 	protected function _process() {
 		$request = strtolower($this->request);
 		switch ($request) {
-			case 'add':
+			case 'create':
 					$this->_add($this->post);
 				break;
 			case 'edit':
@@ -63,29 +54,60 @@ class Front_Page_Items extends Front_Page {
 			case 'delete':
 					$this->_delete($this->post);
 				break;
-			case 'search':
-					$this->_search();
-				break;
-			default:
+			default :
+				$this -> _item();
 				break;
 		}
 	}
 	
 	protected function _add() {
 		$item = $this->post;
-		$item[Item::ITEM_CREATED] = date('Y-m-d H:i:s');
-		$item[Item::ITEM_UPDATED] = date('Y-m-d H:i:s');
-		unset($item['id']);
-		$this->Item()->add($item);
-		header('Location: /items');
+		if(isset($item['item_id']) && empty($item['item_id'])){
+			$item = array_filter($item);
+			$item[Item::ITEM_CREATED] = date('Y-m-d H:i:s');
+			$item[Item::ITEM_UPDATED] = date('Y-m-d H:i:s');
+			if(!empty($item['item_cost_unit_cost'])){
+				$item_unit_cost = $item['item_cost_unit_cost'];
+				unset($item['item_cost_unit_cost']);
+			}
+			$item_id = $this->Item()->add($item);
+			if($item_unit_cost) {
+				front()->database()
+					->insertRow('item_cost', array(
+						'item_cost_item_id' =>$item_id,
+						'item_cost_qty' => $item['item_qty'],
+						'item_cost_unit_cost' => $item_unit_cost,
+						'item_cost_updated' => $item[Item::ITEM_UPDATED]
+					));
+			}
+			header('Location: /items');
+			exit;
+		}
+		
 		return $this;
 	}
 	
 	protected function _edit() {
 		$item = $this->post;
-		unset($item['edit']);
-		$this->Item()->model()->itemUpdate($item);
-		header('Location: /items');
+		
+		if(isset($item['edit-item']) && !empty($item['item_id'])){
+			$item = array_filter($item);
+			unset($item['item_cost_unit_cost']);
+			if($this->Item()->model()->itemUpdate($item)){
+				$status = array();
+				$status['status'] = 1;
+				$status['msg'] = 'Saved changes successfully!';
+				if (IS_AJAX) {
+					header('Content-Type: application/json');
+					echo json_encode($status);
+					exit ;
+				}
+				$this -> _addMessage($status['msg'], 'success', true);
+				header('Location: /items');
+				exit;
+			}
+			
+		}
 		return $this;
 	}
 	
@@ -118,6 +140,28 @@ class Front_Page_Items extends Front_Page {
 			}
 		}
 		
+		return $this;
+	}
+	
+	protected function _item() {
+		$post = $this -> post;
+		if (isset($post['item'])) {
+			$items = $this -> Item()->getAll();
+			if ($post['item'] != 'all') {
+				$id = $post['item'];
+				if (is_numeric($id)) {
+					$items = $this -> Item() -> getDetail($id);
+				}
+			}
+
+			if (IS_AJAX) {
+				header('Content-Type: application/json');
+				$ret = array();
+				$ret['data'] = $items;
+				echo json_encode($ret);
+				exit ;
+			}
+		}
 		return $this;
 	}
 	/* Private Methods

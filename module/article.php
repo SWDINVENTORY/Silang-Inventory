@@ -51,7 +51,7 @@ class Article extends Abstract_Model {
 
 	public function getAll() {
 		return $this->_getAll('*')
-			->sortByArticleCreated('ASC')
+			->sortByArticleName('ASC')
 			->getRows();
 	}
 	

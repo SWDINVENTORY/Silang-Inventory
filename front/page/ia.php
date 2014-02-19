@@ -1,4 +1,5 @@
 <?php //-->
+include(realpath(__DIR__.'/../../module/report/inspection_acceptance_sheet.php'));
 class Front_Page_Ia extends Front_Page {
 	/* Constants
 	 -------------------------------*/
@@ -22,7 +23,6 @@ class Front_Page_Ia extends Front_Page {
 		$this -> request = front()->registry()->get('request', 'variables', '0');
 		$this -> variables = front() -> registry() -> get('request', 'variables') -> getArray();
 		$this -> get = front() -> registry() -> get('get') -> getArray();
-		$this -> ia = $this -> Ia() -> getAll();
 		$this->dept = $this->Dept()-> getAll();
 		$this->article = $this->Article()-> getAll();
 		
@@ -36,7 +36,6 @@ class Front_Page_Ia extends Front_Page {
 			}
 		}
 
-		$this -> _body['ias'] = $this -> ia;
 		$this -> _body['depts'] = $this->dept;
 		$this -> _body['articles'] = $this->article;
 		$this -> _body['error'] = $this -> _errors;
@@ -61,6 +60,9 @@ class Front_Page_Ia extends Front_Page {
 				break;
 			case 'delete' :
 				$this -> _delete();
+				break;
+			case 'report':
+				$this->_report();
 				break;
 			default :
 				$this -> _ia();
@@ -208,12 +210,16 @@ class Front_Page_Ia extends Front_Page {
 		exit ;
 	}
 
-	protected function _search() {}
+	protected function _report() {
+		$report = new report();
+		$report->hdr()->data()->ftr()->output();
+		exit;
+	}
 
 	protected function _ia() {
 		$post = $this -> post;
 		if (isset($post['ia'])) {
-			$ia = $this -> ia;
+			$ia = $this ->Ia()->getAll();
 			if ($post['ia'] != 'all') {
 				$id = $post['ia'];
 				if (is_numeric($id)) {

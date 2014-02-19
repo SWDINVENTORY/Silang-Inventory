@@ -13,10 +13,9 @@ class Item extends Abstract_Model {
 	const ITEM_DESC = 'item_desc';
 	const ITEM_UNIT_MEASURE = 'item_unit_measure';
 	const ITEM_QTY = 'item_qty';
-	const ITEM_ITEM_TYPE = 'item_item_type';
 	const ITEM_STOCK_NO = 'item_stock_no';
 	const ITEM_REMARKS = 'item_remarks';
-	const ITEM_ARTICLE = 'item_article';
+	const ITEM_ARTICLE_ID = 'item_article_id';
 	const ITEM_CREATED = 'item_created';
 	const ITEM_UPDATED = 'item_updated';
 		
@@ -43,18 +42,15 @@ class Item extends Abstract_Model {
 	/* Public Methods
 	-------------------------------*/
 	public function getAll() {
-		return $this->_getAll(
-				array(
-				Item::ITEM_ID,
-				Item::ITEM_DESC,
-				Item::ITEM_UNIT_MEASURE,
-				Item::ITEM_QTY,
-				Item::ITEM_ITEM_TYPE,
-				Item::ITEM_STOCK_NO,
-				Item::ITEM_REMARKS,
-				Item::ITEM_ARTICLE))
-			->sortByItemDesc('ASC')
-			->getRows();
+			return $this->_database
+				->query(
+					$this->_database
+					->select('*')
+					->from('item')
+					->innerJoin('article', 'article_id = item_article_id', false)
+					->innerJoin('(SELECT * FROM item_cost ORDER BY item_cost_updated DESC) i', 'item_cost_item_id=item_id', false)
+					->sortBy('item_desc', 'ASC')
+					->groupBy('item_id'));
 	}
 	
 	public function model($value = NULL, $key = 'user_id') {

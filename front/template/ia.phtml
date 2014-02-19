@@ -292,7 +292,13 @@
 									.replace(model, 'ia')
 									.replace(target_modal, 'ia')
 									.replace(model_id, data.ia_id);
-			            		return action;
+			            		action = $(action).clone();
+								action.find('ul.dropdown-menu').append(
+								'<li><a class="print_report-ia" href="/ia/report/'+data.ia_id+
+									'" target="_blank" title="Print from pdf file">Print</a></li>'
+								)
+								action = action.html();
+								return action;
 			            	}
 			            }];
 		
@@ -370,7 +376,7 @@
 					"success": fnCallback
 				  } );
 				}
-		})
+		});
 		
 		//IA DETAIL INIT
 		ia_dtl_table = $('#ia-dtl-table').dataTable({
