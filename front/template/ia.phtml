@@ -13,6 +13,13 @@
 	.ia th:last-child {
 		width: 5%;
 	}
+	
+	.ia #ia-table td:nth-child(1){
+		width: 15%;
+	}
+	.ia #ia-table td:nth-child(7){
+		width: 10%;
+	}
 	.ia #ia-table td:nth-child(9),
 	.ia #ia-table td:nth-child(2),
 	.ia #ia-table td:nth-child(4),
@@ -278,7 +285,9 @@
 			            { 'mData': 'ia_no' },
 			            { 'mData': 'ia_inv_no'},
 			            { 'mData': 'ia_dr_no' },
-			            { 'mData': 'ia_created'},
+			            { 'mData': function(data){
+								return moment(data.ia_created).format('ddd, MMM Do YYYY');
+						}},
 			            { 'mData': 'dept_name' },
 			            { 'mData': function(data){
 			            	return parseFloat(data.ia_total_amount).moneyFormat();	
@@ -295,7 +304,7 @@
 			            		action = $(action).clone();
 								action.find('ul.dropdown-menu').append(
 								'<li><a class="print_report-ia" href="/ia/report/'+data.ia_id+
-									'" target="_blank" title="Print from pdf file">Print</a></li>'
+									'" target="_blank" title="Print from pdf file.">Print</a></li>'
 								)
 								action = action.html();
 								return action;

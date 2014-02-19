@@ -30,21 +30,23 @@ class Ia_Model extends Abstract_Model {
 	-------------------------------*/
 	/* Public Methods
 	-------------------------------*/		
-	/**
-	 * Loads a po into the model
-	 *
-	 * @param mixed
-	 * @param string
-	 * @return this
-	 */
-	public function load($value, $key = 'po_id') {
-		Po_Error::i()
+
+	public function load($value, $key = 'ia_id') {
+		Ia_Error::i()
 			->argument(1, 'scalar')
 			->argument(2, 'string');
 			
-		$row = $this->_database->getRow(Ia::IA_TABLE, $key, $value);
-		parent::__construct($row);
-		return $this;
+		if(is_array($value)) {
+			return $this->set($value);
+		}
+		
+		$row = $this->_database->getRow($this->_table, $key, $value);
+		
+		if(is_null($row)) {
+			return $this;
+		}
+		
+		return $this->set($row);
 	}
 	/* Private Methods
 	-------------------------------*/

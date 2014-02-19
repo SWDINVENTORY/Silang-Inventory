@@ -30,15 +30,12 @@ function populate(model, callback){
 
 function clear_form(model, callback) {
 	$('#'+model+'-modal-form')[0].reset();
-	$.each(Object.keys(current_item), function(i, v){
-		$('#'+model+'-modal-form').find('input[name="'+v+'"]')
-			.removeAttr('disabled');
-		$('#'+model+'-modal-form').find('select[name="'+v+'"]')
-			.removeAttr('disabled');
-		$('#'+model+'-modal-form').find('textarea[name="'+v+'"]')
-			.removeAttr('disabled');
-		$('#'+v).removeAttr('disabled');
-	});
+	$('#'+model+'-modal-form').find('input[name]')
+		.removeAttr('disabled');
+	$('#'+model+'-modal-form').find('select')
+		.removeAttr('disabled');
+	$('#'+model+'-modal-form').find('textarea')
+		.removeAttr('disabled');
 	if(typeof callback != 'undefined' && typeof(callback) == 'function') {
 		callback();
 	}

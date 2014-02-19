@@ -90,6 +90,19 @@ class Ia extends Abstract_Model {
 			->getRows();
 	}
 	
+	public function getIa($id) {
+		if(!isset($id)){
+			return array();
+		}
+		return $this->search()
+			->innerJoinOn(Po::PO_TABLE, 'po_id=ia_po_id')
+			->innerJoinOn(Supplier::SUPPLIER_TABLE, 'po_supplier_id= supplier_id')
+			->innerJoinOn('dept', 'dept_id=ia_dept_id')
+			->filterByIaId($id)
+			->sortByIaNo('ASC')
+			->getRow();
+	}
+	
 	public function getDetail($id) {
 		return $this
 			->_getAll(array(
