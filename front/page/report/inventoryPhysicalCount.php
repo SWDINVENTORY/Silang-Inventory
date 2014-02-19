@@ -1,6 +1,6 @@
 <?php //-->
 include(realpath(__DIR__.'/../../../module/report/physical_count_report_sheet.php'));
-class Front_Page_Report_inventoryPhysicalCount extends Front_Page {
+class Front_Page_inventoryPhysicalCount extends Front_Page {
 	/* Constants
 	-------------------------------*/
 	/* Public Properties
