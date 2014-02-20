@@ -56,6 +56,7 @@ class report extends Formsheet{
 		$this->leftText(29.5,10.9,$hdr['ia_dr_no'],'','i');
 		$this->drawLine(11.10,'h',array(29,4));
 		$this->leftText(34,11,'Date:','','i');
+		$this->leftText(36.3,10.9,date('M d, Y',strtotime($hdr['ia_created'])),'','i');
 		$this->drawLine(11.10,'h',array(36,5));
 		$this->leftText(2,14,'Requisitioning Office/Dept.:','','i');
 		$this->leftText(12,14,$hdr['dept_name'],'','i');
