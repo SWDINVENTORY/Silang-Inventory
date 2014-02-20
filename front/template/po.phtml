@@ -354,6 +354,13 @@
 								li.find('a').remove();
 								li = $(action).find('a.edit-po').parent();
 								li.find('a').remove();
+								action.find('ul.dropdown-menu').append(
+								'<li><a class="print_report-po" href="/po/report/'+data.po_id+
+									'" target="_blank" title="Print from pdf file."'+
+									' onclick="return confirm('+"'"+
+									'Do you want to print a report to a pdf file?'+"'"+
+									')">Print</a></li>');
+									
 								if(!parseInt(data.po_is_cancelled)){
 									li.append('<a href="/po/cancel/'+data.po_id+'" class="cancel-po"'+
 									'onclick="return confirm('+"'"+

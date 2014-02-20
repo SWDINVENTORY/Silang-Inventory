@@ -59,6 +59,9 @@ class Front_Page_Po extends Front_Page {
 			case 'cancel':
 					$this->_cancel();
 				break;
+			case 'report':
+					$this->_report();
+				break;
 			default:
 					$this->_po();
 				break;
@@ -218,6 +221,18 @@ class Front_Page_Po extends Front_Page {
 		$this->_addMessage('Purchase Order Cancelled', 'success', true);
 		header('Location: /po');
 		exit;
+	}
+	
+	protected function _report(){
+		if(isset($this->variables[1])) {
+			$po_id = $this->variables[1];
+			$po = $this->Po()->getPo($po_id);
+			$po['detail'] = $this->Po()->getDetail($po_id);
+			front()->output($po);
+			exit;
+			recieve_data($po);
+			exit;
+		}
 	}
 	
 	protected function _po() {
