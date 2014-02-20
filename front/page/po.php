@@ -23,7 +23,7 @@ class Front_Page_Po extends Front_Page {
 		$this->request = front()->registry()->get('request', 'variables','0');
 		$this->variables = front()->registry()->get('request', 'variables')->getArray();
 		$this->get = front()->registry()->get('get')->getArray();
-		$this->po = $this->Po()->getAll();
+		$article = $this->Article()-> getAll();
 		
 		if(isset($this->post)) {
 			$this->_setErrors(); //-> post validation
@@ -33,7 +33,7 @@ class Front_Page_Po extends Front_Page {
 			}
 		}
 		
-		$this->_body['pos'] = $this->po;
+		$this->_body['articles'] = $article;
 		$this->_body['error'] = $this->_errors;
 
 		return $this->_page();
@@ -55,6 +55,9 @@ class Front_Page_Po extends Front_Page {
 				break;
 			case 'delete':
 					$this->_delete();
+				break;
+			case 'cancel':
+					$this->_cancel();
 				break;
 			default:
 					$this->_po();
@@ -202,29 +205,24 @@ class Front_Page_Po extends Front_Page {
 		exit;
 	}
 
-	protected function _delete() {
-		$po = $this->post;
+	protected function _cancel() {
 		$variables = $this->variables;
-		if(!empty($po)) {
-			$id = $po[Po::PO_SUPPLIER_ID];
-		}
+		
 		if(isset($variables[1])) {
 			$id = $variables[1];
+			$filter[] = array('po_id=%s', $id); 
+			front()->database()
+				->updateRows(Po::PO_TABLE, array('po_is_cancelled'=>1), $filter);
 		}
-		front()->database()
-			->deleteRows('po', array(
-				array('(po_id = %s)',$id)
-			));
-		$this->_addMessage('Purchase Order Deleted', 'success', true);
+				
+		$this->_addMessage('Purchase Order Cancelled', 'success', true);
 		header('Location: /po');
 		exit;
 	}
-
-	protected function _search() {}
 	
 	protected function _po() {
 		$post = $this->post;
-		$po = $this->po;
+		$po = $this->Po()->getAll();
 		if(isset($post['po']) && $post['po']!= 'all') {
 			$id = $post['po'];
 			if(is_numeric($id)) {

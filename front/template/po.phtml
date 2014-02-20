@@ -26,7 +26,12 @@
 	#po-dtl-table td:nth-child(1) {
 		text-align: center;
 	}
-	#po-dtl-table td:nth-child(2), #po-dtl-table td:nth-child(3), #po-dtl-table td:nth-child(5), #po-dtl-table td:nth-child(6) {
+	
+	#po-dtl-table tfoot td:nth-child(1) {
+		text-align: right;
+	}
+	
+	#po-dtl-table td:nth-child(2), #po-dtl-table td:nth-child(3), #po-dtl-table td:nth-child(5), #po-dtl-table td:nth-child(7) {
 		text-align: right;
 	}
 
@@ -61,7 +66,7 @@
 <div class="row border">
 	<div class="col-sm-12">
 		<div class="table-responsive">
-			<table class="table table-hover table-striped table-bordered tablesorter" id="po-table">
+			<table class="table table-hover table-bordered tablesorter" id="po-table">
 				<thead>
 					<tr>
 						<th>Supplier</th>
@@ -99,7 +104,8 @@
 								<div class="form-group">
 									<label class="col-sm-2 control-label">Supplier</label>
 									<div class="col-sm-10">
-										<input type="input" class="form-control" placeholder="Name" id="supplier_name">
+										<input type="input" class="form-control" placeholder="If the supplier is not existing please, add it first"
+											id="supplier_name" required="required">
 										<input type="hidden" name="po_supplier_id" >
 									</div>
 								</div>
@@ -114,14 +120,14 @@
 								<div class="form-group">
 									<label class="col-sm-4 control-label">P.O. No.</label>
 									<div class="col-sm-4">
-										<input type="text" class="form-control" name="po_no" placeholder="P.O. No.">
+										<input type="text" class="form-control" name="po_no" placeholder="P.O. No." required="required">
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="col-sm-4 control-label">Date</label>
 									<div class="col-sm-6">
 										<div class='input-group date po-created'>
-											<input type='text' name="po_created" class="form-control" />
+											<input type='text' name="po_created" class="form-control" required="required"/>
 											<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
 											</span>
 										</div>
@@ -130,7 +136,7 @@
 								<div class="form-group">
 									<label class="col-sm-4 control-label">Mode of Procurement</label>
 									<div class="col-sm-5">
-										<input type="text" class="form-control" placeholder="Mode" name="po_proc_mod">
+										<input type="text" class="form-control" placeholder="Mode" name="po_proc_mod" required="required">
 									</div>
 								</div>
 							</div>
@@ -142,14 +148,15 @@
 								<div class="form-group">
 									<label class="col-sm-2 control-label">Delivery Place</label>
 									<div class="col-sm-4">
-										<input type="input" class="form-control" placeholder="Place" name="po_deliv_place">
+										<input type="input" class="form-control" placeholder="Place" name="po_deliv_place"
+										required="required" >
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="col-sm-2 control-label">Delivery Date</label>
 									<div class="col-sm-4">
 										<div class='input-group date deliv-date'>
-											<input type='text' name="po_deliv_date" class="form-control" />
+											<input type='text' name="po_deliv_date" class="form-control" required="required"/>
 											<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
 											</span>
 										</div>
@@ -160,13 +167,15 @@
 								<div class="form-group">
 									<label class="col-sm-4 control-label">Delivery Term</label>
 									<div class="col-sm-4">
-										<input type="text" class="form-control" placeholder="Term" name="po_deliv_term">
+										<input type="text" class="form-control" placeholder="Term" name="po_deliv_term"
+											required="required" >
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="col-sm-4 control-label">Payment Term</label>
 									<div class="col-sm-4">
-										<input type="text" class="form-control" placeholder="Term" name="po_pay_term">
+										<input type="text" class="form-control" placeholder="Term" name="po_pay_term"
+										required="required">
 									</div>
 								</div>
 							</div>
@@ -187,18 +196,26 @@
 						<div class="col-sm-12">
 							<h4 align="center">Purchase List</h4>
 							<div class="table-responsive">
-								<table class="table table-hover table-striped table-bordered tablesorter" id="po-dtl-table">
+								<table class="table table-hover table-striped table-bordered" id="po-dtl-table">
 									<thead>
 										<tr>
 											<th>Item No.</th>
 											<th>Item Unit</th>
 											<th>Quantity</th>
 											<th>Description</th>
+											<th>Article</th>
 											<th>Unit Cost</th>
 											<th>Amount</th>
 											<th>Action</th>
 										</tr>
 									</thead>
+									<tfoot>
+										<tr>
+											<td colspan="6">Total Amount</td>
+											<td id="po_total"></td>
+											<td></td>
+										</tr>
+									</tfoot>
 									<tbody></tbody>
 								</table>
 							</div>
@@ -230,28 +247,53 @@
 				<div class="row border">
 							<div class="border">
 								<div class="col-sm-12">
-									<label for="input-name" class="col-sm-2 control-label">Desc</label>
-									<div class="form-group col-sm-10">	
+									<label for="input-name" class="col-sm-3 control-label">Desc</label>
+									<div class="form-group col-sm-9">	
 										<input type="text" class="form-control" placeholder="Desc"
 											name="po_dtl_item_desc" required="required">
 									</div>
 								</div>
 								<div class="col-sm-12">
-									<label for="input-address" class="col-sm-2 control-label">Unit</label>
+									<label for="input-address" class="col-sm-3 control-label">Unit</label>
 									<div class="form-group col-sm-3">
 										<input type="text" class="form-control" placeholder="Unit"
 											name="po_dtl_item_unit" required="required">
 									</div>
 								</div>
 								<div class="col-sm-12">
-									<label for="input-tel" class="col-sm-2 control-label">Qty</label>
+									<label for="input-tel" class="col-sm-3 control-label">Qty</label>
 									<div class="form-group col-sm-3">
 										<input type="text" class="form-control" placeholder="QTY"
 											name="po_dtl_item_qty" required="required">
 									</div>
 								</div>
+								<div class="col-sm-12 form-group">
+									<label for="input-tel" class="col-sm-3 control-label">Stock Type</label>
+									<div class="col-sm-9">
+										<select class="form-control" name="po_dtl_item_type" required="required">
+											<option value="">Select Stock Type</option>
+											<option value="STOCK">STOCK</option>
+											<option value="NONSTOCK">NON-STOCK</option>
+										</select>
+									</div>
+								</div>
+								<div class="col-sm-12 form-group">
+									<label for="input-tel" class="col-sm-3 control-label">Article</label>
+									<div class="col-sm-9">
+										<select class="form-control" name="po_dtl_article_id" required="required">
+											<option value="">Select Article</option>
+											<?php if(!empty($articles)):?>
+											<?php foreach($articles as $article):?>
+											<option value="<?php echo $article['article_id']; ?>">
+												<?php echo $article['article_name']; ?>
+											</option>
+											<?php endforeach;?>
+											<?php endif;?>
+										</select>
+									</div>
+								</div>
 								<div class="col-sm-12">
-									<label for="input-tel" class="col-sm-2 control-label">Cost</label>
+									<label for="input-tel" class="col-sm-3 control-label">Cost</label>
 									<div class="form-group col-sm-3" required="required">
 										<input type="text" class="form-control" placeholder="Unit Cost" name="po_dtl_item_cost">
 									</div>
@@ -282,6 +324,7 @@
 		po_detail_table = {};
 		po_table = {};
 		action_template = $('#action_tpl').text().trim();
+		po_dtl_view_mode = 0;
 		po_columns = [  { "mData": "supplier_name" },
 			            { "mData": "po_no" },
 			            { "mData": function(data) {
@@ -306,14 +349,31 @@
 									.replace(model, 'po')
 									.replace(target_modal, 'po')
 									.replace(model_id, data.po_id);
+								action = $(action).clone();
+								var li = $(action).find('a.delete-po').parent();
+								li.find('a').remove();
+								li = $(action).find('a.edit-po').parent();
+								li.find('a').remove();
+								if(!parseInt(data.po_is_cancelled)){
+									li.append('<a href="/po/cancel/'+data.po_id+'" class="cancel-po"'+
+									'onclick="return confirm('+"'"+
+									'Do you really want to cancel Purchase Order no.'+
+									data.po_no+"'"+')">Cancel</a>');
+								}
+								action = action.html();
 			            		return action;
-			            	}
-			            }];
+							}}
+						];
 		
 		po_dtl_columns = [{ "mData": "po_dtl_item_no" },
 			{ "mData": "po_dtl_item_unit" },
 			{ "mData": "po_dtl_item_qty" },
 			{ "mData": "po_dtl_item_desc" },
+			{ "mData": function(data){
+				var article_name = $('select[name="po_dtl_article_id"]')
+					.find('option[value="'+data.po_dtl_article_id+'"]').text().trim();
+				return article_name;
+			}},
 			{ "mData": function(data){ 
 				return parseFloat(data['po_dtl_item_cost']).moneyFormat();
 			}},
@@ -323,25 +383,40 @@
 			}},
 			{ 
 				'mData': function(data){
-					var model = new RegExp('//model//','g');
-					var model_id = new RegExp('/model_id/','g'); 
-					var target_modal = new RegExp('//target-modal//','g'); 
-					
-					var action = action_template
-						.replace(model, 'po_dtl')
-						.replace(target_modal, 'po_dtl')
-						.replace(model_id, data.po_dtl_id);
-					
-					action = $(action).clone();
-					$(action).find('a.delete-po_dtl').attr('href', '#').removeAttr('onclick');
-					action = $(action).html();
-					return action;
+					if(!po_dtl_view_mode){
+						var model = new RegExp('//model//','g');
+						var model_id = new RegExp('/model_id/','g'); 
+						var target_modal = new RegExp('//target-modal//','g'); 
+						
+						var action = action_template
+							.replace(model, 'po_dtl')
+							.replace(target_modal, 'po_dtl')
+							.replace(model_id, data.po_dtl_id);
+						
+						action = $(action).clone();
+						$(action).find('a.delete-po_dtl').attr('href', '#').removeAttr('onclick');
+						return $(action).html();
+					}
+					return "";
 				}
-			},
-		];
+			}];
+		
+		po_mapping = function(v, o) {
+			if(v == 'po_created') {
+				var dateIs = new Date(o[v].split(' ')[0]).toDateString();
+				return dateIs;
+			}
+			if(v == 'po_deliv_date') {
+				return (new Date(o[v]).toLocaleDateString());
+			}
+			if(v == 'po_total') {
+				return parseFloat(o[v]).moneyFormat();
+			}
+			return o[v];
+		};
 		
 		$('document').ready(function() {
-			$('.po-created').datetimepicker({});
+			$('.po-created').datetimepicker();
 			
 			$('.deliv-date').datetimepicker({
 				pickTime: false
@@ -355,6 +430,19 @@
 				'sAjaxSource': '/po/',
 				'sAjaxDataProp': 'data',
 				"aoColumns": po_columns,
+				"fnRowCallback": function( nRow, aData, iDisplayIndex ) {
+					console.log(aData);
+					if(parseInt(aData.po_is_cancelled)){
+						$(nRow).addClass('danger');
+					};
+					if(parseInt(aData.po_is_furnished) && !parseInt(aData.po_is_cancelled)	) {
+						$(nRow).addClass('success');
+					};
+					
+					if(!parseInt(aData.po_is_furnished) && !parseInt(aData.po_is_cancelled)){
+						$(nRow).addClass('warning');
+					};
+				},
 				"fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {
 				  oSettings.jqXHR = $.ajax( {
 					"dataType": 'json',
@@ -406,58 +494,7 @@
 			var action_handle = $(this);
 			var row = action_handle.parents('tr:first');
 			var po_id;
-			//EDIT PO
-			if(action_handle.hasClass('edit-po')) {
-				po_detail_table.fnClearTable();
-				var row_position = po_table.fnGetPosition(row[0]); 
-				var row_data = po_table.fnGetData(row[0]);
-				current_po = row_data;
-				current_po_row = row_position;
-				changeModal({
-					'action':'/po/edit',
-					'model':'po',
-					'submit_name': 'edit-po',
-					'pr_button':'Save Changes',
-					'modal_label': 'Edit Purchase Order',
-					'run': function(){
-						$('#add-to-purchase, .secondary').show();
-						populate({
-							'data': current_po,
-							'name':'po',
-							'map': function(v, o) {
-									if(v == 'po_created') {
-										var dateIs = new Date(o[v].split(' ')[0]).toDateString();
-										return dateIs;
-									}
-									if(v == 'po_deliv_date') {
-										return (new Date(o[v]).toLocaleDateString());
-									}
-									return o[v];
-								}
-						}, function() {
-							po_detail_table = $('#po-dtl-table').dataTable({
-								"sPaginationType" : "two_button",
-								"iDisplayLength" : 3,
-								"sDom" : '<"pad-it"<"pull-right"f>l>tip>',
-								'sAjaxSource': '/po/',
-								'sAjaxDataProp': 'data',
-								"bDestroy" : true,
-								"bAutoWidth": false,
-								"aoColumns": po_dtl_columns,
-								"fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {
-								  oSettings.jqXHR = $.ajax( {
-									"dataType": 'json',
-									"type": "POST",
-									"url": sSource,
-									"data": {po:current_po['po_id']},
-									"success": fnCallback
-								  } );
-								}
-							});
-						});	
-					}
-				});
-			}
+			
 			//VIEW PO
 			if(action_handle.hasClass('view-po')) {
 				var row_position = po_table.fnGetPosition(row[0]); 
@@ -473,26 +510,18 @@
 					'run': function(){
 						$('#add-to-purchase').hide();
 						$('.secondary').hide();
-						
 						populate({
 							'data': current_po,
 							'name':'po',
-							'map': function(v, o) {
-									if(v == 'po_created') {
-										var dateIs = new Date(o[v].split(' ')[0]).toDateString();
-										return dateIs;
-									}
-									if(v == 'po_deliv_date') {
-										return (new Date(o[v]).toLocaleDateString());
-									}									
-									return o[v];
-						}}, function(){
+							'map': po_mapping,
+						}, function(){
 								$.each(Object.keys(current_po), function(i, v){
 									$('#po-modal-form').find('input[name="'+v+'"]')
 										.attr('disabled', 'disabled');
 									$('#'+v)
 										.attr('disabled', 'disabled');
 								});
+								po_dtl_view_mode = 1;		
 								po_detail_table = $('#po-dtl-table').dataTable({
 										"sPaginationType" : "two_button",
 										"iDisplayLength" : 3,
@@ -512,6 +541,8 @@
 										  } );
 										}
 									});
+								bVis = po_detail_table.fnSettings().aoColumns[7].bVisible;
+								po_detail_table.fnSetColumnVis( 7, bVis ? false : true );
 						});
 					}
 				});
@@ -531,7 +562,6 @@
 					'pr_button':'Save Changes',
 					'modal_label': 'Edit Item',
 					'run': function() {
-						
 						//POPULATE TO THE FORM
 						populate({
 							'data': row_data,
@@ -548,39 +578,6 @@
 					}
 				});
 			}
-			//IF VIEWING DETAIL
-			if(action_handle.hasClass('view-po_dtl')) {
-				var row_position = po_detail_table.fnGetPosition(row[0]); 
-				var row_data = po_detail_table.fnGetData(row[0]);
-				current_po_dtl = row_data;
-				current_po_dtl_row = row_position;
-				changeModal({
-					'action':'#',
-					'model':'po_dtl',
-					'submit_name': 'view-po_dtl',
-					'pr_button':'Back to Order',
-					'modal_label': 'View Item',
-					'run': function() {
-						populate({
-							'data': current_po_dtl,
-							'name':'po_dtl',
-							'map': function(v, o) {
-									if(v == 'po_dtl_item_created') {
-										var dateIs = new Date(o[v].split(' ')[0]).toDateString();
-										return dateIs;
-									}
-									return o[v];
-							}}, function(){
-								$('#po_dtl-modal-form .secondary').hide();
-								$('#po_dtl-modal-form').find('input').attr('disabled','disabled');
-							}
-						);
-						
-						
-					}
-				});
-			}
-			
 			//DELETING DETAIL
 			if(action_handle.hasClass('delete-po_dtl')) {
 				var row_position = po_detail_table.fnGetPosition(row[0]); 
@@ -592,8 +589,9 @@
 				)){
 					po_detail_table.fnDeleteRow(current_po_dtl_row);
 					po_detail_table.fnDraw();
-				}				
-			}
+				}
+			};
+			
 		});
 		
 		//CREATE PO
@@ -656,7 +654,7 @@
 			var button_action = form.find('.btn-primary').attr('name');
 			e.preventDefault();
 			
-			var inputs = form.find('input[name]');
+			var inputs = form.find('input[name], select[name]');
 												
 			switch(button_action){
 				case 'edit-po_dtl':	
@@ -679,6 +677,12 @@
 				default:
 					break;
 			};
+			var total_amount = 0;
+			var items = po_detail_table.fnGetData();
+			(items).forEach(function(v, i, a){
+				total_amount +=parseFloat(v['po_dtl_item_cost'])*parseFloat(v['po_dtl_item_qty']);
+			});
+			$('#po_total').text(parseFloat(total_amount).moneyFormat());
 			$('#po_dtl-modal').modal('hide');
 			$('#po_dtl-modal-form').find('input').removeAttr('disabled');
 		});
