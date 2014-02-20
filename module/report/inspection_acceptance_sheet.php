@@ -14,7 +14,7 @@ class report extends Formsheet{
 		$this->createSheet();
 		return $this;
 	}
-	function hdr(){
+	function hdr($hdr){
 		$metrics = array(
 			'base_x'=> 0.25,
 			'base_y'=> 0.5,
@@ -38,25 +38,32 @@ class report extends Formsheet{
 		$y +=3;
 		$this->drawLine(6.80,'h',array(0,42));
 		$this->leftText(2,8,'Supplier:','','i');
+		$this->leftText(6,7.9,$hdr['supplier_name'],'','i');
 		$this->drawLine(8.10,'h',array(5,15));
 		$this->leftText(28,8,'LAR No.:','','i');
+		$this->leftText(32,7.9,$hdr['ia_no'],'','i');
 		$this->drawLine(8.10,'h',array(31,10));
 		$this->leftText(2,11,'PO No.:','','i');
+		$this->centerText(7,10.9,$hdr['po_no'],'','i');
 		$this->drawLine(11.10,'h',array(5,4));
 		$this->leftText(10,11,'Date:','','i');
+		$this->centerText(14.5,10.9,date('M d, Y',strtotime($hdr['po_deliv_date'])),'','i');
 		$this->drawLine(11.10,'h',array(12,5));
 		$this->leftText(18,11,'Inv. No.:','','i');
+		$this->leftText(21.5,10.9,$hdr['ia_inv_no'],'','i');
 		$this->drawLine(11.10,'h',array(21,4));
 		$this->leftText(26,11,'DR. No.:','','i');
+		$this->leftText(29.5,10.9,$hdr['ia_dr_no'],'','i');
 		$this->drawLine(11.10,'h',array(29,4));
 		$this->leftText(34,11,'Date:','','i');
 		$this->drawLine(11.10,'h',array(36,5));
 		$this->leftText(2,14,'Requisitioning Office/Dept.:','','i');
+		$this->leftText(12,14,$hdr['dept_name'],'','i');
 		$this->drawLine(14.20,'h',array(0,42));
 		$this->drawLine(14.40,'h',array(0,42));
 		return $this;
 	}
-	function data(){
+	function data($details){
 		$metrics = array(
 			'base_x'=> 0.25,
 			'base_y'=>2.5,
@@ -91,6 +98,22 @@ class report extends Formsheet{
 		$this->drawLine(52.70,'h',array(0,42));
 		$this->centerText(0,53.50,'Inspection Office/Inspection Committee',21,'i');
 		$this->centerText(21,53.50,'Property Unit',21,'i');
+		//echo "<pre>";print_r($details);exit();
+		
+		$y = 1.5;
+		$total_per_item=0;
+		$total=0;
+		foreach($details as $detail){
+			$total+=$total_per_item = $detail['po_dtl_item_cost']*$detail['ia_dtl_item_qty'];
+			 $this->centerText(1,$y, isset($detail['item_stock_no'])?$detail['item_stock_no']:'',3,'');
+			 $this->centerText(5.5,$y, $detail['po_dtl_item_unit'],3,'');
+			 $this->centerText(9.5,$y, $detail['ia_dtl_item_qty'],3,'');
+			 $this->leftText(14,$y,$detail['po_dtl_item_desc'],'','');
+			 $this->rightText(32.5,$y,number_format($detail['po_dtl_item_cost'], 2, '.', ','),3,'');
+			 $this->rightText(38,$y,number_format($total_per_item, 2, '.', ','),3,'');
+			 $y++;
+		}
+		$this->rightText(38,35.60,number_format($total, 2, '.', ','),3,'');
 		return $this;
 	}
 	
