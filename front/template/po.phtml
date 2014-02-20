@@ -104,7 +104,7 @@
 								<div class="form-group">
 									<label class="col-sm-2 control-label">Supplier</label>
 									<div class="col-sm-10">
-										<input type="input" class="form-control" placeholder="If the supplier is not existing please, add it first"
+										<input type="input" class="form-control" placeholder="If the supplier does not exist please, add it first"
 											id="supplier_name" required="required">
 										<input type="hidden" name="po_supplier_id" >
 									</div>
@@ -360,8 +360,10 @@
 									' onclick="return confirm('+"'"+
 									'Do you want to print a report to a pdf file?'+"'"+
 									')">Print</a></li>');
-									
-								if(!parseInt(data.po_is_cancelled)){
+								if(!parseInt(data.po_is_cancelled) &&
+									(!parseInt(data.po_is_furnished) && !parseInt(data.po_is_cancelled)) &&
+										!parseInt(data.po_is_furnished)
+									){
 									li.append('<a href="/po/cancel/'+data.po_id+'" class="cancel-po"'+
 									'onclick="return confirm('+"'"+
 									'Do you really want to cancel Purchase Order no.'+
@@ -438,7 +440,6 @@
 				'sAjaxDataProp': 'data',
 				"aoColumns": po_columns,
 				"fnRowCallback": function( nRow, aData, iDisplayIndex ) {
-					console.log(aData);
 					if(parseInt(aData.po_is_cancelled)){
 						$(nRow).addClass('danger');
 					};
