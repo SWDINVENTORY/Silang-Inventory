@@ -100,7 +100,7 @@ class report extends Formsheet{
 		$this->centerText(0,53.50,'Inspection Office/Inspection Committee',21,'i');
 		$this->centerText(21,53.50,'Property Unit',21,'i');
 		//echo "<pre>";print_r($details);exit();
-		
+		$this->GRID['font_size']=9;
 		$y = 1.5;
 		$total_per_item=0;
 		$total=0;
