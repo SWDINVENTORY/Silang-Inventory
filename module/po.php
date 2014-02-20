@@ -113,6 +113,7 @@ class Po extends Abstract_Model {
 			))
 			->addFilter('po_id = %s', $id)
 			->leftJoinOn(Po::PO_DTL_TABLE, 'po_id = po_dtl_po_id')
+			->innerJoinOn('article', 'article_id = po_dtl_article_id')
 			->getRows();
 	}
 	

@@ -161,21 +161,6 @@
 								</select>
 							</div>
 						</div>
-						<div class="col-sm-5">
-							<label class="col-sm-3 control-label">Article</label>
-							<div class="col-sm-6">
-								<select class="form-control" name="ia_article_id" required="required">
-								<option value="">Select Article</option>
-								<?php if(!empty($articles)):?>
-								<?php foreach($articles as $article):?>
-								<option value="<?php echo $article['article_id']; ?>">
-									<?php echo $article['article_name']; ?>
-								</option>
-								<?php endforeach;?>
-								<?php endif;?>
-								</select>
-							</div>
-						</div>
 					</div>
 				</div>
 				
@@ -302,10 +287,12 @@
 									.replace(target_modal, 'ia')
 									.replace(model_id, data.ia_id);
 			            		action = $(action).clone();
+								action.find('a.edit-ia').parent().remove();
+								action.find('a.delete-ia').parent().remove();
 								action.find('ul.dropdown-menu').append(
 								'<li><a class="print_report-ia" href="/ia/report/'+data.ia_id+
 									'" target="_blank" title="Print from pdf file.">Print</a></li>'
-								)
+								);
 								action = action.html();
 								return action;
 			            	}
@@ -346,8 +333,9 @@
 							.replace(target_modal, 'ia_dtl')
 							.replace(model_id, data.ia_dtl_id);
 						action = $(action).clone();
-						$(action).find('a.delete-ia_dtl').parent().remove();
-						action = $(action).html();
+						action.find('a.edit-ia_dtl').text('Accepted');
+						action.find('a.delete-ia_dtl').parent().remove();
+						action = action.html();
 						return action;
 				}}
 			];
@@ -401,49 +389,6 @@
 			var row = action_handle.parents('tr:first');
 			var  ia_id;
 			
-			//EDIT  IA
-			if(action_handle.hasClass('edit-ia')) {
-				ia_dtl_table.fnClearTable();
-				var row_position = ia_table.fnGetPosition(row[0]); 
-				var row_data = ia_table.fnGetData(row[0]);
-				current_ia = row_data;
-				current_ia_row = row_position;
-				changeModal({
-					'action':'/ia/edit',
-					'model':'ia',
-					'submit_name': 'edit-ia',
-					'pr_button':'Save Changes',
-					'modal_label': 'Edit Inspection/Acceptance',
-					'run': function(){
-						$('#add-to-list .secondary').show();
-						populate({
-							'data': current_ia,
-							'name':'ia',
-							'map': ia_mapping, 
-						}, function() {
-							ia_dtl_table = $('#ia-dtl-table').dataTable({
-								"sPaginationType" : "two_button",
-								"iDisplayLength" : 3,
-								"sDom" : '<"pad-it"<"pull-right"f>l>tip>',
-								'sAjaxSource': '/ia/',
-								'sAjaxDataProp': 'data',
-								"bDestroy" : true,
-								"bAutoWidth": false,
-								"aoColumns": ia_dtl_columns,
-								"fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {
-								  oSettings.jqXHR = $.ajax( {
-									"dataType": 'json',
-									"type": "POST",
-									"url": sSource,
-									"data": {ia:current_ia['ia_id']},
-									"success": fnCallback
-								  } );
-								}
-							});
-						});	
-					}
-				});
-			}
 			//VIEW IA
 			if(action_handle.hasClass('view-ia')) {
 				var row_position = ia_table.fnGetPosition(row[0]); 
@@ -468,6 +413,7 @@
 								$.each(Object.keys(current_ia), function(i, v){
 									$('#ia-modal-form').find('input[name="'+v+'"]')
 										.attr('disabled', 'disabled');
+									$('#ia-modal-form').find('select').attr('disabled', 'disabled');
 									$('#'+v)
 										.attr('disabled', 'disabled');
 								});
@@ -490,6 +436,8 @@
 										  } );
 										}
 									});
+								var bVis = ia_dtl_table.fnSettings().aoColumns[6].bVisible;
+								ia_dtl_table.fnSetColumnVis( 6, bVis ? false : true );
 						});
 					}
 				});
@@ -507,7 +455,7 @@
 					'model':'ia_dtl',
 					'submit_name': 'edit-ia_dtl',
 					'pr_button':'Save Changes',
-					'modal_label': 'Edit Inspected/Accepted Item',
+					'modal_label': 'Accepted Item Quantity',
 					'run': function() {
 						//POPULATE TO THE FORM
 						populate({

@@ -32,9 +32,9 @@ function clear_form(model, callback) {
 	$('#'+model+'-modal-form')[0].reset();
 	$('#'+model+'-modal-form').find('input[name]')
 		.removeAttr('disabled');
-	$('#'+model+'-modal-form').find('select')
+	$('#'+model+'-modal-form').find('select[name]')
 		.removeAttr('disabled');
-	$('#'+model+'-modal-form').find('textarea')
+	$('#'+model+'-modal-form').find('textarea[name]')
 		.removeAttr('disabled');
 	if(typeof callback != 'undefined' && typeof(callback) == 'function') {
 		callback();

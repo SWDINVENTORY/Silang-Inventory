@@ -1,13 +1,7 @@
 <style>
-	.supplier .border {
-		padding: 5px;
-	}
+	.supplier .border { padding: 5px; }
 	.supplier .border-space{ padding: 5px 5px; }
-	
-	#supplier-table th:last-child {
-		width: 5%;
-	}
-	
+	#supplier-table th:last-child { width: 5%; }
 </style>
 <div class="row">
 	<div class="col-md-12">
@@ -89,41 +83,41 @@
 <script type="text/javascript">
 (function($) {
 	$(document).ready(function() {
-		supplier_table = {};
-		action_template = $('#action_tpl').text().trim();
-		supplier_columns = [
-			            { "mData": "supplier_name" },
-			            { "mData": "supplier_address" },
-			            { "mData": "supplier_tel_no" },
-			            {
-			            	'mData': function(data){
-			            		var model = new RegExp('//model//','g');
-			            		var model_id = new RegExp('/model_id/','g'); 
-			            		var target_modal = new RegExp('//target-modal//','g'); 
-								var action = action_template
-									.replace(model, 'supplier')
-									.replace(target_modal, 'supplier')
-									.replace(model_id, data.supplier_id);
-			            		return action;
-			            	}
-			            }];
-		supplier_table = $('#supplier-table').dataTable({
-				'sPaginationType' : "two_button",
-				"iDisplayLength" : 10,
-				"sDom" : '<"pad-it"<"pull-right"f>l>t<"pull-right"i>p>',
-				'sAjaxSource': '/supplier/',
-				'sAjaxDataProp': 'data',
-				"bAutoWidth": false,
-				"aoColumns": supplier_columns,
-				"fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {
-				  oSettings.jqXHR = $.ajax( {
-					"dataType": 'json',
-					"type": "POST",
-					"url": sSource,
-					"data": {supplier:'all'},
-					"success": fnCallback
-				  } );
+		var supplier_table = {};
+		var action_template = $('#action_tpl').text().trim();
+		var supplier_columns = [
+			{ "mData": "supplier_name" },
+			{ "mData": "supplier_address" },
+			{ "mData": "supplier_tel_no" },
+			{
+				'mData': function(data){
+					var model = new RegExp('//model//','g');
+					var model_id = new RegExp('/model_id/','g'); 
+					var target_modal = new RegExp('//target-modal//','g'); 
+					var action = action_template
+						.replace(model, 'supplier')
+						.replace(target_modal, 'supplier')
+						.replace(model_id, data.supplier_id);
+					return action;
 				}
+			}];
+		var supplier_table = $('#supplier-table').dataTable({
+			'sPaginationType' : "two_button",
+			"iDisplayLength" : 10,
+			"sDom" : '<"pad-it"<"pull-right"f>l>t<"pull-right"i>p>',
+			'sAjaxSource': '/supplier/',
+			'sAjaxDataProp': 'data',
+			"bAutoWidth": false,
+			"aoColumns": supplier_columns,
+			"fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {
+			  oSettings.jqXHR = $.ajax( {
+				"dataType": 'json',
+				"type": "POST",
+				"url": sSource,
+				"data": {supplier:'all'},
+				"success": fnCallback
+			  } );
+			}
 		})
 		
 		//CREATE Supplier
@@ -195,6 +189,7 @@
 				});
 			}
 		});
+		
 	});
 })(jQuery);
 </script>
