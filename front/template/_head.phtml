@@ -38,27 +38,39 @@
 			</li>
 			<li class="dropdown">
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-caret-square-o-down"></i> Report(s) <b class="caret"></b></a>
-				<ul class="dropdown-menu">
+				<ul class="dropdown-menu" id="reports-menu">
 					<li>
-						<a href="/report/ia">Inspection / Acceptance</a>
+						<a href="/report/propery-code" target="report">Property Code</a>
 					</li>
 					<li>
-						<a href="/report/inventory-count">Property Code for Materials</a>
+						<a href="/report/inventory-count" id="phy-inv-count" target="report">
+							Physical Count
+						</a>
 					</li>
 					<li>
-						<a href="/report/inventory-count">Property Code for Supplies</a>
+						<a href="/report/bin-card" target="report">Bin Card</a>
 					</li>
 					<li>
-						<a href="/report/inventory-count">Physical Count on Inventory</a>
+						<a href="/report/issue-out" target="report">Issue Out</a>
 					</li>
 					<li>
-						<a href="/report/materials-inventory">Materials Inventory</a>
+						<a href="/report/rms" target="report">Issue Out</a>
+					</li>
+					
+					<li>
+						<a href="/report/monthly-report" target="report">Monthly Report</a>
 					</li>
 					<li>
-						<a href="/report/supplies-inventory">Supplies Inventory</a>
+						<a href="/report/monthly-report" target="report">Requisition and Issue</a>
 					</li>
 					<li>
-						<a href="/report/supplies-issued">Supplies Issued</a>
+						<a href="/report/monthly-report" target="report">Returned Materials</a>
+					</li>
+					<li>
+						<a href="/report/old-reusable-stock" target="report">Old Reusable Stock</a>
+					</li>
+					<li>
+						<a href="/report/stock-card" target="report">Old Reusable Stock</a>
 					</li>
 				</ul>
 			</li>
@@ -84,9 +96,24 @@
 	<?php endif; ?>
 </nav>
 <script type="text/javascript">
-	(function($) {
-		$('#navigator li').removeClass('active');
-		var path = window.location.pathname;
-		$('a[href="' + path + '"]').parent().addClass('active');
-	})(jQuery); 
+(function($) {
+	$('#navigator li').removeClass('active');
+	var path = window.location.pathname;
+	$('a[href="' + path + '"]').parent().addClass('active');
+	
+	$('#reports-menu a').on('click', function(){
+		$('div.body').remove();
+		$('#page-wrapper').css({
+			'padding':'0',
+			'height':window.innerHeight.toString()+'px'
+		});
+		$('body').css({
+			'overflow':'hidden'
+		});
+		$('iframe[name="report"]').show().css({
+			'width':'100%',
+			'height':'100%'
+		});
+	});
+})(jQuery); 
 </script>

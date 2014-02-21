@@ -1,6 +1,6 @@
 <style>
 	.ia-modal-dialog {
-		width: 75%;
+		width: 90%;
 	}
 	.ia .border {
 		margin-top: 10px;
@@ -401,10 +401,7 @@
 					'submit_name': 'view-ia',
 					'pr_button':'Back To List',
 					'modal_label': 'View Inspection/Acceptance',
-					'run': function(){
-						$('#add-to-list').hide();
-						$('.secondary').hide();
-						
+					'run': function(){						
 						populate({
 							'data': current_ia,
 							'name':'ia',
@@ -565,6 +562,7 @@
 					'run': function(){
 						clear_form('ia', function(){
 							$('input[name="ia_created"]').val(new Date().toDateString());
+							$('#po_no').removeAttr('disabled');
 						});
 						ia_dtl_table = $('#ia-dtl-table').dataTable({
 								"sPaginationType" : "two_button",
@@ -574,6 +572,8 @@
 								"bAutoWidth": false,
 								"aoColumns": ia_dtl_columns
 								});
+						var bVis = ia_dtl_table.fnSettings().aoColumns[6].bVisible;
+						ia_dtl_table.fnSetColumnVis( 6, bVis ? true : false );
 					}
 				});
 		});
