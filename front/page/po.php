@@ -1,5 +1,5 @@
 <?php //-->
-
+include(realpath(__DIR__.'/../../module/report/inspection_acceptance.php'));
 class Front_Page_Po extends Front_Page {
 	/* Constants
 	-------------------------------*/
@@ -228,8 +228,6 @@ class Front_Page_Po extends Front_Page {
 			$po_id = $this->variables[1];
 			$po = $this->Po()->getPo($po_id);
 			$po['detail'] = $this->Po()->getDetail($po_id);
-			front()->output($po);
-			exit;
 			recieve_data($po);
 			exit;
 		}

@@ -12,7 +12,7 @@ class Article extends Abstract_Model {
 	const ARTICLE_NAME = 'article_name';
 	const ARTICLE_INVENTORY_TYPE = 'article_inventory_type';
 	const ARTICLE_CREATED = 'article_created';
-		
+	const ARTICLE_UPDATED = 'article_updated';
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
@@ -24,7 +24,6 @@ class Article extends Abstract_Model {
 	protected $_primary		= self::ARTICLE_ID;
 	protected $_database	= NULL;
 	protected $_app			= NULL;
-
 	/* Private Properties
 	-------------------------------*/
 	/* Get
@@ -32,7 +31,6 @@ class Article extends Abstract_Model {
 	public static function i() {
 		return self::_getSingleton(__CLASS__);
 	}
-
 	/* Magic
 	-------------------------------*/
 	/* Public Methods
@@ -41,20 +39,17 @@ class Article extends Abstract_Model {
 		$this->_app = Eden::i()->getActiveApp();
 		$this->_database = $this->_app->getDatabase();
 	}
-	
 	public function search() {
 		return $this->_database
 			->search()
 			->setTable($this->_table)
 			->setModel($this->_model);
 	}
-
 	public function getAll() {
 		return $this->_getAll('*')
 			->sortByArticleName('ASC')
 			->getRows();
 	}
-	
 	public function model($value = NULL, $key = 'article_id') {
 		$model = $this->Article_Model()->setDatabase($this->_database);
 		
@@ -65,7 +60,6 @@ class Article extends Abstract_Model {
 		
 		return $model;
 	}
-	
 	/* Protected Methods
 	-------------------------------*/
 	/* Private Methods

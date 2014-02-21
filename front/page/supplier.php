@@ -22,7 +22,7 @@ class Front_Page_Supplier extends Front_Page {
 		$this->post = front()->registry()->get('post')->getArray();
 		$this->request = front()->registry()->get('request', 'variables','0');
 		$this->get = front()->registry()->get('get')->getArray();
-		$this->suppliers = $this->Supplier()->getAll();
+		
 		
 		if(isset($this->post)) {
 			$this->_setErrors();

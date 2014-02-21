@@ -1,0 +1,198 @@
+<style>
+	.article .border { padding: 5px; }
+	.article .border-space{ padding: 5px 5px; }
+	#article-table th:last-child { width: 10%; }
+</style>
+<div class="row">
+	<div class="col-md-12">
+		<h3>Articles <small>Item / Material Classifications</small></h3>
+		<ol class="breadcrumb">
+			<li>
+				<a href="/"><i class="icon-dashboard"></i> Inventory</a>
+			</li>
+			<li class="active">
+				<i class="icon-file-alt"></i> Articles
+			</li>
+		</ol>
+		<?php include(dirname(__FILE__).'\_message.phtml'); ?>
+	</div>
+</div>
+<div class="border">
+	<div class="border-space col-md-offset-11 col-md-1">
+		<button class="btn btn-primary" data-toggle="modal" data-target="#article-modal" 
+			data-backdrop="static" data-keyboard="false" id="create-article">Add</button>
+	</div>
+	<hr />
+	<div class="row article-list border-space">
+		<div class="col-md-12">
+			<div class="table-responsive">
+				<table class="table table-hover table-striped table-bordered" id="article-table">
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Inventory Type</th>
+							<th>Action</th>
+						</tr>
+					</thead>
+					<tbody></tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="article-modal" tabindex="-1" role="dialog" aria-labelledby="mymodallabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="my-modal-label"><span class="modal-form-state">Action Here</span></h4>
+      </div>
+      <div class="modal-body">
+      	<form class="form-horizontal" role="form" action="" method="post" id="article-modal-form">
+			<input type="hidden" name="article_id"/>
+		  <div class="form-group ">
+		    <label for="input-name" class="col-sm-3 control-label">Name:</label>
+		    <div class="col-sm-9">
+		      <input type="text" class="form-control" placeholder="Enter Article Name" name="article_name" required="required">
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="input-tel" class="col-sm-3 control-label">Inventory Type :</label>
+		    <div class="col-sm-9">
+		      <select name="article_inventory_type" class="form-control">
+				<option value="">Select Inventory Type</option>
+				<option value="SUPPLIES">Supplies</option>
+				<option value="MATERIAL">Materials</option>
+			  </select>
+		    </div>
+		  </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary" name="article"><span class="modal-form-action">Save changes</span></button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+<?php include __DIR__.'/action.phtml'; ?>
+<script type="text/javascript" src="/assets/js/modal_control.js"></script>
+<script type="text/javascript">
+(function($) {
+	$(document).ready(function() {
+		var article_table = {};
+		var action_template = $('#action_tpl').text().trim();
+		var article_columns = [
+			{ "mData": "article_name" },
+			{ "mData": function(data){
+				if(data.article_inventory_type) {
+					var inventory_type = $('select[name="article_inventory_type"] option[value="'+
+						data.article_inventory_type+'"]')
+						.text();
+				}
+				return inventory_type;
+			}},
+			{
+				'mData': function(data){
+					var model = new RegExp('//model//','g');
+					var model_id = new RegExp('/model_id/','g'); 
+					var target_modal = new RegExp('//target-modal//','g'); 
+					var action = action_template
+						.replace(model, 'article')
+						.replace(target_modal, 'article')
+						.replace(model_id, data.article_id);
+					return action;
+				}
+			}];
+		var article_table = $('#article-table').dataTable({
+			'sPaginationType' : "two_button",
+			"iDisplayLength" : 10,
+			"sDom" : '<"pad-it"<"pull-right"f>l>t<"pull-right"i>p>',
+			'sAjaxSource': '/article/',
+			'sAjaxDataProp': 'data',
+			"bAutoWidth": false,
+			"aoColumns": article_columns,
+			"fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {
+			  oSettings.jqXHR = $.ajax( {
+				"dataType": 'json',
+				"type": "POST",
+				"url": sSource,
+				"data": {article:'all'},
+				"success": fnCallback
+			  } );
+			}
+		})
+		
+		//CREATE Supplier
+		$('#create-article').click(function(){
+			changeModal({
+					'action':'/article/add',
+					'model':'article',
+					'submit_name': 'create-article',
+					'pr_button':'Create',
+					'modal_label': 'Create Supplier',
+					'run': function(){
+						clear_form('article');
+					}
+			});
+		});
+		
+		$(document).on('click','a',function(){
+			var action_handle = $(this);
+			var row = action_handle.parents('tr:first');
+			var  article_id;
+			//EDIT  Supplier
+			if(action_handle.hasClass('edit-article')) {
+				var row_position = article_table.fnGetPosition(row[0]); 
+				var row_data = article_table.fnGetData(row[0]);
+				current_article = row_data;
+				current_article_row = row_position;
+				changeModal({
+					'action':'/article/edit',
+					'model':'article',
+					'submit_name': 'edit-article',
+					'pr_button':'Save Changes',
+					'modal_label': 'Edit Supplier',
+					'run': function(){
+						populate({
+							'data': current_article,
+							'name':'article',
+							'map': function(v, o){ return o[v]; }
+						}, function(){
+							$('#article-modal .secondary').show();
+						});	
+						$('#article-modal-form').find('input').removeAttr('disabled');
+					}
+				});
+			}
+			//VIEW Supplier
+			if(action_handle.hasClass('view-article')) {
+				var row_position = article_table.fnGetPosition(row[0]); 
+				var row_data = article_table.fnGetData(row[0]);
+				current_article = row_data;
+				current_article_row = row_position;
+				changeModal({
+					'action':'/article',
+					'model':'article',
+					'submit_name': 'view-article',
+					'pr_button':'Back To List',
+					'modal_label': 'View Article',
+					'run': function(){
+						populate({
+							'data': current_article,
+							'name':'article',
+							'map': function(v, o){ return o[v]; }},
+							function(){
+								$('#article-modal .secondary').hide();
+								$('#article-modal-form').find('input').attr('disabled','disabled');
+							}
+							);
+						
+					}
+				});
+			}
+		});
+		
+	});
+})(jQuery);
+</script>
