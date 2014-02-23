@@ -1,5 +1,5 @@
 <?php //-->
-include(realpath(__DIR__.'/../../module/report/inspection_acceptance.php'));
+include(realpath(__DIR__.'/../../module/report/po_report.php'));
 class Front_Page_Po extends Front_Page {
 	/* Constants
 	-------------------------------*/
