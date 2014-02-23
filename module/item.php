@@ -41,6 +41,7 @@ class Item extends Abstract_Model {
 	-------------------------------*/
 	/* Public Methods
 	-------------------------------*/
+		
 	public function getAll() {
 			return $this->_database
 				->query(
@@ -53,11 +54,10 @@ class Item extends Abstract_Model {
 					->groupBy('item_id'));
 	}
 	
-	public function model($value = NULL, $key = 'user_id') {
+	public function model($value = NULL, $key = 'item_id') {
 		$model = $this->Item_Model()->setDatabase($this->_database);
 		
 		if(!is_null($value)) {
-			
 			$model->load($value, $key);
 		}
 		

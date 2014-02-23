@@ -31,6 +31,7 @@ class Po extends Abstract_Model {
 	
 	const PO_DTL_ID = 'po_dtl_id';
 	const PO_DTL_PO_ID = 'po_dtl_po_id';
+	const PO_DTL_ARTICLE_ID = 'po_dtl_article_id';
 	const PO_DTL_ITEM_NO = 'po_dtl_item_no';
 	const PO_DTL_ITEM_UNIT = 'po_dtl_item_unit';
 	const PO_DTL_ITEM_QTY= 'po_dtl_item_qty';

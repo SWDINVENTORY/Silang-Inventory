@@ -80,7 +80,7 @@ class Front_Page_Ia extends Front_Page {
 				$post['ia_is_partial'] = $this->is_partial;
 				$post['ia_partial_qty'] = $this->partial_count;
 				$post['ia_total_amount'] = $this->total_amount;
-				if(!$is_partial){
+				if(!$this->is_partial){
 					unset($post['ia_is_partial']);
 					unset($post['ia_partial_qty']);
 				}
@@ -94,9 +94,18 @@ class Front_Page_Ia extends Front_Page {
 					unset($dtl['po_dtl_item_qty']);
 					unset($dtl['po_dtl_item_cost']);
 					$dtl[Ia::IA_DTL_ITEM_CREATED] = date('Y-m-d H:i:s');
-					$dtl_id = front() -> database() -> insertRow(Ia::IA_DTL_TABLE, $dtl);
+					$dtl_id = front() -> database() -> insertRow(Ia::IA_DTL_TABLE, $dtl)
+						->getLastInsertedId();
+					if($dtl_id){
+						front()->output($dtl);
+						$this->_itemToInventory($dtl);
+						echo 'hey!';
+						exit;
+					}
 					$dtl['ia_dtl_id'] = $dtl_id;
 					array_push($ia_details, $dtl);
+					front()->output($ia_details);
+					exit;
 				}
 
 				$status = array();
@@ -255,6 +264,35 @@ class Front_Page_Ia extends Front_Page {
 				$this->partial_count+=(($dtl['po_dtl_item_qty'] - $dtl['ia_dtl_item_qty']));
 			}
 			$this->total_amount = ($dtl['po_dtl_item_cost'] * $dtl['ia_dtl_item_qty']) + $this->total_amount;
+		}
+	}
+
+	private function _itemToInventory($item) {
+		$po_dtl = front()->database()
+			->getRow('po_dtl', 'po_dtl_id', $item['ia_dtl_po_dtl_id']);
+		$itemfound = $this->Ia()->checkItem($po_dtl); 
+		
+		//if there's a match on item list
+		if(!empty($itemfound)){
+			$filter = array(
+				array('item_id=%s', $itemfound['item_id']));
+			front() -> database() -> updateRows('item', array(
+				'item_qty' => $itemfound['item_qty']+$item['ia_dtl_item_qty'],
+				'item_updated' => date('Y-m-d H:i:s')
+			), $filter);
+		}
+		
+		//If theres no match on item list
+		if(empty($itemfound)) {
+			$this->Item()->model()
+				->setItemDesc($po_dtl['po_dtl_item_desc'])
+				->setItemUnitMeasure($po_dtl['po_dtl_item_unit'])
+				->setItemQty($po_dtl['po_dtl_item_qty'])
+				->setItemType($po_dtl['po_dtl_item_type'])
+				->setItemArticleId($po_dtl['po_dtl_article_id'])
+				->setItemCreated(date('Y-m-d H:i:s'))
+				->setItemUpdated(date('Y-m-d H:i:s'))
+				->save();
 		}
 	}
 }

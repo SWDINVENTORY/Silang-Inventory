@@ -32,7 +32,6 @@ class Front_Page_Supplier extends Front_Page {
 			}
 		}
 		
-		$this->_body['suppliers'] = $this->suppliers;
 		$this->_body['error'] = $this->_errors;
 		
 		return $this->_page();
@@ -227,7 +226,7 @@ class Front_Page_Supplier extends Front_Page {
 	
 	protected function _supplier() {
 		$post = $this->post;
-		$suppliers = $this->suppliers;
+		$suppliers = $this->Supplier()->getAll();
 		
 		if(IS_AJAX) {
 				header('Content-Type: application/json');

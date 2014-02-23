@@ -55,7 +55,7 @@
 		<button type="button" class="btn btn-primary" id="create-ia"
 			data-backdrop="static" data-keyboard="false"
 				data-toggle="modal" data-target="#ia-modal">
-			Create
+			Inspect
 		</button>
 	</div>
 </div>
@@ -109,7 +109,7 @@
 							<div class="form-group">
 								<label class="col-sm-3 control-label">IAR No.</label>
 								<div class="col-sm-5">
-									<input type="input" class="form-control" placeholder="IAR No." name="ia_no" >
+									<input type="input" class="form-control" placeholder="IAR No." name="ia_no" required="required">
 								</div>
 							</div>
 						</div>
@@ -557,7 +557,7 @@
 					'action':'/ia/furnish',
 					'model':'ia',
 					'submit_name': '',
-					'pr_button':'Furnish Report',
+					'pr_button':'Accept',
 					'modal_label': 'Create Inspection/Acceptance',
 					'run': function(){
 						clear_form('ia', function(){

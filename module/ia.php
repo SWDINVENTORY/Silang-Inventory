@@ -120,6 +120,16 @@ class Ia extends Abstract_Model {
 			->innerJoinOn(Po::PO_DTL_TABLE, 'ia_dtl_po_dtl_id = po_dtl_id')
 			->getRows();
 	}
+	
+	public function checkItem($data){
+		return $this->search()
+			->setTable('item')
+			->setColumns('*')
+			->filterByItemDesc($data['po_dtl_item_desc'])
+			->addFilter('item_unit_measure=%s', $data['po_dtl_item_unit'])
+			->addFilter('item_article_id=%s', $data['po_dtl_article_id'])
+			->getRow();	
+	}
 	/* Protected Methods
 	-------------------------------*/
 	/* Private Methods

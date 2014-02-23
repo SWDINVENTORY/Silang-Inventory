@@ -17,7 +17,10 @@ class Item_Model extends Abstract_Model {
 	public static function i() {
 		return self::_getMultiple(__CLASS__);
 	}
-	
+	/* Magic
+	-------------------------------*/
+	/* Public Methods
+	-------------------------------*/		
 	public function itemUpdate($data) {
 		$data[Item::ITEM_UPDATED] = date('Y-m-d H:i:s', time());
 		$filter 	= array();
@@ -26,11 +29,6 @@ class Item_Model extends Abstract_Model {
 		unset($data[Item::ITEM_ID]);
 		return $this->_database->updateRows($this->_table, $data, $filter);
 	}
-	/* Magic
-	-------------------------------*/
-	/* Public Methods
-	-------------------------------*/		
-	
 	/* Private Methods
 	-------------------------------*/
 }
