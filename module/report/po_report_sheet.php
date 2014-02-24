@@ -14,7 +14,7 @@ class POReport extends Formsheet{
 		$this->createSheet();
 	}
 	
-	function hdr(){
+	function hdr($datas){
 		$metrics = array(
 			'base_x'=> 0.25,
 			'base_y'=> 0.25,
@@ -44,39 +44,159 @@ class POReport extends Formsheet{
 		$this->drawLine(26.8,'v',array(8,2));
 		$this->drawLine($y+0.1,'h',array(3,20));
 		$this->leftText(0.2,$y,'Supplier','','');
+		$this->leftText(4,$y,$datas['supplier_name'],'','');
+		
 		
 		$this->drawLine($y+0.1,'h',array(27.5,11.5));
+		$this->leftText(28,$y,$datas['po_no'],'','');
 		$this->leftText(25,$y++,'PO No.','','');
 		
 		$this->drawLine($y+0.1,'h',array(3,20));
 		$this->leftText(0.2,$y,'Address','','');
+		$this->leftText(4,$y,$datas['supplier_address'],'','');
 		
 		$this->drawLine($y+0.1,'h',array(27,12));
+		$this->leftText(28,$y,date('F d, Y',strtotime($datas['po_created'])),'','');
 		$this->leftText(25,$y++,'Date','','');
 		
 		$this->drawLine($y+0.1,'h',array(3,20));
 		$this->drawLine($y+0.1,'h',array(32,7));
+		$this->leftText(33,$y,$datas['po_proc_mod'],'','');
 		$this->leftText(25,$y++,'Mode of Procurement','','');
-		
+		//echo "<pre>";print_r($datas);exit();
 		$this->leftText(0.2,$y++,'Gentlemen:','','');
 		$this->leftText(3,$y++,'Please furnish this office the following articles subject to the terms and conditions contained herein',40,'');
 		
 		$this->drawLine($y+0.1,'h',array(5.5,20));
+		$this->leftText(6,$y,$datas['po_deliv_place'],'','');
 		$this->leftText(0.2,$y,'Place of Delivery','','');
 		
 		$this->drawLine($y+0.1,'h',array(32,7));
+		$this->leftText(33,$y,$datas['po_deliv_term'],'','');
 		$this->leftText(27,$y++,'Delivery Term','','');
 		
 		$this->drawLine($y+0.1,'h',array(5.5,20));
+		$this->leftText(6,$y,date('F d, Y',strtotime($datas['po_deliv_date'])),'','');
 		$this->leftText(0.2,$y,'Date of Delivery','','');
 		
 		$this->drawLine($y+0.1,'h',array(32,7));
+		$this->leftText(33,$y,$datas['po_pay_term'],'','');
 		$this->leftText(27,$y++,'Payment Term','','');
 		
 		$this->drawBox(0,0,40,10);
 	}
 	
-	function table(){
+	function convert_number_to_words($number) {
+		$hyphen      = '-';
+		$conjunction = ' and ';
+		$separator   = ', ';
+		$negative    = 'negative ';
+		$decimal     = ' point ';
+		$dictionary  = array(
+			0                   => 'zero',
+			1                   => 'one',
+			2                   => 'two',
+			3                   => 'three',
+			4                   => 'four',
+			5                   => 'five',
+			6                   => 'six',
+			7                   => 'seven',
+			8                   => 'eight',
+			9                   => 'nine',
+			10                  => 'ten',
+			11                  => 'eleven',
+			12                  => 'twelve',
+			13                  => 'thirteen',
+			14                  => 'fourteen',
+			15                  => 'fifteen',
+			16                  => 'sixteen',
+			17                  => 'seventeen',
+			18                  => 'eighteen',
+			19                  => 'nineteen',
+			20                  => 'twenty',
+			30                  => 'thirty',
+			40                  => 'fourty',
+			50                  => 'fifty',
+			60                  => 'sixty',
+			70                  => 'seventy',
+			80                  => 'eighty',
+			90                  => 'ninety',
+			100                 => 'hundred',
+			1000                => 'thousand',
+			1000000             => 'million',
+			1000000000          => 'billion',
+			1000000000000       => 'trillion',
+			1000000000000000    => 'quadrillion',
+			1000000000000000000 => 'quintillion'
+		);
+
+		if (!is_numeric($number)) {
+			return false;
+		}
+
+		if (($number >= 0 && (int) $number < 0) || (int) $number < 0 - PHP_INT_MAX) {
+			// overflow
+			trigger_error(
+				'convert_number_to_words only accepts numbers between -' . PHP_INT_MAX . ' and ' . PHP_INT_MAX,
+				E_USER_WARNING
+			);
+			return false;
+		}
+
+		if ($number < 0) {
+			return $negative . $this->convert_number_to_words(abs($number));
+		}
+
+		$string = $fraction = null;
+
+		if (strpos($number, '.') !== false) {
+			list($number, $fraction) = explode('.', $number);
+		}
+
+		switch (true) {
+			case $number < 21:
+				$string = $dictionary[$number];
+				break;
+			case $number < 100:
+				$tens   = ((int) ($number / 10)) * 10;
+				$units  = $number % 10;
+				$string = $dictionary[$tens];
+				if ($units) {
+					$string .= $hyphen . $dictionary[$units];
+				}
+				break;
+			case $number < 1000:
+				$hundreds  = $number / 100;
+				$remainder = $number % 100;
+				$string = $dictionary[$hundreds] . ' ' . $dictionary[100];
+				if ($remainder) {
+					$string .= $conjunction . $this->convert_number_to_words($remainder);
+				}
+				break;
+			default:
+				$baseUnit = pow(1000, floor(log($number, 1000)));
+				$numBaseUnits = (int) ($number / $baseUnit);
+				$remainder = $number % $baseUnit;
+				$string = $this->convert_number_to_words($numBaseUnits) . ' ' . $dictionary[$baseUnit];
+				if ($remainder) {
+					$string .= $remainder < 100 ? $conjunction : $separator;
+					$string .= $this->convert_number_to_words($remainder);
+				}
+				break;
+		}
+
+		if (null !== $fraction && is_numeric($fraction)) {
+			$string .= $decimal;
+			$words = array();
+			foreach (str_split((string) $fraction) as $number) {
+				$words[] = $dictionary[$number];
+			}
+			$string .= implode(' ', $words);
+		}
+
+		return $string;
+	}
+	function table($datas){
 		$metrics = array(
 			'base_x'=> 0.25,
 			'base_y'=> 2.3,
@@ -88,7 +208,6 @@ class POReport extends Formsheet{
 		$this->section($metrics);
 		$this->GRID['font_size']=10;
 		$this->drawBox(0,0,40,45);
-		//$this->drawLine(1,'h',array(10,15));
 		$x=5;
 		$x_ntrvl=5;
 		$this->drawLine(2,'h');
@@ -103,12 +222,25 @@ class POReport extends Formsheet{
 		$this->centerText(12,1.3,'Description',18,'b');
 		$this->centerText(31,1.3,'Unit Cost',4,'b');
 		$this->centerText(35,1.3,'Amount',5,'b');
+		$y=3;
+		$total_amount=0;
+		foreach($datas['detail'] as $detail){
+			$this->centerText(3,$y,$detail['po_dtl_item_unit'],5,'');
+			$this->centerText(7.5,$y,$detail['po_dtl_item_qty'],5,'');
+			$this->leftText(12.5,$y,$detail['po_dtl_item_desc'],18,'');
+			$this->rightText(30.5,$y,number_format($detail['po_dtl_item_cost'], 2, '.', ','),4,'');
+			$this->rightText(34.5,$y,number_format($detail['po_dtl_item_qty']*$detail['po_dtl_item_cost'], 2, '.', ','),5,'');
+			$total_amount +=($detail['po_dtl_item_qty']*$detail['po_dtl_item_cost']);
+			$y++;
+		}
 		
 		$this->drawLine(43.5,'h');
-		$this->leftText(0.2,44.5,'(Total Amount in Words)','','');
+		$amount_in_words = $this->convert_number_to_words($total_amount);
+		$this->leftText(0.2,44.5,'(Total Amount in Words)             '.strtoupper($amount_in_words).' PESOS','','');
+		return $total_amount;
 	}
 	
-	function ftr(){
+	function ftr($datas,$total_amount){
 		$metrics = array(
 			'base_x'=> 0.25,
 			'base_y'=> 9.85,
@@ -150,7 +282,7 @@ class POReport extends Formsheet{
 		$y=11.75;
 		$this->leftText(0.2,$y,'Requisition Office/Dept.:','','');
 		$this->leftText(13.2,$y++,'Funds Available:','','');
-		$this->leftText(26.2,$y++,'Amount:','','');
+		$this->leftText(26.2,$y++,'Amount:  Php '.number_format($total_amount, 2, '.', ','),'','');
 		
 		$this->drawLine($y+0.2,'h',array(1,11));
 		$this->centerText(0,$y,'FELIMON M. MADLANSACAY',13,'b');
@@ -158,7 +290,7 @@ class POReport extends Formsheet{
 		$this->centerText(13,$y++,'MA. ANGELES SUMAGUI',13,'b');
 		$this->centerText(0,$y,'(Authorized Official)',13,'');
 		$this->centerText(13,$y,'Chief Accountant',13,'');
-		$this->leftText(26.2,$y,'ALOBS No.:','','');
+		$this->leftText(26.2,$y,'ALOBS No.: '.$datas['po_alobs_no'],'','');
 	}
 }
 ?>

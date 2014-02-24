@@ -64,6 +64,7 @@ class report extends Formsheet{
 		$this->drawLine(14.40,'h',array(0,42));
 		return $this;
 	}
+	
 	function data($details){
 		$metrics = array(
 			'base_x'=> 0.25,
