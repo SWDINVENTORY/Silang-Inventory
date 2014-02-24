@@ -74,50 +74,62 @@ class Front_Page_Ia extends Front_Page {
 		$post = $this -> post;
 		if (isset($post['ia_id']) && empty($post['ia_id'])) {
 			if (isset($post['ia_dtl']) && is_array($post['ia_dtl']) && !empty($post['ia_dtl'])) {
-				$ia_dtl = $post['ia_dtl'];
-				unset($post['ia_dtl']);
-				$this->_computeTotalAmount();
-				$post['ia_is_partial'] = $this->is_partial;
-				$post['ia_partial_qty'] = $this->partial_count;
-				$post['ia_total_amount'] = $this->total_amount;
-				if(!$this->is_partial){
-					unset($post['ia_is_partial']);
-					unset($post['ia_partial_qty']);
-				}
-				$post = array_filter($post);
-				$post[Ia::IA_CREATED] = date('Y-m-d H:i:s');
-				$ia_id = $this->Ia()->add($post);
-				$ia_details = array();
-				foreach ($ia_dtl as $dtls) {
-					$dtl = $dtls;
-					$dtl[Ia::IA_DTL_IA_ID] = $ia_id;
-					unset($dtl['po_dtl_item_qty']);
-					unset($dtl['po_dtl_item_cost']);
-					$dtl[Ia::IA_DTL_ITEM_CREATED] = date('Y-m-d H:i:s');
-					$dtl_id = front() -> database() -> insertRow(Ia::IA_DTL_TABLE, $dtl)
-						->getLastInsertedId();
-					if($dtl_id){
-						front()->output($dtl);
-						$this->_itemToInventory($dtl);
-						echo 'hey!';
-						exit;
+				$po = front()->database()
+					->getRow('po', 'po_id', $post['ia_po_id']);
+				if(!$po['po_is_cancelled'] && !$po['po_is_furnished']) {
+					$ia_dtl = $post['ia_dtl'];
+					unset($post['ia_dtl']);
+					$this->_computeTotalAmount();
+					$post['ia_is_partial'] = $this->is_partial;
+					$post['ia_partial_qty'] = $this->partial_count;
+					$post['ia_total_amount'] = $this->total_amount;
+					if(!$this->is_partial){
+						unset($post['ia_is_partial']);
+						unset($post['ia_partial_qty']);
 					}
-					$dtl['ia_dtl_id'] = $dtl_id;
-					array_push($ia_details, $dtl);
-					front()->output($ia_details);
-					exit;
+					$post = array_filter($post);
+					$post[Ia::IA_CREATED] = date('Y-m-d H:i:s');
+					$ia_id = $this->Ia()->add($post);
+					$ia_details = array();
+					foreach ($ia_dtl as $dtls) {
+						$dtl = $dtls;
+						$dtl[Ia::IA_DTL_IA_ID] = $ia_id;
+						unset($dtl['po_dtl_item_qty']);
+						unset($dtl['po_dtl_item_cost']);
+						$dtl[Ia::IA_DTL_ITEM_CREATED] = date('Y-m-d H:i:s');
+						$dtl_id = front() -> database() -> insertRow(Ia::IA_DTL_TABLE, $dtl)
+							->getLastInsertedId();
+						if($dtl_id){
+							$this->_itemToInventory($dtl);
+						}
+						$dtl['ia_dtl_id'] = $dtl_id;
+						array_push($ia_details, $dtl);
+					}
+					$this->_updatePo($post['ia_po_id']);
+					$status = array();
+					$status['status'] = 1;
+					$status['msg'] = 'Successfully Inspected and Accepted Order '; //. $post[Ia:] . '!';
+					$status['data'] = array('ia_id' => $ia_id, 'ia' => $post, 'ia_dtl' => $ia_details);
+					if (IS_AJAX) {
+						header('Content-Type: application/json');
+						echo json_encode($status);
+						exit ;
+					}
+					$this -> _addMessage($status['msg'], 'success', true);
+					header('Location: /ia');
+					exit ;
 				}
-
 				$status = array();
-				$status['status'] = 1;
-				$status['msg'] = 'Successfully Inspected and Accepted Order '; //. $post[Ia:] . '!';
-				$status['data'] = array('ia_id' => $ia_id, 'ia' => $post, 'ia_dtl' => $ia_details);
+				$status['status'] = 0;
+				$status['msg'] = 'Sorry, Purchase Order is already cancelled or completed';
+
 				if (IS_AJAX) {
 					header('Content-Type: application/json');
 					echo json_encode($status);
 					exit ;
 				}
-				$this -> _addMessage($status['msg'], 'success', true);
+
+				$this -> _addMessage($status['msg'], 'danger', true);
 				header('Location: /ia');
 				exit ;
 			}
@@ -267,13 +279,16 @@ class Front_Page_Ia extends Front_Page {
 		}
 	}
 
+	//Item to Inventory
 	private function _itemToInventory($item) {
+		//Get Purchase Detail
 		$po_dtl = front()->database()
 			->getRow('po_dtl', 'po_dtl_id', $item['ia_dtl_po_dtl_id']);
+		//if exist
 		$itemfound = $this->Ia()->checkItem($po_dtl); 
 		
 		//if there's a match on item list
-		if(!empty($itemfound)){
+		if(!empty($itemfound)) {
 			$filter = array(
 				array('item_id=%s', $itemfound['item_id']));
 			front() -> database() -> updateRows('item', array(
@@ -294,5 +309,52 @@ class Front_Page_Ia extends Front_Page {
 				->setItemUpdated(date('Y-m-d H:i:s'))
 				->save();
 		}
+	}
+
+	private function _updatePo($po_id){
+		$po_dtl = $this->Po()->getDetail($po_id);
+		$ias = front()->database()
+			->search('po')
+			->setColumns('*')
+			->filterByPoId($po_id)
+			->innerJoinOn('ia', 'po_id =ia_po_id')
+			->leftJoinOn('ia_dtl', 'ia_id=ia_dtl_ia_id')
+			->innerJoinOn('po_dtl', 'po_dtl_id=ia_dtl_po_dtl_id')
+			->getRows();
+		
+		$purchasedItems = array();
+		
+		//PO Detail Mapping
+		foreach($po_dtl as $dtl) {
+			$index = $dtl['po_dtl_item_desc'].'-'.$dtl['po_dtl_item_unit'];
+			$purchasedItems[$index] = array(
+				'qty' => $dtl['po_dtl_item_qty'],
+				'cost' => $dtl['po_dtl_item_cost'],
+				'accumulated_qty' => 0
+			);
+		}
+		
+		//For each IA
+		foreach($ias as $ia) {
+			$ia_index = $ia['po_dtl_item_desc'].'-'.$ia['po_dtl_item_unit']; 
+			if(isset($purchasedItems[$ia_index])){
+				$purchasedItems[$ia_index]['accumulated_qty']+=$ia['ia_dtl_item_qty'];
+			}
+		}
+		
+		//Check if completed qty
+		$is_furnished = 0;
+		foreach($purchasedItems as $purchased){
+			if($purchased['qty']<=$purchased['accumulated_qty']) {
+				$is_furnished = 1;
+			}
+		}
+		
+		front()->database()
+			->updateRows('po', array(
+				'po_is_furnished' => $is_furnished 
+			), array(
+				array('po_id=%s', $po_id)
+				));
 	}
 }

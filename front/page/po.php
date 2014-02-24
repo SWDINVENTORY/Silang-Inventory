@@ -164,7 +164,8 @@ class Front_Page_Po extends Front_Page {
 							->getLastInsertedId();
 						$dtl['po_dtl_id'] = $dtl_id;
 					}
-					if(isset($dtl[Po::PO_DTL_ID])) {
+					
+					if(isset($dtl[Po::PO_DTL_ID])){
 						unset($filter);
 						$filter[] = array('po_dtl_id=%s', $dtl[Po::PO_DTL_ID]); 
 						unset($dtl[Po::PO_DTL_ITEM_CREATED]);

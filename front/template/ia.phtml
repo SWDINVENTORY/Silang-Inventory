@@ -118,7 +118,7 @@
 						<div class="col-md-2">
 							<label class="control-label col-md-5">PO No.</label>
 							<div class="col-md-7">
-								<input type="input" class="form-control" placeholder="PO No." id="po_no">
+								<input type="input" class="form-control" placeholder="PO No." id="po_no" required="required">
 								<input type="hidden" name="ia_po_id" id="po_id">
 							</div>
 						</div>
@@ -587,17 +587,17 @@
 			});
 			$.post('/po/', {po_no : po_number}, function(data){
 				var po = (data.data)?data.data:false;
-				if(!po) {
+				if(!po.po_dtl.length) {
 					alert('Purchase Order '+po_number+' not existing!');
 					input.empty().focus();
 				}
-				if(po) {
-					po.po_is_ia = parseInt(po.po_is_ia); 
-					if(po.po_is_ia){
-						alert('Purchase Order '+po.po_no+' is already inspected and accepted!');
+				if(po){
+					po.po_is_furnished = parseInt(po.po_is_furnished); 
+					if(po.po_is_furnished){
+						alert('Purchase Order '+po.po_no+' is already inspected, accepted and completed!');
 						input.empty().focus();
 					}
-					if(!po.po_is_ia){
+					if(!po.po_is_furnished && !po.po_is_cancelled){
 						populate({
 							name:'ia',
 							data: po,
