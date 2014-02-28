@@ -99,6 +99,7 @@ class Front_Page_Ia extends Front_Page {
 						$dtl[Ia::IA_DTL_ITEM_CREATED] = date('Y-m-d H:i:s');
 						$dtl_id = front() -> database() -> insertRow(Ia::IA_DTL_TABLE, $dtl)
 							->getLastInsertedId();
+						
 						if($dtl_id){
 							$this->_itemToInventory($dtl);
 						}
@@ -284,6 +285,7 @@ class Front_Page_Ia extends Front_Page {
 		//Get Purchase Detail
 		$po_dtl = front()->database()
 			->getRow('po_dtl', 'po_dtl_id', $item['ia_dtl_po_dtl_id']);
+		
 		//if exist
 		$itemfound = $this->Ia()->checkItem($po_dtl); 
 		
@@ -292,23 +294,38 @@ class Front_Page_Ia extends Front_Page {
 			$filter = array(
 				array('item_id=%s', $itemfound['item_id']));
 			front() -> database() -> updateRows('item', array(
-				'item_qty' => $itemfound['item_qty']+$item['ia_dtl_item_qty'],
-				'item_updated' => date('Y-m-d H:i:s')
-			), $filter);
+					'item_qty' => $itemfound['item_qty']+intval($item['ia_dtl_item_qty']),
+					'item_updated' => date('Y-m-d H:i:s')
+				), $filter);
+			
+			$cost = array(
+				'item_cost_item_id' => $itemfound['item_id'],
+				'item_cost_qty' => intval($item['ia_dtl_item_qty']),
+				'item_cost_unit_cost' => floatval($po_dtl['po_dtl_item_cost']),
+				'item_cost_updated' => date('Y-m-d H:i:s')
+			);
+			front()->database()->insertRow('item_cost', $cost);
 		}
-		
 		//If theres no match on item list
 		if(empty($itemfound)) {
-			$this->Item()->model()
-				->setItemDesc($po_dtl['po_dtl_item_desc'])
-				->setItemUnitMeasure($po_dtl['po_dtl_item_unit'])
-				->setItemQty($po_dtl['po_dtl_item_qty'])
-				->setItemType($po_dtl['po_dtl_item_type'])
-				->setItemArticleId($po_dtl['po_dtl_article_id'])
-				->setItemCreated(date('Y-m-d H:i:s'))
-				->setItemUpdated(date('Y-m-d H:i:s'))
-				->save();
+			$item_id = front()->database()->insertRow('item', array(
+				'item_desc' => $po_dtl['po_dtl_item_desc'],
+				'item_unit_measure' => $po_dtl['po_dtl_item_unit'],
+				'item_qty' => $po_dtl['po_dtl_item_qty'],
+				'item_article_id' => $po_dtl['po_dtl_article_id'],
+				'item_created' => date('Y-m-d H:i:s'),
+				'item_updated' => date('Y-m-d H:i:s')
+			))->getLastInsertedId();
+			if($item_id){
+				front()->database()->insertRow('item_cost', array(
+					'item_cost_item_id' => $item_id,
+					'item_cost_qty' => intval($po_dtl['po_dtl_item_qty']),
+					'item_cost_unit_cost' => floatval($po_dtl['po_dtl_item_cost']),
+					'item_cost_created' => date('Y-m-d H:i:s')
+				));
+			}
 		}
+		return $this;
 	}
 
 	private function _updatePo($po_id){

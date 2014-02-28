@@ -333,7 +333,7 @@
 							.replace(target_modal, 'ia_dtl')
 							.replace(model_id, data.ia_dtl_id);
 						action = $(action).clone();
-						action.find('a.edit-ia_dtl').text('Accepted');
+						action.find('a.edit-ia_dtl').text('Inspect');
 						action.find('a.delete-ia_dtl').parent().remove();
 						action = action.html();
 						return action;
@@ -454,6 +454,7 @@
 					'pr_button':'Save Changes',
 					'modal_label': 'Accepted Item Quantity',
 					'run': function() {
+						clear_form('ia_dtl');
 						//POPULATE TO THE FORM
 						populate({
 							'data': row_data,
@@ -499,20 +500,36 @@
 			e.preventDefault();
 			
 			var inputs = form.find('input[name]');
-												
+			var items = ia_dtl_table.fnGetData();
+			var totalCosting = 0;									
 			switch(button_action){
 				case 'edit-ia_dtl':
 					$.each(inputs, function(i, o) {
 						if (current_ia_dtl[$(o).attr('name')]!= 'undefined') {
 							current_ia_dtl[$(o).attr('name')] = $(o).val();
 						}
+						/*if($['ia_dtl_item_qty']!= 'undefined'){
+							totalCosting+=(parseInt(items[i1]['ia_dtl_item_qty'])*
+								parseFloat(items[i1]['po_dtl_item_cost']))
+						}*/
 					});
-					
 					ia_dtl_table.fnUpdate(current_ia_dtl, current_ia_dtl_row);
 					break;
 				default:
 					break;
 			};
+			var total_amount = 0;
+			items = ia_dtl_table.fnGetData();
+			(items).forEach(function(v, i, a){
+				console.log(v);
+				if(v['ia_dtl_item_qty'] != undefined) {
+					console.log(parseFloat(v['po_dtl_item_cost'])
+						*parseInt(v['ia_dtl_item_qty']));
+					total_amount +=parseFloat(v['po_dtl_item_cost'])
+						*parseInt(v['ia_dtl_item_qty']);
+				}
+			});
+			$('#ia_total_amount').text(parseFloat(total_amount).moneyFormat());
 			$('#ia_dtl-modal').modal('hide');
 			$('#ia_dtl-modal-form').find('input').removeAttr('disabled');
 		});
@@ -582,17 +599,20 @@
 		$('#po_no').on('blur', function(){
 			var input = $(this);
 			var po_number = input.val();
+			var having_ia_no = $('input[name="ia_no"]').val();
 			clear_form('ia', function(){
-				$('input[name="ia_created"]').val(moment().format('M/D/YYYY'))
+				$('input[name="ia_created"]').val(moment().format('M/D/YYYY'));
+				$('input[name="ia_no"]').val(having_ia_no);
 			});
 			$.post('/po/', {po_no : po_number}, function(data){
-				var po = (data.data)?data.data:false;
+				po = (data.data)?data.data:false;
 				if(!po.po_dtl.length) {
 					alert('Purchase Order '+po_number+' not existing!');
 					input.empty().focus();
 				}
 				if(po){
 					po.po_is_furnished = parseInt(po.po_is_furnished); 
+					po.po_is_cancelled = parseInt(po.po_is_cancelled); 
 					if(po.po_is_furnished){
 						alert('Purchase Order '+po.po_no+' is already inspected, accepted and completed!');
 						input.empty().focus();
