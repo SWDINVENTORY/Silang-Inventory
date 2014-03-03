@@ -1,32 +1,24 @@
 <?php //-->
-/*
- * This file is part a custom application package.
- */
-
-/**
- * Default logic to output a page
- */
-class Front_Page_Ris extends Front_Page {
+class Requisition_Error extends Eden_Error {
 	/* Constants
 	-------------------------------*/
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_title = 'SWD-Inventory :  Requisition / Issue';
-	protected $_class = 'ris';
-	protected $_template = '/ris.phtml';
-	
 	/* Private Properties
 	-------------------------------*/
+	/* Get
+	-------------------------------*/
+	public static function i($message = NULL, $code = 0) {
+		$class = __CLASS__;
+		return new $class($message, $code);
+	}
+	
 	/* Magic
 	-------------------------------*/
 	/* Public Methods
 	-------------------------------*/
-	public function render() {
-		return $this->_page();
-	}
-	
 	/* Protected Methods
 	-------------------------------*/
 	/* Private Methods

@@ -37,13 +37,13 @@
 </style>
 <div class="row">
 	<div class="col-lg-12">
-		<h3>Requisition / Issuance <small>Request and issue of supplies and materials</small></h3>
+		<h3>Issuance <small>Issuance of supplies and materials</small></h3>
 		<ol class="breadcrumb">
 			<li>
 				<a href="/"><i class="icon-dashboard"></i> Inventory</a>
 			</li>
 			<li class="active">
-				<i class="icon-file-alt"></i> Requisition / Issuance
+				<i class="icon-file-alt"></i> Issuance
 			</li>
 		</ol>
 	</div>
@@ -65,12 +65,10 @@
 					<tr>
 						<th>Division</th>
 						<th>Office</th>
-						<th>Resrisnsibility Code</th>
+						<th>Responsibility Code</th>
 						<th>RIS No</th>
 						<th>RIS Date</th>
-						<th>SAI No</th>
-						<th>SAI Date</th>
-						<th>Purrisse</th>
+						<th>Purpose</th>
 						<th>Action</th>
 					</tr>
 				</thead>
@@ -95,78 +93,40 @@
 					<input type="hidden" name="ris_id"/>
 					<div class="border">
 						<div class="form-horizontal row">
-							<div class="col-sm-7">
+							<div class="col-sm-3">
 								<div class="form-group">
-									<label class="col-sm-2 control-label">Supplier</label>
-									<div class="col-sm-10">
-										<input type="input" class="form-control" placeholder="Name" id="supplier_name">
-										<input type="hidden" name="ris_supplier_id" >
+									<label class="col-sm-3 control-label">Division</label>
+									<div class="col-sm-9">
+										<input type="input" class="form-control" placeholder="Division" id="ris_division">
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-sm-2 control-label">Address</label>
-									<div class="col-sm-10">
-										<input type="input" class="form-control" placeholder="Address" id="supplier_address" disabled>
-									</div>
-								</div>
-							</div>
-							<div class="col-sm-5">
-								<div class="form-group">
-									<label class="col-sm-4 control-label">P.O. No.</label>
-									<div class="col-sm-4">
-										<input type="text" class="form-control" name="ris_no" placeholder="P.O. No.">
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="col-sm-4 control-label">Date</label>
-									<div class="col-sm-6">
-										<div class='input-group date ris-created'>
-											<input type='text' name="ris_created" class="form-control" />
-											<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
-											</span>
-										</div>
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="col-sm-4 control-label">Mode of Procurement</label>
-									<div class="col-sm-5">
-										<input type="text" class="form-control" placeholder="Mode" name="ris_proc_mod">
+									<label class="col-sm-3 control-label">Office</label>
+									<div class="col-sm-9">
+										<input type="input" class="form-control" placeholder="Office" id="ris_office">
 									</div>
 								</div>
 							</div>
-						</div>
-					</div>
-					<div class="border">
-						<div class="form-horizontal row">
-							<div class="col-sm-7">
+							<div class="col-sm-4">
 								<div class="form-group">
-									<label class="col-sm-2 control-label">Delivery Place</label>
+									<label class="col-sm-7 control-label">Responsibility Center Code</label>
 									<div class="col-sm-4">
-										<input type="input" class="form-control" placeholder="Place" name="ris_deliv_place">
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="col-sm-2 control-label">Delivery Date</label>
-									<div class="col-sm-4">
-										<div class='input-group date deliv-date'>
-											<input type='text' name="ris_deliv_date" class="form-control" />
-											<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
-											</span>
-										</div>
+										<input type="text" class="form-control" name="ris_rcc" placeholder="RCC">
 									</div>
 								</div>
 							</div>
-							<div class="col-sm-5">
+							<div class="col-sm-3">
 								<div class="form-group">
-									<label class="col-sm-4 control-label">Delivery Term</label>
-									<div class="col-sm-4">
-										<input type="text" class="form-control" placeholder="Term" name="ris_deliv_term">
+									<label class="col-sm-4 control-label">RIS No.</label>
+									<div class="col-sm-8">
+										<input type="text" class="form-control" name="ris_no" placeholder="RIS No.">
 									</div>
 								</div>
+							</div>
+							<div class="col-sm-2">
 								<div class="form-group">
-									<label class="col-sm-4 control-label">Payment Term</label>
-									<div class="col-sm-4">
-										<input type="text" class="form-control" placeholder="Term" name="ris_pay_term">
+									<div class="col-sm-12">
+										<input type="text" class="form-control" id="ris_created" placeholder="RIS Date" disabled>
 									</div>
 								</div>
 							</div>
@@ -175,27 +135,28 @@
 					<hr/>
 					<div class="border">
 						<div class="row item-input col-sm-12">
-							<div class="col-sm-offset-11 col-sm-1">
-								<button type="button" class="btn btn-primary" id="add-to-purchase"
+							<div class="col-sm-offset-10 col-sm-2">
+								<button type="button" class="btn btn-primary" id="request_item"
 								data-toggle="modal" data-target="#ris_dtl-modal" data-backdrop="static" data-keyboard="false">
-									Add Item
+									Request Item
 								</button>
 							</div>
 						</div>
 					</div>
 					<div class="row border-space">
 						<div class="col-sm-12">
-							<h4 align="center">Purchase List</h4>
+							<h4 align="center">Requesition List</h4>
 							<div class="table-resrisnsive">
 								<table class="table table-hover table-striped table-bordered tablesorter" id="ris-dtl-table">
 									<thead>
 										<tr>
-											<th>Item No.</th>
-											<th>Item Unit</th>
-											<th>Quantity</th>
+											<th>Item No</th>
+											<th>Stock No</th>
+											<th>Unit</th>
 											<th>Description</th>
-											<th>Unit Cost</th>
-											<th>Amount</th>
+											<th>Qty</th>
+											<th>Issuance Qty</th>
+											<th>Issuance Remarks</th>
 											<th>Action</th>
 										</tr>
 									</thead>
@@ -228,35 +189,36 @@
 			<div class="modal-body">
 				<form id="ris_dtl-modal-form" action='#'>
 				<div class="row border">
-							<div class="border">
-								<div class="col-sm-12">
-									<label for="input-name" class="col-sm-2 control-label">Desc</label>
-									<div class="form-group col-sm-10">	
-										<input type="text" class="form-control" placeholder="Desc"
-											name="ris_dtl_item_desc" required="required">
-									</div>
-								</div>
-								<div class="col-sm-12">
-									<label for="input-address" class="col-sm-2 control-label">Unit</label>
-									<div class="form-group col-sm-3">
-										<input type="text" class="form-control" placeholder="Unit"
-											name="ris_dtl_item_unit" required="required">
-									</div>
-								</div>
-								<div class="col-sm-12">
-									<label for="input-tel" class="col-sm-2 control-label">Qty</label>
-									<div class="form-group col-sm-3">
-										<input type="text" class="form-control" placeholder="QTY"
-											name="ris_dtl_item_qty" required="required">
-									</div>
-								</div>
-								<div class="col-sm-12">
-									<label for="input-tel" class="col-sm-2 control-label">Cost</label>
-									<div class="form-group col-sm-3" required="required">
-										<input type="text" class="form-control" placeholder="Unit Cost" name="ris_dtl_item_cost">
-									</div>
-								</div>
+					<div class="border">
+						<div class="col-sm-12">
+							<label for="input-name" class="col-sm-3 control-label">Stock No</label>
+							<div class="form-group col-sm-5">	
+								<input type="text" class="form-control" placeholder="Stock No"
+									name="ris_dtl_item_stock_no">
 							</div>
+						</div>
+						<div class="col-sm-12">
+							<label for="input-address" class="col-sm-3 control-label">Desc</label>
+							<div class="form-group col-sm-9">
+								<input type="text" class="form-control" placeholder="Description"
+									name="ris_dtl_item_desc" required="required">
+							</div>
+						</div>
+						<div class="col-sm-12">
+							<label for="input-address" class="col-sm-3 control-label">Unit</label>
+							<div class="form-group col-sm-2">
+								<input type="text" class="form-control" placeholder="UNIT"
+									name="ris_dtl_item_unit" required="required">
+							</div>
+						</div>
+						<div class="col-sm-12">
+							<label for="input-tel" class="col-sm-3 control-label">Qty</label>
+							<div class="form-group col-sm-2">
+								<input type="text" class="form-control" placeholder="QTY"
+									name="ris_dtl_item_qty" required="required">
+							</div>
+						</div>
+					</div>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default secondary" data-dismiss="modal">
@@ -603,8 +565,8 @@
 					'action':'/ris/furnish',
 					'model':'ris',
 					'submit_name': 'furnish',
-					'pr_button':'Furnish Order',
-					'modal_label': 'Create Purchase Order',
+					'pr_button':'Furnish Request',
+					'modal_label': 'Create Requesition',
 					'run': function(){
 						/*$('#add-to-purchase').show();
 						clear_form('ris', function(){
