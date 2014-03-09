@@ -19,6 +19,7 @@ class Po extends Abstract_Model {
 	const PO_DELIV_TERM = 'po_deliv_term';
 	const PO_PAY_TERM = 'po_pay_term';
 	const PO_TOTAL = 'po_total';
+	const PO_PURPOSE = 'po_purpose';
 	const PO_AUTH_OFF = 'po_auth_off';
 	const PO_REQ_OFF = 'po_req_off';
 	const PO_FUNDS_OFF = 'po_funds_off';
