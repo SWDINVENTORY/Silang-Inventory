@@ -52,7 +52,7 @@ class Front_Page_Issuance extends Front_Page {
 				$this -> _add();
 				break;
 			default :
-				$this -> _requisition();
+				$this -> _issuance();
 				break;
 		}
 	}
@@ -232,25 +232,27 @@ class Front_Page_Issuance extends Front_Page {
 		}
 	}
 
-	protected function _requisition() {
-		/*$post = $this -> post;
-		if (isset($post['ia'])) {
-			$ia = $this ->Ia()->getAll();
-			if ($post['ia'] != 'all') {
-				$id = $post['ia'];
-				if (is_numeric($id)) {
-					$ia = $this -> Ia() -> getDetail($id);
+	protected function _issuance() {
+		$post = $this -> post;
+		if (isset($post['ris_no'])) {
+			$issuance = front()->database()->getRows('ris');
+			if ($post['ris_no'] != 'all') {
+				$ris_no = $post['ris_no'];
+				if ($ris_no) {
+					$issuance = front()->database()->getRow('ris','ris_no',$ris_no);
+					$issuance['ris_dtl']=$this -> Requisition() -> getDetail($issuance['ris_id']);
+					
 				}
 			}
 
 			if (IS_AJAX) {
 				header('Content-Type: application/json');
 				$ret = array();
-				$ret['data'] = $requisition;
+				$ret['data'] = $issuance;
 				echo json_encode($ret);
 				exit ;
 			}
-		}*/
+		}
 		return $this;
 	}
 
