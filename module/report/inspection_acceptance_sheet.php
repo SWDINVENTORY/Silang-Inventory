@@ -116,18 +116,18 @@ class report extends Formsheet{
 		}
 		$y+=2;
 		//echo "<pre>";print_r($detail);exit();
-		$this->leftText(14,$y+=2,$detail['po_purpose'],'','');
-		$this->leftText(14,$y+=3,$detail['ia_is_partial']?'PARTIAL DELIVERY':'FULL DELIVERY','','');
+		$this->leftText(14,$y+=2,$detail['po_purpose'],'','b');
+		$this->leftText(14,$y+=2.5,$detail['ia_is_partial']?'PARTIAL DELIVERY':'FULL DELIVERY','','b');
 		$this->GRID['font_size']=12;
 		$this->SetTextColor(250,0,0);
-		$this->leftText(14,$y+2,isset($detail['detail'][0]['po_dtl_item_type'])?$detail['detail'][0]['po_dtl_item_type']:'','','');
+		$this->leftText(14,$y+1.5,isset($detail['detail'][0]['po_dtl_item_type'])?$detail['detail'][0]['po_dtl_item_type']:'','','b');
 		$this->GRID['font_size']=9;
 		$this->SetTextColor(0,0,0);
 		$this->rightText(38,35.60,number_format($total, 2, '.', ','),3,'');
 		return $this;
 	}
 	
-	function ftr(){
+	function ftr($detail){
 		$metrics = array(
 			'base_x'=> 0.25,
 			'base_y'=>8.15,
@@ -138,27 +138,33 @@ class report extends Formsheet{
 		);	
 		$this->section($metrics);
 		$this->GRID['font_size']=10;	
-		$this->leftText(1,2,'Date Inspected:','','');
+		$this->leftText(1,2,'Date Inspected: '.date('F d, Y',strtotime($detail['dept_created'])),'','');
 		$this->leftText(22,2,'Date Received:','','');
+		//echo "<pre>";print_r($detail);exit();
+		
+		$this->GRID['font_size']=12;
+		$this->leftText(24.25,3.8,!$detail['ia_is_partial']?'x':'',1,'');
+		$this->leftText(24.25,5,$detail['ia_is_partial']?'x':'',1,'');
+		$this->GRID['font_size']=10;
 		$this->DrawBox(3,3,1,1,'');
 		$this->DrawBox(24,3,1,1,'');
 		$this->DrawBox(24,4.20,1,1,'');
 		//$this->fitText(1,3,'Inspected, verified and found in order as to quantity and specifications.',2,$style='');
 		$this->fitParagraph(5,3.90,'Inspected, verified and found in order as to quantity and specifications.',10);
 		$this->fitParagraph(26,3.90,'Complete',10);
-		$this->fitParagraph(26,4.90,'Partial (pls. specify quantity)',10);
+		$this->fitParagraph(26,4.90,'Partial (pls. specify quantity) '.$detail['ia_partial_qty'].($detail['ia_partial_qty']>1?' items':' item'),10);
 		//inspectors
 		$this->GRID['font_size']=8;
 		$this->drawLine(7.50,'h',array(.40,7.60));
 		$this->drawLine(11.30,'h',array(.40,7.60));
 		$this->drawLine(14.30,'h',array(.40,7.60));
-		$this->leftText(1,8.20,'EDGARDO F. AMBULO','','');
-		$this->leftText(1,12,'ANASTACIO CALDERON','','');
-		$this->leftText(1,15.20,'MA. ANGELES SUMAGUI','','');
+		//$this->leftText(1,8.20,'EDGARDO F. AMBULO','','');
+		//$this->leftText(1,12,'ANASTACIO CALDERON','','');
+		//$this->leftText(1,15.20,'MA. ANGELES SUMAGUI','','');
 		
-		$this->leftText(12,8.20,'MARIO ATIENZA','','');
-		$this->leftText(12,12,'DENNIS B. ANARNA','','');
-		$this->leftText(11.70,15.20,'REQUESTING DIVISION','','');
+		//$this->leftText(12,8.20,'MARIO ATIENZA','','');
+		//$this->leftText(12,12,'DENNIS B. ANARNA','','');
+		//$this->leftText(11.70,15.20,'REQUESTING DIVISION','','');
 		$this->drawLine(7.50,'h',array(11,7.60));
 		$this->drawLine(11.30,'h',array(11,7.60));
 		$this->drawLine(14.30,'h',array(11,7.60));

@@ -5,7 +5,7 @@
 		$report = new report();
 		$report->hdr($datas);
 		$report->data($datas);
-		$report->ftr();
+		$report->ftr($datas);
 		$report->output();
 	}
 ?>
