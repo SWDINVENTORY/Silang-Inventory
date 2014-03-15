@@ -4,7 +4,7 @@
 		//echo "<pre>";print_r($datas);exit();
 		$report = new report();
 		$report->hdr($datas);
-		$report->data($datas['detail']);
+		$report->data($datas);
 		$report->ftr();
 		$report->output();
 	}

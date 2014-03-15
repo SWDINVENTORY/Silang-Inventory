@@ -65,7 +65,7 @@ class report extends Formsheet{
 		return $this;
 	}
 	
-	function data($details){
+	function data($detail){
 		$metrics = array(
 			'base_x'=> 0.25,
 			'base_y'=>2.5,
@@ -100,21 +100,29 @@ class report extends Formsheet{
 		$this->drawLine(52.70,'h',array(0,42));
 		$this->centerText(0,53.50,'Inspection Office/Inspection Committee',21,'i');
 		$this->centerText(21,53.50,'Property Unit',21,'i');
-		//echo "<pre>";print_r($details);exit();
 		$this->GRID['font_size']=9;
 		$y = 1.5;
 		$total_per_item=0;
 		$total=0;
-		foreach($details as $detail){
-			$total+=$total_per_item = $detail['po_dtl_item_cost']*$detail['ia_dtl_item_qty'];
-			 $this->centerText(1,$y, isset($detail['item_stock_no'])?$detail['item_stock_no']:'',3,'');
-			 $this->centerText(5.5,$y, $detail['po_dtl_item_unit'],3,'');
-			 $this->centerText(9.5,$y, $detail['ia_dtl_item_qty'],3,'');
-			 $this->leftText(14,$y,$detail['po_dtl_item_desc'],'','');
-			 $this->rightText(32.5,$y,number_format($detail['po_dtl_item_cost'], 2, '.', ','),3,'');
+		foreach($detail['detail'] as $dtl){
+			$total+=$total_per_item = $dtl['po_dtl_item_cost']*$dtl['ia_dtl_item_qty'];
+			 $this->centerText(1,$y, isset($dtl['item_stock_no'])?$dtl['item_stock_no']:'',3,'');
+			 $this->centerText(5.5,$y, $dtl['po_dtl_item_unit'],3,'');
+			 $this->centerText(9.5,$y, $dtl['ia_dtl_item_qty'],3,'');
+			 $this->leftText(14,$y,$dtl['po_dtl_item_desc'],'','');
+			 $this->rightText(32.5,$y,number_format($dtl['po_dtl_item_cost'], 2, '.', ','),3,'');
 			 $this->rightText(38,$y,number_format($total_per_item, 2, '.', ','),3,'');
 			 $y++;
 		}
+		$y+=2;
+		//echo "<pre>";print_r($detail);exit();
+		$this->leftText(14,$y+=2,$detail['po_purpose'],'','');
+		$this->leftText(14,$y+=3,$detail['ia_is_partial']?'PARTIAL DELIVERY':'FULL DELIVERY','','');
+		$this->GRID['font_size']=12;
+		$this->SetTextColor(250,0,0);
+		$this->leftText(14,$y+2,isset($detail['detail'][0]['po_dtl_item_type'])?$detail['detail'][0]['po_dtl_item_type']:'','','');
+		$this->GRID['font_size']=9;
+		$this->SetTextColor(0,0,0);
 		$this->rightText(38,35.60,number_format($total, 2, '.', ','),3,'');
 		return $this;
 	}
