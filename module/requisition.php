@@ -84,6 +84,7 @@ class Requisition extends Abstract_Model {
 		return $this
 			->_getAll('*')
 			->addFilter('ris_id = %s', $id)
+			->innerJoinOn('ris_dtl', 'ris_id = ris_dtl_ris_id')
 			->getRows();
 	}
 	/* Protected Methods

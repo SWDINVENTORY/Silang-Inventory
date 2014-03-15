@@ -12,6 +12,7 @@ function changeModal(action) {
 }
 
 function populate(model, callback){
+console.log(model);
 	Object.keys(model.data).forEach(function(v,i,a) {
 		var value = model.map(v, model.data);
 		$('#'+model.name+'-modal-form').find('input[name="'+v+'"]').val(value);
