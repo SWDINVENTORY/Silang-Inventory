@@ -234,24 +234,27 @@ class Front_Page_Issuance extends Front_Page {
 
 	protected function _issuance() {
 		$post = $this -> post;
+		$issuance = front()->database()
+			->search('ris')
+			->filterByRisIsIssued(1)
+			->getRows();
+			
 		if (isset($post['ris_no'])) {
-			$issuance = front()->database()->getRows('ris');
-			if ($post['ris_no'] != 'all') {
+			if (!empty($post['ris_no'])) {
 				$ris_no = $post['ris_no'];
 				if ($ris_no) {
 					$issuance = front()->database()->getRow('ris','ris_no',$ris_no);
 					$issuance['ris_dtl']=$this -> Requisition() -> getDetail($issuance['ris_id']);
 					
 				}
-			}
-
-			if (IS_AJAX) {
-				header('Content-Type: application/json');
-				$ret = array();
-				$ret['data'] = $issuance;
-				echo json_encode($ret);
-				exit ;
-			}
+			}			
+		}
+		if (IS_AJAX) {
+			header('Content-Type: application/json');
+			$ret = array();
+			$ret['data'] = $issuance;
+			echo json_encode($ret);
+			exit ;
 		}
 		return $this;
 	}

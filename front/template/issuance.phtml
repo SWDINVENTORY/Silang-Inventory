@@ -19,7 +19,7 @@
 		width: 5%;
 	}
 
-	#ris-table td:nth-child(2), #ris-table td:nth-child(3), #ris-table td:nth-child(4), #ris-table td:nth-child(5), #ris-table td:nth-child(7), #ris-table td:nth-child(8), #ris-table td:nth-child(9) {
+	#ris-table td:nth-child(4), #ris-table td:nth-child(5) {
 		text-align: right;
 	}
 
@@ -232,21 +232,14 @@
 		ris_dtl_table = {};
 		ris_table = {};
 		action_template = $('#action_tpl').text().trim();
-		ris_columns = [  { "mData": "supplier_name" },
+		ris_columns = [{ "mData": "ris_division" },
+			            { "mData": "ris_office" },
+			            { "mData": 'ris_rcc'},
 			            { "mData": "ris_no" },
 			            { "mData": function(data) {
 			            	return moment(data.ris_created).format('ddd, MMM Do YYYY');
-			       		}},
-			            { "mData": "ris_proc_mod" },
-			            { "mData": function(data){
-			            		return parseFloat(data['ris_total']).moneyFormat();
-			            }},
-			            { "mData": "ris_deliv_place" },
-			            { "mData": function(data) {
-			            	return moment(data.ris_deliv_date).format('ddd, MMM Do YYYY');
 			            	}},
-			            { "mData": "ris_deliv_term" },
-			            { "mData": "ris_pay_term" },
+			            { "mData": "ris_purpose" },
 			            {
 			            	'mData': function(data){
 			            		var model = new RegExp('//model//','g');
@@ -256,6 +249,18 @@
 									.replace(model, 'ris')
 									.replace(target_modal, 'ris')
 									.replace(model_id, data.ris_id);
+									
+								action = $(action).clone();
+								$(action).find('.edit-ris').remove();
+								action.find('ul.dropdown-menu').append(
+								'<li><a class="print_report-ris" href="/issuance/report/'+data.ris_id+
+									'" target="_blank" title="Print from pdf file."'+
+									' onclick="return confirm('+"'"+
+									'Do you want to print a report to a pdf file?'+"'"+
+									')">Print</a></li>');
+								$(action).find('.delete-ris').remove();
+								action = $(action).html();
+								
 			            		return action;
 			            	}
 			            }];
@@ -306,7 +311,7 @@
 				"fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {
 				  oSettings.jqXHR = $.ajax( {
 					"dataType": 'json',
-					"type": "POST",
+					"type": 'POST',
 					"url": sSource,
 					"data": {ris:'all'},
 					"success": fnCallback
