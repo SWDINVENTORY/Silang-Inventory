@@ -4,8 +4,8 @@
 		//echo "<pre>";print_r($datas);exit();
 		$report = new report();
 		$report->hdr($datas);
-		$report->data($datas['detail']);
-		$report->ftr();
+		$report->data($datas);
+		$report->ftr($datas);
 		$report->output();
 	}
 ?>

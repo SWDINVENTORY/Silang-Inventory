@@ -257,9 +257,9 @@ class POReport extends Formsheet{
 		$this->leftText(1,$y++,'everyday of delay shall be imposed.','','');
 		
 		$this->centerText(24,$y++,'Very truly yours,',12,'');
-		$this->centerText(24,$y,'BONIFACIO B. DELA CRUZ',12,'b');
+		$this->centerText(24,$y,$datas['po_auth_off'],12,'b');
 		$y+=0.75;
-		$this->centerText(24,$y,'General Manager',12,'b');
+		//$this->centerText(24,$y,'General Manager',12,'b');
 		
 		$this->drawLine($y+0.2,'h',array(24,12));
 		$y+=0.75;
@@ -269,6 +269,7 @@ class POReport extends Formsheet{
 		$y+=1.25;
 		$this->drawLine($y,'h',array(1,15));
 		$y+=0.75;
+		$this->centerText(1,$y-1,$datas['po_conforme'],15,'');
 		$this->centerText(1,$y,'Signature Over Printed Name',15,'');
 		
 		$y+=1.25;
@@ -285,9 +286,9 @@ class POReport extends Formsheet{
 		$this->leftText(26.2,$y++,'Amount:  Php '.number_format($total_amount, 2, '.', ','),'','');
 		
 		$this->drawLine($y+0.2,'h',array(1,11));
-		$this->centerText(0,$y,'FELIMON M. MADLANSACAY',13,'b');
+		$this->centerText(0,$y,$datas['po_req_off'],13,'b');
 		$this->drawLine($y+0.2,'h',array(14,11));
-		$this->centerText(13,$y++,'MA. ANGELES SUMAGUI',13,'b');
+		$this->centerText(13,$y++,$datas['po_funds_off'],13,'b');
 		$this->centerText(0,$y,'(Authorized Official)',13,'');
 		$this->centerText(13,$y,'Chief Accountant',13,'');
 		$this->leftText(26.2,$y,'ALOBS No.: '.$datas['po_alobs_no'],'','');

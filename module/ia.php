@@ -113,6 +113,7 @@ class Ia extends Abstract_Model {
 				Po::PO_DTL_ITEM_UNIT,
 				Po::PO_DTL_ITEM_QTY,
 				Po::PO_DTL_ITEM_COST,
+				'po_dtl_item_type'
 			))
 			->addFilter('ia_id = %s', $id)
 			->leftJoinOn(Ia::IA_DTL_TABLE, 'ia_id = ia_dtl_ia_id')
