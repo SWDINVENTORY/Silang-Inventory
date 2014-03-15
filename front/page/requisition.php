@@ -1,11 +1,5 @@
 <?php //-->
-/*
- * This file is part a custom application package.
- */
 
-/**
- * Default logic to output a page
- */
 class Front_Page_Requisition extends Front_Page {
 	/* Constants
 	-------------------------------*/
@@ -63,70 +57,32 @@ class Front_Page_Requisition extends Front_Page {
 
 	protected function _add() {
 		$post = $this -> post;
-		front()->output($post);
-		exit;
+		
+		//If id for requisition
 		if (isset($post['ris_id']) && empty($post['ris_id'])) {
 			if (isset($post['ris_dtl']) && is_array($post['ris_dtl']) &&
 				!empty($post['ris_dtl'])) {
-				$po = front()->database()
-					->getRow('po', 'po_id', $post['ris_po_id']);
-				if(!$po['po_is_cancelled'] && !$po['po_is_furnished']) {
-					$ris_dtl = $post['ris_dtl'];
+					$post['ris_created']=date('Y-m-d H:i:s');
+					unset($post['ris_id']);
 					unset($post['ris_dtl']);
-					$this->_computeTotalAmount();
-					$post['ris_is_partial'] = $this->is_partial;
-					$post['ris_partial_qty'] = $this->partial_count;
-					$post['ris_total_amount'] = $this->total_amount;
-					if(!$this->is_partial){
-						unset($post['ris_is_partial']);
-						unset($post['ris_partial_qty']);
-					}
-					$post = array_filter($post);
-					$post[Ia::IA_CREATED] = date('Y-m-d H:i:s');
-					$ris_id = $this->Ia()->add($post);
-					$ris_details = array();
-					foreach ($ris_dtl as $dtls) {
-						$dtl = $dtls;
-						$dtl[Ia::IA_DTL_IA_ID] = $ris_id;
-						unset($dtl['po_dtl_item_qty']);
-						unset($dtl['po_dtl_item_cost']);
-						$dtl[Ia::IA_DTL_ITEM_CREATED] = date('Y-m-d H:i:s');
-						$dtl_id = front() -> database() -> insertRow(Ia::IA_DTL_TABLE, $dtl)
-							->getLastInsertedId();
-						
-						if($dtl_id){
-							$this->_itemToInventory($dtl);
-						}
-						$dtl['ris_dtl_id'] = $dtl_id;
-						array_push($ris_details, $dtl);
-					}
-					$this->_updatePo($post['ris_po_id']);
+					unset($post['furnish']);
+					
+					front()->database()
+						->insertRow('ris', $post);
+					
 					$status = array();
 					$status['status'] = 1;
-					$status['msg'] = 'Successfully Inspected and Accepted Order '; //. $post[Ia:] . '!';
-					$status['data'] = array('ris_id' => $ris_id, 'ia' => $post, 'ris_dtl' => $ris_details);
-					if (IS_AJAX) {
+					$status['msg'] = 'Successfully Created Requisition '.$post['ris_no'].'!';
+					
+					if(IS_AJAX){
 						header('Content-Type: application/json');
 						echo json_encode($status);
-						exit ;
+						exit;
 					}
-					$this -> _addMessage($status['msg'], 'success', true);
-					header('Location: /ia');
-					exit ;
-				}
-				$status = array();
-				$status['status'] = 0;
-				$status['msg'] = 'Sorry, Purchase Order is already cancelled or completed';
 
-				if (IS_AJAX) {
-					header('Content-Type: application/json');
-					echo json_encode($status);
-					exit ;
-				}
-
-				$this -> _addMessage($status['msg'], 'danger', true);
-				header('Location: /ia');
-				exit ;
+					$this->_addMessage($status['msg'], 'success', true);
+					header('Location: /requisition');
+					exit;
 			}
 
 			$status = array();
@@ -140,12 +96,12 @@ class Front_Page_Requisition extends Front_Page {
 			}
 
 			$this -> _addMessage($status['msg'], 'danger', true);
-			header('Location: /ia');
+			header('Location: /requisition');
 			exit ;
 		}
 		return $this;
 	}
-
+	
 	protected function _edit() {
 		$post = $this -> post;
 		unset($post['ia-dtl-table_length']);

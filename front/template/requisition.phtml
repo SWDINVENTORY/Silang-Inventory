@@ -97,13 +97,13 @@
 								<div class="form-group">
 									<label class="col-sm-3 control-label">Division</label>
 									<div class="col-sm-9">
-										<input type="input" class="form-control" placeholder="Division" id="ris_division">
+										<input type="input" class="form-control" placeholder="Division" name="ris_division">
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="col-sm-3 control-label">Office</label>
 									<div class="col-sm-9">
-										<input type="input" class="form-control" placeholder="Office" id="ris_office">
+										<input type="input" class="form-control" placeholder="Office" name="ris_office">
 									</div>
 								</div>
 							</div>
@@ -135,7 +135,7 @@
 							<div class="col-sm-12">
 								<div class="form-group">
 									<label >Purpose</label>
-									<textarea placeholder="Purpose" id="ris_purpose" class="form-control"></textarea>
+									<textarea placeholder="Purpose" name="ris_purpose" class="form-control"></textarea>
 								</div>
 							</div>
 						</div>
@@ -252,7 +252,7 @@
 		ris_dtl_table = {};
 		ris_table = {};
 		action_template = $('#action_tpl').text().trim();
-		ris_columns = [  { "mData": "ris_division" },
+		ris_columns = [{ "mData": "ris_division" },
 			            { "mData": "ris_office" },
 			            { "mData": 'ris_rcc'},
 			            { "mData": "ris_no" },
@@ -282,9 +282,9 @@
 				}
 				return "";
 			}},
-			{ "mData": "ris_dtl_item_qty" },
 			{ "mData": "ris_dtl_item_unit" },
 			{ "mData": "ris_dtl_item_desc" },
+			{ "mData": "ris_dtl_item_qty" },
 			{ "mData": function(data){
 				if(data.ris_dtl_item_issued){
 					return data.ris_dtl_item_issued;
@@ -298,7 +298,7 @@
 				return "";
 			}},
 			{ 
-				'mData': function(data){
+				'mData': function(data) {
 					var model = new RegExp('//model//','g');
 					var model_id = new RegExp('/model_id/','g'); 
 					var target_modal = new RegExp('//target-modal//','g'); 
@@ -365,13 +365,13 @@
 				current_ris = row_data;
 				current_ris_row = row_position;
 				changeModal({
-					'action':'/ris/edit',
+					'action':'/requisition/edit',
 					'model':'ris',
 					'submit_name': 'edit-ris',
 					'pr_button':'Save Changes',
-					'modal_label': 'Edit Purchase Order',
-					'run': function(){
-						$('#add-to-purchase, .secondary').show();
+					'modal_label': 'Edit Requisition',
+					'run': function() {
+						$('.secondary').show();
 						populate({
 							'data': current_ris,
 							'name':'ris',
@@ -386,11 +386,12 @@
 									return o[v];
 								}
 						}, function() {
+							console.log(current_ris);
 							ris_dtl_table = $('#ris-dtl-table').dataTable({
 								"sPaginationType" : "two_button",
 								"iDisplayLength" : 3,
 								"sDom" : '<"pad-it"<"pull-right"f>l>tip>',
-								'sAjaxSource': '/ris/',
+								'sAjaxSource': '/requisition/',
 								'sAjaxDataProp': 'data',
 								"bDestroy" : true,
 								"bAutoWidth": false,
@@ -398,7 +399,7 @@
 								"fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {
 								  oSettings.jqXHR = $.ajax( {
 									"dataType": 'json',
-									"type": "risST",
+									"type": "POST",
 									"url": sSource,
 									"data": {ris:current_ris['ris_id']},
 									"success": fnCallback
@@ -551,7 +552,7 @@
 		$('#create-ris').click(function(){
 			//ris_dtl_table.fnClearTable();
 			changeModal({
-					'action':'/ris/furnish',
+					'action':'/requisition/furnish',
 					'model':'ris',
 					'submit_name': 'furnish',
 					'pr_button':'Furnish Request',
@@ -570,10 +571,7 @@
 								"aoColumns": ris_dtl_columns,
 								"fnRowCallback": function( nRow, aData, iDisplayIndex ) {
 										/* Append the grade to the default row class name */
-										if ( aData[4] == "A" )
-										{
-											$('td:eq(4)', nRow).html( '<b>A</b>' );
-										}
+										console.log(nRow, aData, iDisplayIndex);
 										return nRow;
 									}
 								});
@@ -634,6 +632,7 @@
 					
 					current_ris_dtl['ris_dtl_item_no'] = ris_dtl_table.fnGetData().length+1; 
 					current_ris_dtl['ris_dtl_item_created'] = (new Date()).toLocaleString();
+					console.log('current_ris_dtl', current_ris_dtl);
 					ris_dtl_table.fnAddData(current_ris_dtl);
 					break;
 				default:
