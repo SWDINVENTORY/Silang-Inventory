@@ -307,6 +307,13 @@
 				<div class="row border">
 							<div class="border">
 								<div class="col-sm-12">
+									<label for="input-name" class="col-sm-3 control-label">Barcode</label>
+									<div class="form-group col-sm-5">	
+										<input type="text" class="form-control" placeholder="Stock No"  autofocus="autofocus" id="po_dtl_stock_no"
+											name="po_dtl_stock_no">
+									</div>
+								</div>
+								<div class="col-sm-12">
 									<label for="input-name" class="col-sm-3 control-label">Desc</label>
 									<div class="form-group col-sm-9">	
 										<input type="text" class="form-control" placeholder="Desc"
@@ -378,6 +385,7 @@
 <script type="text/javascript" src="/assets/js/modal_control.js"></script>
 <script type="text/javascript">
 	(function($) {
+		var ENTER = 13;
 		current_po = 'new';
 		current_po_dtl = null;
 		current_po_dtl_row = null;
@@ -554,6 +562,24 @@
 						})
 					};
 				}
+			});
+			
+			$('input[name="po_dtl_stock_no"]').on('keydown', function(e) {
+					if(e.which==ENTER) {
+						
+						var barcode = $(this).val();
+						$.post('/po/get_item', {stock_no:barcode}, function(data){
+							var data = data;
+							if(!data.found){
+								alert('No Item Match Found!');
+							} else {
+								var msg = 'Already existing! \n\n'+'Stock No: '+barcode;
+										msg+='\n\n'+'Item Desc: '+data.item_desc;
+								alert(msg);
+							}
+						});
+					}
+					
 			});
 			
 		});

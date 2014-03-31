@@ -63,6 +63,22 @@ class Item extends Abstract_Model {
 		
 		return $model;
 	}
+	
+	public function search() {
+		return $this->_database
+			->search()
+			->setTable($this->_table)
+			->setModel($this->_model);
+	}
+	
+	public static function getByStockNo($stock_no=null) {
+		return front()->database()
+			->search()
+			->setTable('item')
+			->setColumns('*')
+			->filterByItemStockNo($stock_no)
+			->getRow();
+	}
 	/* Protected Methods
 	-------------------------------*/
 	/* Private Methods

@@ -254,14 +254,14 @@
 		action_template = $('#action_tpl').text().trim();
 		ris_columns = [{ "mData": "ris_division" },
 			            { "mData": "ris_office" },
-			            { "mData": 'ris_rcc'},
+			            { "mData": 'ris_rcc' },
 			            { "mData": "ris_no" },
 			            { "mData": function(data) {
 			            	return moment(data.ris_created).format('ddd, MMM Do YYYY');
-			            	}},
+			            }},
 			            { "mData": "ris_purpose" },
 			            {
-			            	'mData': function(data){
+			            	'mData': function(data) {
 			            		var model = new RegExp('//model//','g');
 			            		var model_id = new RegExp('/model_id/','g'); 
 			            		var target_modal = new RegExp('//target-modal//','g'); 

@@ -43,7 +43,7 @@ class Front_Page_Po extends Front_Page {
 	-------------------------------*/
 	
 	protected function _setErrors() { }
-	
+		
 	protected function _process(){
 		$request = strtolower($this->request);
 		switch ($request) {
@@ -61,6 +61,9 @@ class Front_Page_Po extends Front_Page {
 				break;
 			case 'report':
 					$this->_report();
+				break;
+			case 'get_item':
+					$this->_getItemByStock() ;
 				break;
 			default:
 					$this->_po();
@@ -259,6 +262,21 @@ class Front_Page_Po extends Front_Page {
 				exit;
 			}
 		return $this;
+	}
+	
+	protected function _getItemByStock() {
+		$post = $this->post;
+		if(IS_AJAX) {
+			if(isset($post['stock_no']) && !empty($post['stock_no'])) {
+				$item_stock_no = $post['stock_no'];
+				$item = Item::getByStockNo($item_stock_no);
+				$found = !empty($item)?1:0;
+				header('Content-Type: application/json');
+				$ret = array('data'=>$item, 'found'=>$found);
+				echo json_encode($ret);
+				exit;
+			}
+		}
 	}
 	
 	/* Private Methods
