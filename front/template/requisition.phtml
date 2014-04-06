@@ -202,21 +202,21 @@
 							<label for="input-name" class="col-sm-3 control-label">Stock No</label>
 							<div class="form-group col-sm-5">	
 								<input type="text" class="form-control" placeholder="Stock No"
-									name="ris_dtl_item_stock_no">
+									name="ris_dtl_item_stock_no" id="stock_no">
 							</div>
 						</div>
 						<div class="col-sm-12">
 							<label for="input-address" class="col-sm-3 control-label">Desc</label>
 							<div class="form-group col-sm-9">
 								<input type="text" class="form-control" placeholder="Description"
-									name="ris_dtl_item_desc" required="required">
+									name="ris_dtl_item_desc" required="required" id="item_desc">
 							</div>
 						</div>
 						<div class="col-sm-12">
 							<label for="input-address" class="col-sm-3 control-label">Unit</label>
 							<div class="form-group col-sm-2">
 								<input type="text" class="form-control" placeholder="UNIT"
-									name="ris_dtl_item_unit" required="required">
+									name="ris_dtl_item_unit" required="required" id="item_unit_measure">
 							</div>
 						</div>
 						<div class="col-sm-12">
@@ -640,6 +640,26 @@
 			};
 			$('#ris_dtl-modal').modal('hide');
 			$('#ris_dtl-modal-form').find('input').removeAttr('disabled');
+		});
+		
+		
+		
+
+		//ITEM POPULATION
+		$('#stock_no').on('blur', function(){
+			var input = $(this);
+			var item_stock_no = input.val();
+			$.post('/item/', {item : item_stock_no}, function(data){
+					
+				item = (data.data)?data.data:false;
+				console.log(item[0]);	
+				console.log(item[0].item_desc);	
+				if(item){
+					$('#item_desc').val(item[0].item_desc);
+					$('#item_unit_measure').val(item[0].item_unit_measure);
+				
+				}
+			});
 		});
 	})(jQuery);
 </script>

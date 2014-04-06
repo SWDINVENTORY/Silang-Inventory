@@ -153,6 +153,11 @@ class Front_Page_Items extends Front_Page {
 					$items = $this -> Item() -> getDetail($id);
 				}
 			}
+			
+			if(isset($post['item']) && !empty($post['item'])) {
+				$item_stock_no = $post['item'];
+				$items = $this->Item()->getBy('item_stock_no', '"'.$item_stock_no.'"');
+			}
 
 			if (IS_AJAX) {
 				header('Content-Type: application/json');
