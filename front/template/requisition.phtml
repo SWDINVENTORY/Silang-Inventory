@@ -665,5 +665,25 @@
 			$('#ris_dtl-modal').modal('hide');
 			$('#ris_dtl-modal-form').find('input').removeAttr('disabled');
 		});
+		
+		
+		//ITEM POPULATION
+		$('[name="ris_dtl_item_stock_no"]').on('keypress', function(e){
+			console.log(e.which);
+			if(e.which == 13){
+				var input = $(this);
+				var item_stock_no = input.val();
+				if(item_stock_no.length){
+					$.post('/item2/', {item : item_stock_no}, function(data){
+						item = (data.data)?data.data:false;
+						if(item){
+							$('[name="ris_dtl_item_desc"]').val(item[0].item_desc);
+							$('[name="ris_dtl_item_unit"]').val(item[0].item_unit_measure);
+						
+						}
+					});
+				}
+			}
+		});
 	})(jQuery);
 </script>
