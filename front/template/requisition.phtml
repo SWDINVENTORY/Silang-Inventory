@@ -33,6 +33,11 @@
 	#ris_dtl-modal .modal-content {
 		margin-top: 30%;
 	}
+	
+	.modal-body{
+		max-height:450px;
+		overflow-y:auto;
+	}
 
 </style>
 <div class="row">
@@ -79,17 +84,17 @@
 </div>
 
 
-<div class="modal fade" id="ris-modal" tabindex="-1" role="dialog" 
-	aria-labelledby="mymodallabel" aria-hidden="true">
-	<div class="modal-dialog ris-modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h4 class="modal-title" id="my-modal-label">
-					<span class="modal-form-state">Action Here</span>
-				</h4>
-			</div>
-			<div class="modal-body">
-				<form method="post" action="/requisition/furnish/" id="ris-modal-form">
+<form method="post" action="/requisition/furnish/" id="ris-modal-form">
+	<div class="modal fade" id="ris-modal" tabindex="-1" role="dialog" 
+		aria-labelledby="mymodallabel" aria-hidden="true">
+		<div class="modal-dialog ris-modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="my-modal-label">
+						<span class="modal-form-state">Action Here</span>
+					</h4>
+				</div>
+				<div class="modal-body">
 					<input type="hidden" name="ris_id"/>
 					<div class="border">
 						<div class="form-horizontal row">
@@ -174,56 +179,57 @@
 						</div>
 					</div>
 					<div id="hidden_data"></div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-default secondary" data-dismiss="modal">
-							Close
-						</button>
-						<button type="submit" class="btn btn-primary" name="furnish">
-							<span class="modal-form-action">Furnish</span>
-						</button>
-					</div>
-				</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default secondary" data-dismiss="modal">
+						Close
+					</button>
+					<button type="submit" class="btn btn-primary" name="furnish">
+						<span class="modal-form-action">Furnish</span>
+					</button>
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
+</form>
 
-<div class="modal fade" id="ris_dtl-modal" tabindex="-1" role="dialog" aria-labelledby="mymodallabel" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h4 class="modal-title" id="my-modal-label"><span class="modal-form-state">Action Here</span></h4>
-			</div>
-			<div class="modal-body">
-				<form id="ris_dtl-modal-form" action='#'>
-				<div class="row border">
-					<div class="border">
-						<div class="col-sm-12">
-							<label for="input-name" class="col-sm-3 control-label">Stock No</label>
-							<div class="form-group col-sm-5">	
-								<input type="text" class="form-control" placeholder="Stock No"
-									name="ris_dtl_item_stock_no" id="stock_no">
+<form id="ris_dtl-modal-form" action='#'>					
+	<div class="modal fade" id="ris_dtl-modal" tabindex="-1" role="dialog" aria-labelledby="mymodallabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="my-modal-label"><span class="modal-form-state">Action Here</span></h4>
+				</div>
+				<div class="modal-body">
+					<div class="row border">
+						<div class="border">
+							<div class="col-sm-12">
+								<label for="input-name" class="col-sm-3 control-label">Stock No</label>
+								<div class="form-group col-sm-5">	
+									<input type="text" class="form-control" placeholder="Stock No"
+										name="ris_dtl_item_stock_no" id="stock_no">
+								</div>
 							</div>
-						</div>
-						<div class="col-sm-12">
-							<label for="input-address" class="col-sm-3 control-label">Desc</label>
-							<div class="form-group col-sm-9">
-								<input type="text" class="form-control" placeholder="Description"
-									name="ris_dtl_item_desc" required="required" id="item_desc">
+							<div class="col-sm-12">
+								<label for="input-address" class="col-sm-3 control-label">Desc</label>
+								<div class="form-group col-sm-9">
+									<input type="text" class="form-control" placeholder="Description"
+										name="ris_dtl_item_desc" required="required" id="item_desc">
+								</div>
 							</div>
-						</div>
-						<div class="col-sm-12">
-							<label for="input-address" class="col-sm-3 control-label">Unit</label>
-							<div class="form-group col-sm-2">
-								<input type="text" class="form-control" placeholder="UNIT"
-									name="ris_dtl_item_unit" required="required" id="item_unit_measure">
+							<div class="col-sm-12">
+								<label for="input-address" class="col-sm-3 control-label">Unit</label>
+								<div class="form-group col-sm-2">
+									<input type="text" class="form-control" placeholder="UNIT"
+										name="ris_dtl_item_unit" required="required" id="item_unit_measure">
+								</div>
 							</div>
-						</div>
-						<div class="col-sm-12">
-							<label for="input-tel" class="col-sm-3 control-label">Qty</label>
-							<div class="form-group col-sm-2">
-								<input type="text" class="form-control" placeholder="QTY"
-									name="ris_dtl_item_qty" required="required">
+							<div class="col-sm-12">
+								<label for="input-tel" class="col-sm-3 control-label">Qty</label>
+								<div class="form-group col-sm-2">
+									<input type="text" class="form-control" placeholder="QTY"
+										name="ris_dtl_item_qty" required="required">
+								</div>
 							</div>
 						</div>
 					</div>
@@ -236,11 +242,10 @@
 						<span class="modal-form-action" >Save changes</span>
 					</button>
 				</div>
-				</form>
 			</div>
 		</div>
 	</div>
-</div>
+</form>
 <?php include __DIR__.'/action.phtml'; ?>
 <script type="text/javascript" src="/assets/js/autocomplete.js"></script>
 <script type="text/javascript" src="/assets/js/modal_control.js"></script>
