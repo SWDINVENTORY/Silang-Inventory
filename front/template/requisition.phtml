@@ -675,7 +675,7 @@
 				var input = $(this);
 				var item_stock_no = input.val();
 				if(item_stock_no.length){
-					$.post('/item/', {item : item_stock_no}, function(data){
+					$.post('/item2/', {item : item_stock_no}, function(data){
 						item = (data.data)?data.data:false;
 						if(item){
 							$('#item_desc').val(item[0].item_desc);

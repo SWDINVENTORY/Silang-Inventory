@@ -42,7 +42,7 @@ class Front_Page_Items extends Front_Page {
 	-------------------------------*/
 	protected function _setErrors() {}
 
-	protected function _process() {
+	protected function _process() {	
 		$request = strtolower($this->request);
 		switch ($request) {
 			case 'create':
@@ -112,6 +112,8 @@ class Front_Page_Items extends Front_Page {
 	}
 	
 	protected function _search() {
+	
+		print_r($this->post);exit;
 		$get = $this->get;
 		$post = $this->post;
 		$this->items = array();
@@ -145,6 +147,30 @@ class Front_Page_Items extends Front_Page {
 	
 	protected function _item() {
 		$post = $this -> post;
+		if (isset($post['item'])) {
+			$items = $this -> Item()->getAll();
+			if ($post['item'] != 'all') {
+				$id = $post['item'];
+				if (is_numeric($id)) {
+					$items = $this -> Item() -> getDetail($id);
+				}
+			}
+
+			if (IS_AJAX) {
+				header('Content-Type: application/json');
+				$ret = array();
+				$ret['data'] = $items;
+				echo json_encode($ret);
+				exit ;
+			}
+		}
+		return $this;
+	}
+	
+	
+	protected function _item2() {
+		$post = $this -> post;
+		
 		if (isset($post['item'])) {
 			$items = $this -> Item()->getAll();
 			if ($post['item'] != 'all') {
