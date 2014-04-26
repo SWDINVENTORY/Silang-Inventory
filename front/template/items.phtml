@@ -1,9 +1,33 @@
 <style>
 .items .border {
-		margin-top: 10px;
-	}
+	margin-top: 10px;
+}
+	
+.dataTables_filter label{
+	width:250px;
+}
+[name="item-table_length"]{
+	display: inline;
+	width: 100px;
+	height: 34px;
+	padding: 6px 12px;
+	font-size: 14px;
+	line-height: 1.428571429;
+	color: #555555;
+	vertical-align: middle;
+	background-color: #ffffff;
+	background-image: none;
+	border: 1px solid #cccccc;
+	border-radius: 4px;
+}
+
+
+.modal-body{
+	max-height:450px;
+	overflow-y:auto;
+}
 </style>
-<div class="row">
+<div class="row-fluid">
 	<div class="col-md-12">
 		<h3>Items <small>Supplies / Materials </small></h3>
 		<ol class="breadcrumb">
@@ -21,9 +45,9 @@
 		<?php include(dirname(__FILE__).'\_message.phtml'); ?>
 	</div>
 </div>
-<div class="row">
-	<div class="col-xs-offset-10 col-xs-2">
-		<button type="button" class="btn btn-primary" id="create-item"
+<div class="row-fluid">
+	<div class="col-xs-12">
+		<button type="button" class="btn btn-primary pull-right" id="create-item"
 			data-backdrop="static" data-keyboard="false"
 				data-toggle="modal" data-target="#item-modal">
 			Create
@@ -31,7 +55,7 @@
 	</div>
 </div>
 <div class="border">
-	<div class="row item-list border-space">
+	<div class="row-fluid item-list border-space">
 		<div class="col-md-12">
 			<h4 align="center">Items List</h4>
 			<div class="table-responsive">

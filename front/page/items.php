@@ -164,6 +164,34 @@ class Front_Page_Items extends Front_Page {
 		}
 		return $this;
 	}
+	
+	protected function _item2() {
+		$post = $this -> post;
+		if (isset($post['item'])) {
+			$items = $this -> Item()->getAll();
+			if ($post['item'] != 'all') {
+				$id = $post['item'];
+				if (is_numeric($id)) {
+					$items = $this -> Item() -> getDetail($id);
+				}
+			}
+			
+			if(isset($post['item']) && !empty($post['item'])) {
+				$item_stock_no = $post['item'];
+				$items = $this->Item()->getBy('item_stock_no', '"'.$item_stock_no.'"');
+			}
+
+
+			if (IS_AJAX) {
+				header('Content-Type: application/json');
+				$ret = array();
+				$ret['data'] = $items;
+				echo json_encode($ret);
+				exit ;
+			}
+		}
+		return $this;
+	}
 	/* Private Methods
 	-------------------------------*/
 	

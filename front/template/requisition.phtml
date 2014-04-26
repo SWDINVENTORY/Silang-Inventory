@@ -33,9 +33,33 @@
 	#ris_dtl-modal .modal-content {
 		margin-top: 30%;
 	}
-
+	
+	
+	.dataTables_filter label{
+		width:250px;
+	}
+	[name="ris-table_length"],[name="ris-dtl-table_length"]{
+		display: inline;
+		width: 100px;
+		height: 34px;
+		padding: 6px 12px;
+		font-size: 14px;
+		line-height: 1.428571429;
+		color: #555555;
+		vertical-align: middle;
+		background-color: #ffffff;
+		background-image: none;
+		border: 1px solid #cccccc;
+		border-radius: 4px;
+	}
+	
+	
+	.modal-body{
+		max-height:450px;
+		overflow-y:auto;
+	}
 </style>
-<div class="row">
+<div class="row-fluid">
 	<div class="col-lg-12">
 		<h3>Requisition <small>Request of supplies and materials</small></h3>
 		<ol class="breadcrumb">
@@ -48,17 +72,17 @@
 		</ol>
 	</div>
 </div><!-- /.row -->
-<div class="row">
-	<div class="col-xs-offset-10 col-xs-2">
-		<button type="button" class="btn btn-primary" id="create-ris"
+<div class="row-fluid">
+	<div class="col-xs-12">
+		<button type="button" class="btn btn-primary pull-right" id="create-ris"
 			data-backdrop="static" data-keyboard="false"
 				data-toggle="modal" data-target="#ris-modal">
 			Create
 		</button>
 	</div>
 </div>
-<div class="row border">
-	<div class="col-sm-12">
+<div class="row-fluid border">
+	<div class="col-sm-12" style="padding-top:20px">
 		<div class="table-resrisnsive">
 			<table class="table table-hover table-striped table-bordered tablesorter" id="ris-table">
 				<thead>
@@ -79,115 +103,115 @@
 </div>
 
 
-<div class="modal fade" id="ris-modal" tabindex="-1" role="dialog" 
-	aria-labelledby="mymodallabel" aria-hidden="true">
-	<div class="modal-dialog ris-modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h4 class="modal-title" id="my-modal-label">
-					<span class="modal-form-state">Action Here</span>
-				</h4>
-			</div>
-			<div class="modal-body">
-				<form method="post" action="/requisition/furnish/" id="ris-modal-form">
-					<input type="hidden" name="ris_id"/>
-					<div class="border">
-						<div class="form-horizontal row">
-							<div class="col-sm-3">
-								<div class="form-group">
-									<label class="col-sm-3 control-label">Division</label>
-									<div class="col-sm-9">
-										<input type="input" class="form-control" placeholder="Division" name="ris_division">
+<form method="post" action="/requisition/furnish/" id="ris-modal-form">
+	<div class="modal fade" id="ris-modal" tabindex="-1" role="dialog" 
+		aria-labelledby="mymodallabel" aria-hidden="true">
+		<div class="modal-dialog ris-modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="my-modal-label">
+						<span class="modal-form-state">Action Here</span>
+					</h4>
+				</div>
+				<div class="modal-body">
+						<input type="hidden" name="ris_id"/>
+						<div class="border">
+							<div class="form-horizontal row-fluid">
+								<div class="col-sm-3">
+									<div class="form-group">
+										<label class="col-sm-3 control-label">Division</label>
+										<div class="col-sm-9">
+											<input type="input" class="form-control" placeholder="Division" name="ris_division">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label">Office</label>
+										<div class="col-sm-9">
+											<input type="input" class="form-control" placeholder="Office" name="ris_office">
+										</div>
 									</div>
 								</div>
-								<div class="form-group">
-									<label class="col-sm-3 control-label">Office</label>
-									<div class="col-sm-9">
-										<input type="input" class="form-control" placeholder="Office" name="ris_office">
+								<div class="col-sm-4">
+									<div class="form-group">
+										<label class="col-sm-6 control-label">Responsibility Center Code</label>
+										<div class="col-sm-6">
+											<input type="text" class="form-control" name="ris_rcc" placeholder="RCC">
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-3">
+									<div class="form-group">
+										<label class="col-sm-6 control-label">RIS No.</label>
+										<div class="col-sm-6">
+											<input type="text" class="form-control" name="ris_no" placeholder="RIS No.">
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-2">
+									<div class="form-group">
+										<div class="col-sm-12">
+											<input type="text" class="form-control" id="ris_created" placeholder="RIS Date" disabled>
+										</div>
 									</div>
 								</div>
 							</div>
-							<div class="col-sm-4">
-								<div class="form-group">
-									<label class="col-sm-6 control-label">Responsibility Center Code</label>
-									<div class="col-sm-6">
-										<input type="text" class="form-control" name="ris_rcc" placeholder="RCC">
-									</div>
-								</div>
-							</div>
-							<div class="col-sm-3">
-								<div class="form-group">
-									<label class="col-sm-6 control-label">RIS No.</label>
-									<div class="col-sm-6">
-										<input type="text" class="form-control" name="ris_no" placeholder="RIS No.">
-									</div>
-								</div>
-							</div>
-							<div class="col-sm-2">
-								<div class="form-group">
-									<div class="col-sm-12">
-										<input type="text" class="form-control" id="ris_created" placeholder="RIS Date" disabled>
+							<div class="row-fluid">
+								<div class="col-sm-12">
+									<div class="form-group">
+										<label >Purpose</label>
+										<textarea placeholder="Purpose" name="ris_purpose" class="form-control"></textarea>
 									</div>
 								</div>
 							</div>
 						</div>
-						<div class="row">
+						<hr/>
+						<div class="border">
+							<div class="row-fluid item-input">
+								<div class="col-sm-12">
+									<button type="button" class="btn btn-primary pull-right" id="request_item"
+									data-toggle="modal" data-target="#ris_dtl-modal" data-backdrop="static" data-keyboard="false">
+										Request Item
+									</button>
+								</div>
+							</div>
+						</div>
+						<div class="row-fluid border-space">
 							<div class="col-sm-12">
-								<div class="form-group">
-									<label >Purpose</label>
-									<textarea placeholder="Purpose" name="ris_purpose" class="form-control"></textarea>
+								<h4 align="center">List</h4>
+								<div class="table-resrisnsive">
+									<table class="table table-hover table-striped table-bordered tablesorter" id="ris-dtl-table">
+										<thead>
+											<tr>
+												<th>Item No</th>
+												<th>Stock No</th>
+												<th>Unit</th>
+												<th>Description</th>
+												<th>Qty</th>
+												<th>Issuance Qty</th>
+												<th>Issuance Remarks</th>
+												<th>Action</th>
+											</tr>
+										</thead>
+										<tbody></tbody>
+									</table>
 								</div>
 							</div>
 						</div>
-					</div>
-					<hr/>
-					<div class="border">
-						<div class="row item-input col-sm-12">
-							<div class="col-sm-offset-10 col-sm-2">
-								<button type="button" class="btn btn-primary" id="request_item"
-								data-toggle="modal" data-target="#ris_dtl-modal" data-backdrop="static" data-keyboard="false">
-									Request Item
-								</button>
-							</div>
-						</div>
-					</div>
-					<div class="row border-space">
-						<div class="col-sm-12">
-							<h4 align="center">List</h4>
-							<div class="table-resrisnsive">
-								<table class="table table-hover table-striped table-bordered tablesorter" id="ris-dtl-table">
-									<thead>
-										<tr>
-											<th>Item No</th>
-											<th>Stock No</th>
-											<th>Unit</th>
-											<th>Description</th>
-											<th>Qty</th>
-											<th>Issuance Qty</th>
-											<th>Issuance Remarks</th>
-											<th>Action</th>
-										</tr>
-									</thead>
-									<tbody></tbody>
-								</table>
-							</div>
-						</div>
-					</div>
-					<div id="hidden_data"></div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-default secondary" data-dismiss="modal">
-							Close
-						</button>
-						<button type="submit" class="btn btn-primary" name="furnish">
-							<span class="modal-form-action">Furnish</span>
-						</button>
-					</div>
-				</form>
+						<div id="hidden_data"></div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default secondary" data-dismiss="modal">
+						Close
+					</button>
+					<button type="submit" class="btn btn-primary" name="furnish">
+						<span class="modal-form-action">Furnish</span>
+					</button>
+				</div>		
 			</div>
 		</div>
 	</div>
-</div>
-
+</form>
+		
 <div class="modal fade" id="ris_dtl-modal" tabindex="-1" role="dialog" aria-labelledby="mymodallabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
@@ -640,6 +664,26 @@
 			};
 			$('#ris_dtl-modal').modal('hide');
 			$('#ris_dtl-modal-form').find('input').removeAttr('disabled');
+		});
+		
+		
+		//ITEM POPULATION
+		$('[name="ris_dtl_item_stock_no"]').on('keypress', function(e){
+			console.log(e.which);
+			if(e.which == 13){
+				var input = $(this);
+				var item_stock_no = input.val();
+				if(item_stock_no.length){
+					$.post('/item2/', {item : item_stock_no}, function(data){
+						item = (data.data)?data.data:false;
+						if(item){
+							$('[name="ris_dtl_item_desc"]').val(item[0].item_desc);
+							$('[name="ris_dtl_item_unit"]').val(item[0].item_unit_measure);
+						
+						}
+					});
+				}
+			}
 		});
 	})(jQuery);
 </script>
