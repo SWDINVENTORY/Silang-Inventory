@@ -1,12 +1,12 @@
 function changeModal(action) {
-	$('#'+action.model+'-modal-form').attr('action', action.action);
-	var modal_action = $('#'+action.model+'-modal-form')
-		.parents('div.modal-content')
+	modal = $('#'+action.model+'-modal-form').attr('action', action.action);
+	modal_action = $('#'+action.model+'-modal-form')
+		.find('.modal')
 		.find('span.modal-form-action');
 	modal_action.html(action.pr_button);
 	modal_action.parents('button').attr('name', action.submit_name);
 	$('#'+action.model+'-modal-form')
-		.parents('div.modal-content')
+		.find('div.modal-content')
 		.find('#my-modal-label').html(action.modal_label);
 	action.run();
 }

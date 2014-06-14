@@ -1,5 +1,5 @@
 <style>
-	.ia-modal-dialog {
+	.modal-dialog {
 		width: 90%;
 	}
 	.ia .border {
@@ -52,7 +52,7 @@
 		border-radius: 4px;
 	}
 	.modal-body{
-		max-height:450px;
+		max-height:600px;
 		overflow-y:auto;
 	}
 </style>
@@ -106,14 +106,15 @@
 		</div>
 	</div>
 </div>
+
+<form method="post" action="/ia/furnish/" id="ia-modal-form">
 <div class="modal fade" id="ia-modal" tabindex="-1" role="dialog" aria-labelledby="mymodallabel" aria-hidden="true">
-	<div class="modal-dialog ia-modal-dialog">
+	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h4 class="modal-title" id="my-modal-label"><span class="modal-form-state">Action Here</span></h4>
 			</div>
 			<div class="modal-body">
-				<form method="post" action="/po/furnish/" id="ia-modal-form">
 				<input type="hidden" name="ia_id"/>
 				<!---IA Proper -->
 				<div class="border">
@@ -227,6 +228,7 @@
 		</div>
 	</div>
 </div>
+</form>
 <div class="modal fade" id="ia_dtl-modal" tabindex="-1" role="dialog" aria-labelledby="mymodallabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
