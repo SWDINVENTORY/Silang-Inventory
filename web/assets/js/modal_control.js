@@ -1,5 +1,5 @@
 function changeModal(action) {
-	modal = $('#'+action.model+'-modal-form').attr('action', action.action);
+	$('#'+action.model+'-modal-form').attr('action', action.action);
 	modal_action = $('#'+action.model+'-modal-form')
 		.find('.modal')
 		.find('span.modal-form-action');
@@ -12,7 +12,6 @@ function changeModal(action) {
 }
 
 function populate(model, callback){
-console.log(model);
 	Object.keys(model.data).forEach(function(v,i,a) {
 		var value = model.map(v, model.data);
 		$('#'+model.name+'-modal-form').find('input[name="'+v+'"]').val(value);

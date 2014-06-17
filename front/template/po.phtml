@@ -323,90 +323,92 @@
 		</div>
 	</div>
 </form>
-<div class="modal fade" id="po_dtl-modal" tabindex="-1" role="dialog" aria-labelledby="mymodallabel" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h4 class="modal-title" id="my-modal-label"><span class="modal-form-state">Action Here</span></h4>
-			</div>
-			<div class="modal-body">
-				<form id="po_dtl-modal-form" action='#'>
-				<div class="row border">
-							<div class="border">
-								<div class="col-sm-12">
-									<label for="input-name" class="col-sm-3 control-label">Barcode</label>
-									<div class="form-group col-sm-5">	
-										<input type="text" class="form-control" placeholder="Stock No"  autofocus="autofocus" id="po_dtl_stock_no"
-											name="po_dtl_stock_no">
-									</div>
-								</div>
-								<div class="col-sm-12">
-									<label for="input-name" class="col-sm-3 control-label">Desc</label>
-									<div class="form-group col-sm-9">	
-										<input type="text" class="form-control" placeholder="Desc"
-											name="po_dtl_item_desc" required="required">
-									</div>
-								</div>
-								<div class="col-sm-12">
-									<label for="input-address" class="col-sm-3 control-label">Unit</label>
-									<div class="form-group col-sm-3">
-										<input type="text" class="form-control" placeholder="Unit"
-											name="po_dtl_item_unit" required="required">
-									</div>
-								</div>
-								<div class="col-sm-12">
-									<label for="input-tel" class="col-sm-3 control-label">Qty</label>
-									<div class="form-group col-sm-3">
-										<input type="text" class="form-control" placeholder="QTY"
-											name="po_dtl_item_qty" required="required">
-									</div>
-								</div>
-								<div class="col-sm-12 form-group">
-									<label for="input-tel" class="col-sm-3 control-label">Stock Type</label>
-									<div class="col-sm-9">
-										<select class="form-control" name="po_dtl_item_type" required="required">
-											<option value="">Select Stock Type</option>
-											<option value="STOCK">STOCK</option>
-											<option value="NONSTOCK">NON-STOCK</option>
-										</select>
-									</div>
-								</div>
-								<div class="col-sm-12 form-group">
-									<label for="input-tel" class="col-sm-3 control-label">Article</label>
-									<div class="col-sm-9">
-										<select class="form-control" name="po_dtl_article_id" required="required">
-											<option value="">Select Article</option>
-											<?php if(!empty($articles)):?>
-											<?php foreach($articles as $article):?>
-											<option value="<?php echo $article['article_id']; ?>">
-												<?php echo $article['article_name']; ?>
-											</option>
-											<?php endforeach;?>
-											<?php endif;?>
-										</select>
-									</div>
-								</div>
-								<div class="col-sm-12">
-									<label for="input-tel" class="col-sm-3 control-label">Cost</label>
-									<div class="form-group col-sm-3" required="required">
-										<input type="text" class="form-control" placeholder="Unit Cost" name="po_dtl_item_cost">
-									</div>
-								</div>
-							</div>
+<form id="po_dtl-modal-form" action='#'>
+	<div class="modal fade"  id="po_dtl-modal" tabindex="-1" role="dialog" aria-labelledby="mymodallabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="my-modal-label"><span class="modal-form-state">Action Here</span></h4>
 				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default secondary" data-dismiss="modal">
-						Close
-					</button>
-					<button type="submit" class="btn btn-primary" name="">
-						<span class="modal-form-action" >Save changes</span>
-					</button>
+				<div class="modal-body">
+					
+					<div class="row border">
+								<div class="border">
+									<div class="col-sm-12">
+										<label for="input-name" class="col-sm-3 control-label">Barcode</label>
+										<div class="form-group col-sm-5">	
+											<input type="text" class="form-control" placeholder="Stock No"  autofocus="autofocus" id="po_dtl_stock_no"
+												name="po_dtl_stock_no">
+										</div>
+									</div>
+									<div class="col-sm-12">
+										<label for="input-name" class="col-sm-3 control-label">Desc</label>
+										<div class="form-group col-sm-9">	
+											<input type="text" class="form-control" placeholder="Desc"
+												name="po_dtl_item_desc" required="required">
+										</div>
+									</div>
+									<div class="col-sm-12">
+										<label for="input-address" class="col-sm-3 control-label">Unit</label>
+										<div class="form-group col-sm-3">
+											<input type="text" class="form-control" placeholder="Unit"
+												name="po_dtl_item_unit" required="required">
+										</div>
+									</div>
+									<div class="col-sm-12">
+										<label for="input-tel" class="col-sm-3 control-label">Qty</label>
+										<div class="form-group col-sm-3">
+											<input type="text" class="form-control" placeholder="QTY"
+												name="po_dtl_item_qty" required="required">
+										</div>
+									</div>
+									<div class="col-sm-12 form-group">
+										<label for="input-tel" class="col-sm-3 control-label">Stock Type</label>
+										<div class="col-sm-9">
+											<select class="form-control" name="po_dtl_item_type" required="required">
+												<option value="">Select Stock Type</option>
+												<option value="STOCK">STOCK</option>
+												<option value="NONSTOCK">NON-STOCK</option>
+											</select>
+										</div>
+									</div>
+									<div class="col-sm-12 form-group">
+										<label for="input-tel" class="col-sm-3 control-label">Article</label>
+										<div class="col-sm-9">
+											<select class="form-control" name="po_dtl_article_id" required="required">
+												<option value="">Select Article</option>
+												<?php if(!empty($articles)):?>
+												<?php foreach($articles as $article):?>
+												<option value="<?php echo $article['article_id']; ?>">
+													<?php echo $article['article_name']; ?>
+												</option>
+												<?php endforeach;?>
+												<?php endif;?>
+											</select>
+										</div>
+									</div>
+									<div class="col-sm-12">
+										<label for="input-tel" class="col-sm-3 control-label">Cost</label>
+										<div class="form-group col-sm-3" required="required">
+											<input type="text" class="form-control" placeholder="Unit Cost" name="po_dtl_item_cost">
+										</div>
+									</div>
+								</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default secondary" data-dismiss="modal">
+							Close
+						</button>
+						<button type="submit" class="btn btn-primary" name="">
+							<span class="modal-form-action" >Save changes</span>
+						</button>
+					</div>
+					
 				</div>
-				</form>
 			</div>
 		</div>
 	</div>
-</div>
+</form>
 <?php include __DIR__.'/action.phtml'; ?>
 <script type="text/javascript" src="/assets/js/autocomplete.js"></script>
 <script type="text/javascript" src="/assets/js/modal_control.js"></script>
@@ -600,9 +602,24 @@
 							if(!data.found){
 								alert('No Item Match Found!');
 							} else {
-								var msg = 'Already existing! \n\n'+'Stock No: '+barcode;
+								var po_dtl_data ={};
+								
+								po_dtl_data['po_dtl_item_desc'] = data.data['item_desc'];
+								po_dtl_data['po_dtl_item_unit'] = data.data['item_unit_measure'];
+								po_dtl_data['po_dtl_item_type'] = data.data['item_type'];
+								po_dtl_data['po_dtl_article_id'] = data.data['item_article_id'];
+								
+								populate({
+									name:'po_dtl',
+									data:po_dtl_data,
+									map: function(v, o) {
+										return o[v];
+									}
+								});
+								/*var msg = 'Already existing! \n\n'+'Stock No: '+barcode;
 										msg+='\n\n'+'Item Desc: '+data.item_desc;
-								alert(msg);
+								alert(msg);*/
+								
 							}
 						});
 					}

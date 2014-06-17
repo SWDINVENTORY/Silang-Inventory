@@ -75,7 +75,7 @@ class Item extends Abstract_Model {
 		return front()->database()
 			->search()
 			->setTable('item')
-			->setColumns('*')
+			->setColumns('item_id', 'item_unit_measure', 'item_type', 'item_stock_no', 'item_desc', 'item_article_id')
 			->filterByItemStockNo($stock_no)
 			->getRow();
 	}
