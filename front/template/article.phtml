@@ -61,11 +61,13 @@
 		    <div class="col-sm-9">
 		      <select name="article_inventory_type" class="form-control">
 				<option value="">Select Inventory Type</option>
-				<option value="SUPPLIES">Supplies</option>
-				<option value="MATERIAL">Materials</option>
+				<option value="SUPPLIES">SUPPLIES</option>
+				<option value="MATERIAL">MATERIALS</option>
+				<option value="ENGRPRODMAT">ENGINEERING AND PRODUCTION MATERIALS</option>
 			  </select>
 		    </div>
 		  </div>
+		  
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default secondary" data-dismiss="modal">Close</button>
@@ -106,7 +108,7 @@
 			}];
 		var article_table = $('#article-table').dataTable({
 			'sPaginationType' : "two_button",
-			"iDisplayLength" : 10,
+			"iDisplayLength" : 100,
 			"sDom" : '<"pad-it"<"pull-right"f>l>t<"pull-right"i>p>',
 			'sAjaxSource': '/article/',
 			'sAjaxDataProp': 'data',
