@@ -78,8 +78,8 @@ class ReturnedMaterialSlip extends Formsheet{
 		$this->GRID['font_size']=10;	
 		$y = 0.8;
 		//LABEL
-		$this->centerText(0,$y,'REQUISITION',22,'b');
-		$this->centerText(22,$y++,'ISSUANCE',8,'b');
+		$this->centerText(0,$y,'RETURNED ITEMS',22,'b');
+		$this->centerText(22,$y++,'RECEIVED',8,'b');
 		$this->GRID['font_size']=9;	
 		$this->centerText(0,$y,'Acct. No',3,'');
 		$this->centerText(3,$y,'Stock No',3,'');
@@ -115,7 +115,8 @@ class ReturnedMaterialSlip extends Formsheet{
 		$this->section($metrics);
 		$this->GRID['font_size']=8;
 		$y=1.8;		
-		$this->leftText(0.2,$y++,'PURPOSE:','','b');
+		$this->leftText(0.2,$y,'PURPOSE:','','b');
+		$this->leftText(15,$y++,'CHARGING:','','b');
 		$this->centerText(5,$y,'Returned by:',12,'b');
 		$this->centerText(17,$y,'Approved by:',7,'b');
 		$this->centerText(24,$y++,'Received by:',6,'b');
