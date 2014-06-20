@@ -35,11 +35,13 @@ class BinCard extends Formsheet{
 		$y++;
 		$this->drawLine($y+0.2,'h',array(6,13));
 		$y++;
+		$this->GRID['font_size']=9;	
 		$this->centerText(0,$y++,'Description',25,'b');
-		$this->leftText(0,$y,'Stock No.','','b');
-		$this->drawLine($y+0.2,'h',array(3.5,7));
-		$this->leftText(12.5,$y,'Re-Order Point','','b');
-		$this->drawLine($y+0.2,'h',array(18,7));
+		$this->leftText(0,$y,'Acct. Code:','','b');
+		$this->leftText(8,$y,'Stock No.:','','b');
+		//$this->drawLine($y+0.2,'h',array(3.5,7));
+		$this->leftText(16,$y,'Re-Order Point:','','b');
+		//$this->drawLine($y+0.2,'h',array(18,7));
 	}
 	
 	function table(){
@@ -52,7 +54,7 @@ class BinCard extends Formsheet{
 			'rows'=> 31,	
 		);
 		$this->section($metrics);
-		$this->GRID['font_size']=10;
+		$this->GRID['font_size']=9;
 		$this->drawBox(0,0,25,31);
 		$this->drawMultipleLines(2,30,1,'h');
 		//$this->drawLine(1,'h',array(10,15));
