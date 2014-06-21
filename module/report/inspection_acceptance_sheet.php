@@ -115,7 +115,7 @@ class IAReport extends Formsheet{
 			 $this->rightText(38,$y,number_format($total_per_item, 2, '.', ','),3,'');
 			 $y++;
 		}
-		$y+=2;
+		$y+=25;
 		//echo "<pre>";print_r($detail);exit();
 		$this->leftText(14,$y+=2,$detail['po_purpose'],'','b');
 		$this->leftText(14,$y+=2.5,$detail['ia_is_partial']?'PARTIAL DELIVERY':'FULL DELIVERY','','b');
@@ -146,6 +146,7 @@ class IAReport extends Formsheet{
 		$this->GRID['font_size']=12;
 		$this->leftText(24.25,3.8,!$detail['ia_is_partial']?'x':'',1,'');
 		$this->leftText(24.25,5,$detail['ia_is_partial']?'x':'',1,'');
+		$this->leftText(3.3,3.8,'x',1,'');
 		$this->GRID['font_size']=10;
 		$this->DrawBox(3,3,1,1,'');
 		$this->DrawBox(24,3,1,1,'');
