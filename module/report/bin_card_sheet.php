@@ -1,5 +1,6 @@
 <?php
-require('formsheet.php');
+namespace Report;
+
 class BinCard extends Formsheet{
 	protected static $_width = 8.5;
 	protected static $_height = 5.5;
@@ -8,9 +9,9 @@ class BinCard extends Formsheet{
 	protected static $_available_line = 41;	
 	protected static $_allot_subjects = 15;
 	
-	function BinCard(){
+	function __construct(){
 		$this->showLines = !true;
-		$this->FPDF(BinCard::$_orient, BinCard::$_unit,array(BinCard::$_width,BinCard::$_height));
+		parent::__construct(BinCard::$_orient, BinCard::$_unit,array(BinCard::$_width,BinCard::$_height));
 		$this->createSheet();
 	}
 	

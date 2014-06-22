@@ -1,6 +1,7 @@
 <?php
 require('../fpdf17/fpdf.php');
-	class FormSheet extends FPDF{
+//use fpdf\FPDF_EXTENDED as FPDF;	
+class FormSheet extends FPDF{
 		private $FONT_CONST = 0.50;
 		public $GRID = array();
 		protected $showLines=true;

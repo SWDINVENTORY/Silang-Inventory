@@ -1,10 +1,13 @@
 <?php
-require('fpdf17/fpdf.php');
+namespace Report;
+
+use fpdf\FPDF as FPDF;
 	class FormSheet extends FPDF{
 		private $FONT_CONST = 0.50;
 		public $GRID = array();
 		protected $showLines=true;
 		protected $_colorful =true;
+        
 		public function createSheet($type=null,$title=null,$img=null){
 			$this->AddPage();
 			$this->SetMargins(0,0);

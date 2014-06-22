@@ -1,5 +1,6 @@
 <?php
-require('formsheet.php');
+namespace Report;
+
 class SWDReport extends Formsheet{
 	protected static $_width = 8.5;
 	protected static $_height = 13;
@@ -8,9 +9,9 @@ class SWDReport extends Formsheet{
 	protected static $_available_line = 41;	
 	protected static $_allot_subjects = 15;
 	
-	function SWDReport(){
+	function __construct(){
 		$this->showLines = !true;
-		$this->FPDF(SWDReport::$_orient, SWDReport::$_unit,array(SWDReport::$_width,SWDReport::$_height));
+		parent::__construct(SWDReport::$_orient, SWDReport::$_unit,array(SWDReport::$_width,SWDReport::$_height));
 		$this->createSheet();
 	}
 	

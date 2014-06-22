@@ -1,5 +1,6 @@
 <?php
-require('formsheet.php');
+namespace Report;
+
 class RequisitionAndIssueSlip extends Formsheet{
 	protected static $_width = 8.5;
 	protected static $_height = 6.5;
@@ -8,9 +9,9 @@ class RequisitionAndIssueSlip extends Formsheet{
 	protected static $_available_line = 41;	
 	protected static $_allot_subjects = 15;
 	
-	function RequisitionAndIssueSlip(){
+	function __construct(){
 		$this->showLines = !true;
-		$this->FPDF(RequisitionAndIssueSlip::$_orient, RequisitionAndIssueSlip::$_unit,array(RequisitionAndIssueSlip::$_width,RequisitionAndIssueSlip::$_height));
+		parent::__construct(RequisitionAndIssueSlip::$_orient, RequisitionAndIssueSlip::$_unit,array(RequisitionAndIssueSlip::$_width,RequisitionAndIssueSlip::$_height));
 		$this->createSheet();
 	}
 	

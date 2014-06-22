@@ -1,5 +1,6 @@
 <?php
-require('formsheet.php');
+namespace Report;
+
 class StockCard extends Formsheet{
 	protected static $_width = 8.5;
 	protected static $_height = 11;
@@ -9,9 +10,9 @@ class StockCard extends Formsheet{
 	protected static $_curr_page = 1;
 	protected static $_allot_subjects = 15;
 	
-	function StockCard(){
+	function __construct(){
 		$this->showLines = !true;
-		$this->FPDF(StockCard::$_orient, StockCard::$_unit,array(StockCard::$_width,StockCard::$_height));
+		parent::__construct(StockCard::$_orient, StockCard::$_unit,array(StockCard::$_width,StockCard::$_height));
 		$this->createSheet();
 	}
 	

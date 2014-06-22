@@ -16,7 +16,7 @@ require_once dirname(__FILE__).'/class.php';
  * @category   core
  * @author     Christian Blanquera cblanquera@openovate.com
  */
-class Eden_When extends Eden_Class implements ArrayAccess, Iterator {
+class Eden_When extends Eden_Class implements \ArrayAccess, \Iterator {
 	/* Constants
 	-------------------------------*/
 	/* Public Properties

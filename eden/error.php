@@ -6,6 +6,7 @@
  * Copyright and license information can be found at LICENSE.txt
  * distributed with this package.
  */
+//require_once dirname(__FILE__).'/class.php';
 
 /**
  * The base class for any class handling exceptions. Exceptions
@@ -19,7 +20,8 @@
  * @category   error
  * @author     Christian Blanquera cblanquera@openovate.com
  */
-class Eden_Error extends Exception {
+ 
+class Eden_Error extends \Exception {
 	/* Constants
 	-------------------------------*/
 	const REFLECTION_ERROR 		= 'Error creating Reflection Class: %s, Method: %s.';

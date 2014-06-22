@@ -1,5 +1,6 @@
 <?php //-->
-include(realpath(__DIR__.'/../../module/report/po_report.php'));
+include(realpath(__DIR__.'/../../module/report/po_report_sheet.php'));
+use Report\POReport as POReport;
 class Front_Page_Po extends Front_Page {
 	/* Constants
 	-------------------------------*/
@@ -233,7 +234,12 @@ class Front_Page_Po extends Front_Page {
 			$po_id = $this->variables[1];
 			$po = $this->Po()->getPo($po_id);
 			$po['detail'] = $this->Po()->getDetail($po_id);
-			recieve_data($po);
+            
+            $po_rpt= new POReport();
+            $po_rpt->hdr($po);
+            $total_amount = $po_rpt->table($po);
+            $po_rpt->ftr($po,$total_amount);
+            $po_rpt->output();
 			exit;
 		}
 	}

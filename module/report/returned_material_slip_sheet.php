@@ -1,5 +1,6 @@
 <?php
-require('formsheet.php');
+namespace Report;
+
 class ReturnedMaterialSlip extends Formsheet{
 	protected static $_width = 8.5;
 	protected static $_height = 6.5;
@@ -8,9 +9,9 @@ class ReturnedMaterialSlip extends Formsheet{
 	protected static $_available_line = 41;	
 	protected static $_allot_subjects = 15;
 	
-	function ReturnedMaterialSlip(){
+	function __construct(){
 		$this->showLines = !true;
-		$this->FPDF(ReturnedMaterialSlip::$_orient, ReturnedMaterialSlip::$_unit,array(ReturnedMaterialSlip::$_width,ReturnedMaterialSlip::$_height));
+		parent::__construct(ReturnedMaterialSlip::$_orient, ReturnedMaterialSlip::$_unit,array(ReturnedMaterialSlip::$_width,ReturnedMaterialSlip::$_height));
 		$this->createSheet();
 	}
 	

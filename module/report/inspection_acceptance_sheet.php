@@ -1,16 +1,17 @@
 <?php
-require('formsheet.php');
-class report extends Formsheet{
+namespace Report;
+
+class IAReport extends Formsheet{
 	protected static $_width = 8.5;
 	protected static $_height = 11;
 	protected static $_unit = 'in';
 	protected static $_orient = 'P';	
 	protected static $_allot_subjects = 15;
 	
-	function report($data=null){
+	function __construct($data=null){
 		$this->data =$data; 
 		$this->showLines = !true;
-		$this->FPDF(report::$_orient, report::$_unit,array(report::$_width,report::$_height));
+		parent::__construct(IAReport::$_orient, IAReport::$_unit,array(IAReport::$_width,IAReport::$_height));
 		$this->createSheet();
 		return $this;
 	}

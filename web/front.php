@@ -1,4 +1,5 @@
 <?php //-->
+require '/../vendor/autoload.php';
 /*
  * This file is part a custom application package.
  * (c) 2011-2012 Openovate Labs

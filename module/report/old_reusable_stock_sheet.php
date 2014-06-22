@@ -1,5 +1,6 @@
 <?php
-require('formsheet.php');
+namespace Report;
+
 class OldReusableStock extends Formsheet{
 	protected static $_width = 8.5;
 	protected static $_height = 11;
@@ -8,9 +9,9 @@ class OldReusableStock extends Formsheet{
 	protected static $_available_line = 41;	
 	protected static $_allot_subjects = 15;
 	
-	function OldReusableStock(){
+	function __construct(){
 		$this->showLines = !true;
-		$this->FPDF(OldReusableStock::$_orient, OldReusableStock::$_unit,array(OldReusableStock::$_width,OldReusableStock::$_height));
+		parent::__construct(OldReusableStock::$_orient, OldReusableStock::$_unit,array(OldReusableStock::$_width,OldReusableStock::$_height));
 		$this->createSheet();
 	}
 	

@@ -1,5 +1,6 @@
 <?php
-require('formsheet.php');
+namespace Report;
+
 class IssueOutReport extends Formsheet{
 	protected static $_width = 8.5;
 	protected static $_height = 13;
@@ -9,9 +10,9 @@ class IssueOutReport extends Formsheet{
 	protected static $_curr_page = 1;
 	protected static $_allot_subjects = 15;
 	
-	function IssueOutReport(){
+	function __construct(){
 		$this->showLines = !true;
-		$this->FPDF(IssueOutReport::$_orient, IssueOutReport::$_unit,array(IssueOutReport::$_width,IssueOutReport::$_height));
+		parent::__construct(IssueOutReport::$_orient, IssueOutReport::$_unit,array(IssueOutReport::$_width,IssueOutReport::$_height));
 		$this->createSheet();
 	}
 	

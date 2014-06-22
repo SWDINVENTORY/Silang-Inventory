@@ -1,5 +1,6 @@
 <?php
-require('formsheet.php');
+namespace Report;
+
 class PCREPORT extends Formsheet{
 	protected static $_width = 8.5;
 	protected static $_height = 13;
@@ -9,9 +10,9 @@ class PCREPORT extends Formsheet{
 	protected static $_curr_page = 1;
 	protected static $_allot_subjects = 15;
 	
-	function PCREPORT(){
+	function __construct(){
 		$this->showLines = !true;
-		$this->FPDF(PCREPORT::$_orient, PCREPORT::$_unit,array(PCREPORT::$_width,PCREPORT::$_height));
+		parent::__construct(PCREPORT::$_orient, PCREPORT::$_unit,array(PCREPORT::$_width,PCREPORT::$_height));
 		$this->createSheet();
 	}
 	

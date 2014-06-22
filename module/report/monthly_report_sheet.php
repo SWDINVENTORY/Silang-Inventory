@@ -1,5 +1,6 @@
 <?php
-require('formsheet.php');
+namespace Report;
+
 class MonthlyReport extends Formsheet{
 	protected static $_width = 8.5;
 	protected static $_height = 11;
@@ -9,9 +10,9 @@ class MonthlyReport extends Formsheet{
 	protected static $_curr_page = 1;
 	protected static $_allot_subjects = 15;
 	
-	function MonthlyReport(){
+	function __construct(){
 		$this->showLines = !true;
-		$this->FPDF(MonthlyReport::$_orient, MonthlyReport::$_unit,array(MonthlyReport::$_width,MonthlyReport::$_height));
+		parent::__construct(MonthlyReport::$_orient, MonthlyReport::$_unit,array(MonthlyReport::$_width,MonthlyReport::$_height));
 		$this->createSheet();
 	}
 	
