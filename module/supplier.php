@@ -13,6 +13,7 @@ class Supplier extends Abstract_Model {
 	const SUPPLIER_NAME = 'supplier_name';
 	const SUPPLIER_ADDRESS = 'supplier_address';
 	const SUPPLIER_TEL_NO = 'supplier_tel_no';
+	const SUPPLIER_TIN = 'supplier_tin';
 	const SUPPLIER_CREATED = 'supplier_created';
 	const SUPPLIER_UPDATED = 'supplier_updated';
 		
@@ -57,6 +58,7 @@ class Supplier extends Abstract_Model {
 				array(
 				Supplier::SUPPLIER_ID,
 				Supplier::SUPPLIER_NAME,
+				Supplier::SUPPLIER_TIN,
 				Supplier::SUPPLIER_ADDRESS,
 				Supplier::SUPPLIER_TEL_NO))
 			->sortBySupplierCreated('ASC')

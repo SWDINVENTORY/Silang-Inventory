@@ -21,6 +21,7 @@ class Front_Page_Supplier extends Front_Page {
 	public function render() {
 		$this->post = front()->registry()->get('post')->getArray();
 		$this->request = front()->registry()->get('request', 'variables','0');
+		$this->variables = front()->registry()->get('request', 'variables');
 		$this->get = front()->registry()->get('get')->getArray();
 		
 		
@@ -89,7 +90,7 @@ class Front_Page_Supplier extends Front_Page {
 		$supplier[Supplier::SUPPLIER_CREATED] = date('Y-m-d H:i:s');
 		$supplier[Supplier::SUPPLIER_UPDATED] = date('Y-m-d H:i:s');
 		unset($supplier['id']);
-		if(empty($supplier['id'])){
+		if(empty($supplier['id'])) {
 			$this->Supplier()->add($supplier);
 			
 			$status = array();
@@ -214,6 +215,7 @@ class Front_Page_Supplier extends Front_Page {
 		if(isset($variables[1])) {
 			$id = $variables[1];
 		}
+		
 		front()->database()
 			->deleteRows('supplier', array(
 				array('(supplier_id = %s)',$id)

@@ -30,6 +30,7 @@
 					<thead>
 						<tr>
 							<th>Name</th>
+							<th>TIN</th>
 							<th>Address</th>
 							<th>Telephone No.</th>
 							<th>Action</th>
@@ -42,6 +43,7 @@
 	</div>
 </div>
 <!-- Modal -->
+<form class="form-horizontal" role="form" action="" method="post" id="supplier-modal-form">
 <div class="modal fade" id="supplier-modal" tabindex="-1" role="dialog" aria-labelledby="mymodallabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -49,23 +51,28 @@
         <h4 class="modal-title" id="my-modal-label"><span class="modal-form-state">Action Here</span></h4>
       </div>
       <div class="modal-body">
-      	<form class="form-horizontal" role="form" action="" method="post" id="supplier-modal-form">
 			<input type="hidden" name="supplier_id"/>
 		  <div class="form-group ">
-		    <label for="input-name" class="col-sm-2 control-label">Name:</label>
-		    <div class="col-sm-10">
+		    <label for="input-name" class="col-sm-3 control-label">Name:</label>
+		    <div class="col-sm-6">
 		      <input type="text" class="form-control" id="input-name" placeholder="Enter Name" name="supplier_name" required="required">
 		    </div>
 		  </div>
+		  <div class="form-group ">
+		    <label for="input-name" class="col-sm-3 control-label">TIN </label>
+		    <div class="col-sm-6">
+		      <input type="text" class="form-control" id="input-name" placeholder="Enter TIN" name="supplier_tin" required="required">
+		    </div>
+		  </div>
 		  <div class="form-group">
-		    <label for="input-address" class="col-sm-2 control-label">Address:</label>
-		    <div class="col-sm-10">
+		    <label for="input-address" class="col-sm-3 control-label">Address:</label>
+		    <div class="col-sm-6">
 		      <input type="text" class="form-control" id="input-address" placeholder="Enter Address" name="supplier_address" required="required">
 		    </div>
 		  </div>
 		  <div class="form-group">
-		    <label for="input-tel" class="col-sm-2 control-label">Tel No. :</label>
-		    <div class="col-xs-4">
+		    <label for="input-tel" class="col-sm-3 control-label">Tel No:</label>
+		    <div class="col-xs-6">
 		      <input type="text" class="form-control" id="input-tel" placeholder="Enter Tel No" name="supplier_tel_no">
 		    </div>
 		  </div>
@@ -74,10 +81,10 @@
         <button type="button" class="btn btn-default secondary" data-dismiss="modal">Close</button>
         <button type="submit" class="btn btn-primary" name="supplier"><span class="modal-form-action">Save changes</span></button>
       </div>
-      </form>
     </div>
   </div>
 </div>
+</form>
 <?php include __DIR__.'/action.phtml'; ?>
 <script type="text/javascript" src="/assets/js/modal_control.js"></script>
 <script type="text/javascript">
@@ -87,6 +94,7 @@
 		var action_template = $('#action_tpl').text().trim();
 		var supplier_columns = [
 			{ "mData": "supplier_name" },
+			{ "mData": "supplier_tin" },
 			{ "mData": "supplier_address" },
 			{ "mData": "supplier_tel_no" },
 			{
