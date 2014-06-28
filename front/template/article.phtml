@@ -2,6 +2,24 @@
 	.article .border { padding: 5px; }
 	.article .border-space{ padding: 5px 5px; }
 	#article-table th:last-child { width: 10%; }
+	
+	.dataTables_filter label{
+		width:250px;
+	}
+	[name="article-table_length"],[name="article-dtl-table_length"]{
+		display: inline;
+		width: 100px;
+		height: 34px;
+		padding: 6px 12px;
+		font-size: 14px;
+		line-height: 1.428571429;
+		color: #555555;
+		vertical-align: middle;
+		background-color: #ffffff;
+		background-image: none;
+		border: 1px solid #cccccc;
+		border-radius: 4px;
+	}
 </style>
 <div class="row">
 	<div class="col-md-12">
@@ -19,7 +37,7 @@
 </div>
 <div class="border">
 	<div class="border-space col-md-offset-11 col-md-1">
-		<button class="btn btn-primary" data-toggle="modal" data-target="#article-modal" 
+		<button class="btn btn-primary pull-right" data-toggle="modal" data-target="#article-modal" 
 			data-backdrop="static" data-keyboard="false" id="create-article">Add</button>
 	</div>
 	<hr />

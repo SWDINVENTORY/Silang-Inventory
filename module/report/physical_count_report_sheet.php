@@ -1,6 +1,5 @@
 <?php
 namespace Report;
-
 class PCREPORT extends Formsheet{
 	protected static $_width = 8.5;
 	protected static $_height = 13;
