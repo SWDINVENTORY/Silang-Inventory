@@ -213,6 +213,72 @@
 						</table>
 					</div>
 				</div>
+				<div class="row item-list border-space">
+					<div class="col-lg-12">
+						<div class="col-lg-6">
+							<h4 align="center">INSPECTORS</h4>
+							<div class="form-horizontal row inspectors">
+								<div class="col-md-12 row">
+									<div class="col-md-5">
+										<input type="input" class="form-control" placeholder="Name" vname="inspectors_name" >
+									</div>
+									<div class="col-md-5">
+										<input type="input" class="form-control" placeholder="Position" vname="inspectors_position">
+									</div>
+									<div class="col-md-2">
+										<button type="button" class="btn btn-default">
+										  <span class="glyphicon glyphicon-plus"></span>
+										</button>
+									</div>
+								</div>
+								<div class="col-md-12 row">
+									<div class="col-md-5">
+										<input type="input" class="form-control" placeholder="Name" vname="inspectors_name" >
+									</div>
+									<div class="col-md-5">
+										<input type="input" class="form-control" placeholder="Position" vname="inspectors_position">
+									</div>
+									<div class="col-md-2">
+										<button type="button" class="btn btn-default">
+										  <span class="glyphicon glyphicon-plus"></span>
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-6">
+							<h4 align="center">ACCEPTEE</h4>
+							<div class="form-horizontal row acceptee">
+								<div class="col-md-12 row">
+									<div class="col-md-5">
+										<input type="input" class="form-control" placeholder="Name" vname="acceptee_name">
+									</div>
+									<div class="col-md-5">
+										<input type="input" class="form-control" placeholder="Position" vname="acceptee_position" >
+									</div>
+									<div class="col-md-2">
+										<button type="button" class="btn btn-default">
+										  <span class="glyphicon glyphicon-plus"></span>
+										</button>
+									</div>
+								</div>
+								<div class="col-md-12 row">
+									<div class="col-md-5">
+										<input type="input" class="form-control" placeholder="Name" vname="acceptee_name">
+									</div>
+									<div class="col-md-5">
+										<input type="input" class="form-control" placeholder="Position" vname="acceptee_position" >
+									</div>
+									<div class="col-md-2">
+										<button type="button" class="btn btn-default">
+										  <span class="glyphicon glyphicon-plus"></span>
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 				<div id="hidden_data"></div>	
 				<!-- IA Proper End -->
 				<div class="modal-footer">
@@ -325,8 +391,8 @@
 		
 		ia_dtl_columns = [
 				{ "mData": function(data){ //stock_no 
-					if(data.item_stock_no){
-						return data.item_stock_no;
+					if(data.po_dtl_stock_no){
+						return data.po_dtl_stock_no;
 					}
 					return " "; 
 				}},
@@ -460,7 +526,7 @@
 									});
 								var bVis = ia_dtl_table.fnSettings().aoColumns[6].bVisible;
 								ia_dtl_table.fnSetColumnVis( 6, bVis ? false : true );
-						});
+							});
 					}
 				});
 			}
@@ -562,8 +628,10 @@
 		//HEADER SUBMIT HANDLER
 		$('#ia-modal-form').submit(function(e){
 			//e.preventDefault();
+			
 			$('#hidden_data').html('');
 			var data = ia_dtl_table.fnGetData();
+			
 			$.each(data, function(index, o){
 				(Object.keys(o)).forEach(function(v, i, a){
 						switch(v){
@@ -583,6 +651,9 @@
 						}
 				});
 			});
+			
+			console.log(data);
+			
 			var hidden_aggregation = $('#hidden_data');
 			$.each(data, function(index, o){
 				Object.keys(o).forEach(function(v,i,a){
@@ -590,6 +661,16 @@
 						'<input type="hidden" name="ia_dtl['+index+']['+v+']" value="'+o[v]+'"/>');
 					});
 			});
+			
+			//inspectator
+			$.each($('.inspectors .row'),function(i,e){
+				var name = $(e).find('input[vname="inspectors_name"]').val();
+				var position = $(e).find('input[vname="inspectors_position"]').val();
+				hidden_aggregation.append('<input type="hidden" name="ia_signatories['+i+'][name]" value="'+name+'"/>');
+				hidden_aggregation.append('<input type="hidden" name="ia_signatories['+i+'][position]" value="'+position+'"/>');
+			});
+			console.log(hidden_aggregation);
+			
 		});
 		
 		//CREATE PO

@@ -81,12 +81,23 @@ class Ia extends Abstract_Model {
 	}
 	
 	public function getAll() {
-		return $this->_getAll('*')
+		$all = $this->_getAll('*')
 			->innerJoinOn(Po::PO_TABLE, 'po_id=ia_po_id')
 			->innerJoinOn(Supplier::SUPPLIER_TABLE, 'po_supplier_id= supplier_id')
 			->innerJoinOn('dept', 'dept_id=ia_dept_id')
 			->sortByIaNo('ASC')
 			->getRows();
+		
+		for($i=0; $i<count($all); $i++){
+			$all[$i]['signatories'] = 
+				$this->search()
+					->setTable('signatories')
+					->filterByTransactionType('IA')
+					->addFilter('transaction_id = %s',$all[$i]['ia_id'])
+					->getRows();
+		}
+		
+		return $all;
 	}
 	
 	public function getIa($id) {
@@ -97,7 +108,7 @@ class Ia extends Abstract_Model {
 			->innerJoinOn(Po::PO_TABLE, 'po_id=ia_po_id')
 			->innerJoinOn(Supplier::SUPPLIER_TABLE, 'po_supplier_id= supplier_id')
 			->innerJoinOn('dept', 'dept_id=ia_dept_id')
-			->filterByIaId($id)
+			->filterByIaId($id)			
 			->sortByIaNo('ASC')
 			->getRow();
 	}
@@ -113,7 +124,8 @@ class Ia extends Abstract_Model {
 				Po::PO_DTL_ITEM_UNIT,
 				Po::PO_DTL_ITEM_QTY,
 				Po::PO_DTL_ITEM_COST,
-				'po_dtl_item_type'
+				Po::PO_DTL_STOCK_NO,
+				'po_dtl_item_type',
 			))
 			->addFilter('ia_id = %s', $id)
 			->leftJoinOn(Ia::IA_DTL_TABLE, 'ia_id = ia_dtl_ia_id')
