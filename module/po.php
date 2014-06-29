@@ -39,6 +39,7 @@ class Po extends Abstract_Model {
 	const PO_DTL_ITEM_DESC= 'po_dtl_item_desc';
 	const PO_DTL_ITEM_COST= 'po_dtl_item_cost';
 	const PO_DTL_ITEM_CREATED = 'po_dtl_item_created';
+	const PO_DTL_STOCK_NO = 'po_dtl_stock_no';
 		
 	/* Public Properties
 	-------------------------------*/
@@ -124,6 +125,7 @@ class Po extends Abstract_Model {
 				'po_auth_off',
 				'po_req_off',
 				'po_funds_off',
+				'po_dtl_stock_no',
 				'po_conforme'
 			))
 			->addFilter('po_id = %s', $id)

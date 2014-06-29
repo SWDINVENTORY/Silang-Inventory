@@ -81,20 +81,23 @@ class RequisitionAndIssueSlip extends Formsheet{
 		$this->centerText(0,$y,'REQUISITION',22,'b');
 		$this->centerText(22,$y++,'ISSUANCE',8,'b');
 		$this->GRID['font_size']=9;	
-		$this->centerText(0,$y,'Stock No',3,'');
-		$this->centerText(3,$y,'Unit',2,'');
-		$this->centerText(5,$y,'Description',12,'');
-		$this->centerText(17,$y,'Size',3,'');
+		$this->centerText(0,$y,'Acct. No',3,'');
+		$this->centerText(3,$y,'Stock No',3,'');
+		$this->centerText(6,$y,'Unit',2,'');
+		$this->centerText(7,$y,'Description',12,'');
+		$this->centerText(17.5,$y,'Size',3,'');
 		$this->centerText(20,$y,'Qty',2,'');
 		$this->centerText(22,$y,'Qty',2,'');
 		$this->centerText(24,$y,'Remarks',6,'');
+		
 		
 		//BOX
 		$this->drawBox(0,0,30,25);
 		$this->drawMultipleLines(1,24,1,'h');
 		$this->drawLine(3,'v',array(1,24));
-		$this->drawLine(5,'v',array(1,24));
-		$this->drawLine(17,'v',array(1,24));
+		$this->drawLine(6,'v',array(1,24));
+		$this->drawLine(8,'v',array(1,24));
+		$this->drawLine(18,'v',array(1,24));
 		$this->drawLine(20,'v',array(1,24));
 		$this->drawLine(22,'v');
 		$this->drawLine(24,'v',array(1,24));
@@ -113,9 +116,11 @@ class RequisitionAndIssueSlip extends Formsheet{
 		$this->section($metrics);
 		$this->GRID['font_size']=8;
 		$y=1.8;		
-		$this->leftText(0.2,$y++,'PURPOSE:','','b');
-		$this->centerText(5,$y,'Returned by:',12,'b');
-		$this->centerText(17,$y,'Approved by:',7,'b');
+		$this->leftText(0.2,$y,'PURPOSE:','','b');
+		$this->leftText(15,$y++,'CHARGING:','','b');
+		$this->centerText(1.5,$y,'Request by:',12,'b');
+		$this->centerText(10.5,$y,'Approved by:',7,'b');
+		$this->centerText(17.5,$y,'Issued by:',6,'b');
 		$this->centerText(24,$y++,'Received by:',6,'b');
 		$this->leftText(0.2,$y++,'Signature','','');
 		$this->leftText(0.2,$y++,'Printed Name','','');
@@ -124,7 +129,8 @@ class RequisitionAndIssueSlip extends Formsheet{
 		
 		$this->drawBox(0,0,30,7);
 		$this->drawMultipleLines(2,6,1,'h');
-		$this->drawLine(5,'v',array(2,5));
+		$this->drawLine(4,'v',array(2,5));
+		$this->drawLine(11,'v',array(2,5));
 		$this->drawLine(17,'v',array(2,5));
 		$this->drawLine(24,'v',array(2,5));
 		

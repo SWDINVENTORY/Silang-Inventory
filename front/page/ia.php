@@ -73,13 +73,19 @@ class Front_Page_Ia extends Front_Page {
 
 	protected function _add() {
 		$post = $this -> post;
+		
 		if (isset($post['ia_id']) && empty($post['ia_id'])) {
 			if (isset($post['ia_dtl']) && is_array($post['ia_dtl']) && !empty($post['ia_dtl'])) {
 				$po = front()->database()
 					->getRow('po', 'po_id', $post['ia_po_id']);
+					
 				if(!$po['po_is_cancelled'] && !$po['po_is_furnished']) {
 					$ia_dtl = $post['ia_dtl'];
+					$ia_signatories = $post['ia_signatories'];
+					
+					unset($post['ia_signatories']);
 					unset($post['ia_dtl']);
+					
 					$this->_computeTotalAmount();
 					$post['ia_is_partial'] = $this->is_partial;
 					$post['ia_partial_qty'] = $this->partial_count;
@@ -108,6 +114,15 @@ class Front_Page_Ia extends Front_Page {
 						array_push($ia_details, $dtl);
 					}
 					$this->_updatePo($post['ia_po_id']);
+					
+					//inspectors
+					for($x=0;$x<count($ia_signatories);$x++){
+						$ia_signatories[$x]['transaction_type']='IA';
+						$ia_signatories[$x]['type']='inspectors';
+						$ia_signatories[$x]['transaction_id']=$ia_id;
+						front() -> database() -> insertRow('signatories',$ia_signatories[$x])->getLastInsertedId();
+					}
+					
 					$status = array();
 					$status['status'] = 1;
 					$status['msg'] = 'Successfully Inspected and Accepted Order '; //. $post[Ia:] . '!';
