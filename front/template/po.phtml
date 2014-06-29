@@ -128,17 +128,29 @@
 							<div class="form-horizontal row">
 								<div class="col-sm-7">
 									<div class="form-group">
-										<label class="col-sm-2 control-label">Supplier</label>
-										<div class="col-sm-10">
+										<label class="col-sm-3 control-label">Supplier</label>
+										<div class="col-sm-9">
 											<input type="input" class="form-control" placeholder="If the supplier does not exist please, add it first"
 												id="supplier_name" required="required">
 											<input type="hidden" name="po_supplier_id" >
 										</div>
 									</div>
 									<div class="form-group">
-										<label class="col-sm-2 control-label">Address</label>
-										<div class="col-sm-10">
+										<label class="col-sm-3 control-label">Address</label>
+										<div class="col-sm-9">
 											<input type="input" class="form-control" placeholder="Address" id="supplier_address" disabled>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label">TIN</label>
+										<div class="col-sm-3">
+											<span class="form-control" id="supplier_tin">345-3453-345-345</span>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label">Contact Person</label>
+										<div class="col-sm-5">
+											<input type="input" class="form-control" placeholder="Contact" id="supplier_contact" >
 										</div>
 									</div>
 								</div>
@@ -172,14 +184,14 @@
 							<div class="form-horizontal row">
 								<div class="col-sm-7">
 									<div class="form-group">
-										<label class="col-sm-2 control-label">Delivery Place</label>
+										<label class="col-sm-3 control-label">Delivery Place</label>
 										<div class="col-sm-4">
 											<input type="input" class="form-control" placeholder="Place" name="po_deliv_place"
 											required="required" >
 										</div>
 									</div>
 									<div class="form-group">
-										<label class="col-sm-2 control-label">Delivery Date</label>
+										<label class="col-sm-3 control-label">Delivery Date</label>
 										<div class="col-sm-4">
 											<div class='input-group date deliv-date'>
 												<input type='text' name="po_deliv_date" class="form-control" required="required"/>
@@ -209,8 +221,8 @@
 							<div class="form-horizontal row">
 									<div class="col-sm-7">
 										<div class="form-group">
-											<label class="col-sm-2 control-label">Purpose</label>
-											<div class="col-sm-10">
+											<label class="col-sm-3 control-label">Purpose</label>
+											<div class="col-sm-9">
 												<input type="input" class="form-control" placeholder="Project Name" name="po_purpose"
 												required="required" >
 											</div>
@@ -218,8 +230,8 @@
 									</div>
 									<div class="col-sm-5">
 										<div class="form-group">
-											<label class="col-sm-4 control-label">Funds Available</label>
-											<div class="col-sm-3">
+											<label class="col-sm-3 control-label">Funds Available</label>
+											<div class="col-sm-9">
 												<input type="input" class="form-control" placeholder="Amount" name="po_available_fund"
 												required="required" >
 											</div>
@@ -229,18 +241,9 @@
 							<div class="form-horizontal row">
 									<div class="col-sm-7">
 										<div class="form-group">
-											<label class="col-sm-2 control-label">Official</label>
+											<label class="col-sm-3 control-label">Official</label>
 											<div class="col-sm-7">
 												<input type="input" class="form-control" placeholder="Official" name="po_auth_off"
-												required="required" >
-											</div>
-										</div>
-									</div>
-									<div class="col-sm-5">
-										<div class="form-group">
-											<label class="col-sm-4 control-label">Conforme</label>
-											<div class="col-sm-8">
-												<input type="input" class="form-control" placeholder="Conforme" name="po_conforme"
 												required="required" >
 											</div>
 										</div>
@@ -249,7 +252,7 @@
 							<div class="form-horizontal row">
 									<div class="col-sm-7">
 										<div class="form-group">
-											<label class="col-sm-2 control-label">Requisition Dept</label>
+											<label class="col-sm-3 control-label">Requisition Dept</label>
 											<div class="col-sm-7">
 												<input type="input" class="form-control" placeholder="Authorized Official" name="po_req_off"
 												required="required" >
@@ -285,7 +288,7 @@
 									<table class="table table-hover table-striped table-bordered" id="po-dtl-table">
 										<thead>
 											<tr>
-												<th>Item No.</th>
+												<th>Stock No.</th>
 												<th>Item Unit</th>
 												<th>Quantity</th>
 												<th>Description</th>
@@ -423,7 +426,9 @@
 		var action_template = $('#action_tpl').text().trim();
 		var po_dtl_view_mode = 0;
 		var po_columns = [  { "mData": "supplier_name" },
-			            { "mData": "po_no" },
+			            { "mData": function(){
+							return "no";
+						} },
 			            { "mData": function(data) {
 			            	return moment(data.po_created).format('ddd, MMM Do YYYY');
 			       		}},

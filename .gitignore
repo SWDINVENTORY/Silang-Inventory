@@ -3,3 +3,5 @@ config/databases.php
 config/databases.php
 config/databases.php
 config/databases.php
+composer.lock
+vendor/*
