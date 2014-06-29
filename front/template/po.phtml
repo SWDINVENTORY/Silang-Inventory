@@ -219,7 +219,7 @@
 								</div>
 							</div>
 							<div class="form-horizontal row">
-									<div class="col-sm-7">
+									<div class="col-sm-6">
 										<div class="form-group">
 											<label class="col-sm-3 control-label">Purpose</label>
 											<div class="col-sm-7">
@@ -228,7 +228,7 @@
 											</div>
 										</div>
 									</div>
-									<div class="col-sm-5">
+									<div class="col-sm-7">
 										<div class="form-group">
 											<label class="col-sm-4 control-label">Account No</label>
 											<div class="col-sm-5">
@@ -435,9 +435,7 @@
 		var action_template = $('#action_tpl').text().trim();
 		var po_dtl_view_mode = 0;
 		var po_columns = [  { "mData": "supplier_name" },
-			            { "mData": function(){
-							return "no";
-						} },
+			            { "mData": "po_no" },
 			            { "mData": function(data) {
 			            	return moment(data.po_created).format('ddd, MMM Do YYYY');
 			       		}},
