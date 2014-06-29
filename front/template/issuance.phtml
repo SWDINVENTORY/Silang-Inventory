@@ -33,6 +33,24 @@
 	#ris_dtl-modal .modal-content {
 		margin-top: 30%;
 	}
+	
+	.dataTables_filter label{
+		width:250px;
+	}
+	[name="ris-table_length"],[name="ris-dtl-table_length"]{
+		display: inline;
+		width: 100px;
+		height: 34px;
+		padding: 6px 12px;
+		font-size: 14px;
+		line-height: 1.428571429;
+		color: #555555;
+		vertical-align: middle;
+		background-color: #ffffff;
+		background-image: none;
+		border: 1px solid #cccccc;
+		border-radius: 4px;
+	}
 
 </style>
 <div class="row">
@@ -50,7 +68,7 @@
 </div><!-- /.row -->
 <div class="row">
 	<div class="col-xs-offset-10 col-xs-2">
-		<button type="button" class="btn btn-primary" id="issue-ris"
+		<button type="button" class="btn btn-primary pull-right" id="issue-ris"
 			data-backdrop="static" data-keyboard="false"
 				data-toggle="modal" data-target="#ris-modal">
 			Issue Out

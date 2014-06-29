@@ -2,6 +2,24 @@
 	.supplier .border { padding: 5px; }
 	.supplier .border-space{ padding: 5px 5px; }
 	#supplier-table th:last-child { width: 5%; }
+	
+	.dataTables_filter label{
+		width:250px;
+	}
+	[name="supplier-table_length"],[name="supplier-dtl-table_length"]{
+		display: inline;
+		width: 100px;
+		height: 34px;
+		padding: 6px 12px;
+		font-size: 14px;
+		line-height: 1.428571429;
+		color: #555555;
+		vertical-align: middle;
+		background-color: #ffffff;
+		background-image: none;
+		border: 1px solid #cccccc;
+		border-radius: 4px;
+	}
 </style>
 <div class="row">
 	<div class="col-md-12">
@@ -19,7 +37,7 @@
 </div>
 <div class="border">
 	<div class="border-space col-md-offset-11 col-md-1">
-		<button class="btn btn-primary" data-toggle="modal" data-target="#supplier-modal" 
+		<button class="btn btn-primary pull-right" data-toggle="modal" data-target="#supplier-modal" 
 			data-backdrop="static" data-keyboard="false" id="create-supplier">Add</button>
 	</div>
 	<hr />
