@@ -144,13 +144,13 @@
 									<div class="form-group">
 										<label class="col-sm-3 control-label">TIN</label>
 										<div class="col-sm-3">
-											<span class="form-control" id="supplier_tin">345-3453-345-345</span>
+											<span class="form-control" id="supplier_tin"></span>
 										</div>
 									</div>
 									<div class="form-group">
 										<label class="col-sm-3 control-label">Contact Person</label>
 										<div class="col-sm-5">
-											<input type="input" class="form-control" placeholder="Contact" id="supplier_contact" >
+											<input type="input" class="form-control" placeholder="Contact" id="po_conforme" >
 										</div>
 									</div>
 								</div>
@@ -222,7 +222,7 @@
 									<div class="col-sm-7">
 										<div class="form-group">
 											<label class="col-sm-3 control-label">Purpose</label>
-											<div class="col-sm-9">
+											<div class="col-sm-7">
 												<input type="input" class="form-control" placeholder="Project Name" name="po_purpose"
 												required="required" >
 											</div>
@@ -230,9 +230,9 @@
 									</div>
 									<div class="col-sm-5">
 										<div class="form-group">
-											<label class="col-sm-3 control-label">Funds Available</label>
-											<div class="col-sm-9">
-												<input type="input" class="form-control" placeholder="Amount" name="po_available_fund"
+											<label class="col-sm-4 control-label">Account No</label>
+											<div class="col-sm-5">
+												<input type="input" class="form-control" placeholder="Purpose Account No" name="po_account_no"
 												required="required" >
 											</div>
 										</div>
@@ -244,6 +244,15 @@
 											<label class="col-sm-3 control-label">Official</label>
 											<div class="col-sm-7">
 												<input type="input" class="form-control" placeholder="Official" name="po_auth_off"
+												required="required" >
+											</div>
+										</div>
+									</div>
+									<div class="col-sm-5">
+										<div class="form-group">
+											<label class="col-sm-4 control-label">Funds Available</label>
+											<div class="col-sm-5">
+												<input type="input" class="form-control" placeholder="Amount" name="po_available_fund"
 												required="required" >
 											</div>
 										</div>
@@ -476,7 +485,7 @@
 							}}
 						];
 		
-		var po_dtl_columns = [{ "mData": "po_dtl_item_no" },
+		var po_dtl_columns = [{ "mData": "po_dtl_stock_no" },
 			{ "mData": "po_dtl_item_unit" },
 			{ "mData": "po_dtl_item_qty" },
 			{ "mData": "po_dtl_item_desc" },
@@ -584,6 +593,11 @@
 				onSelect : function(suggestion) {
 					$('#supplier_address').val(suggestion.data.supplier_address);
 					$('input[name="po_supplier_id"]').val(suggestion.data.supplier_id);
+					$('#supplier_tin').text(suggestion.data.supplier_tin);
+					if(!suggestion.data.supplier_tin){
+						$('#supplier_tin').text('No TIN');
+					}
+					console.log(suggestion.data);
 				},
 				transformResult : function(response) {
 					response = JSON.parse(response);
@@ -749,9 +763,13 @@
 					'modal_label': 'Create Purchase Order',
 					'run': function(){
 						$('#add-to-purchase').show();
+						
 						clear_form('po', function(){
 							$('input[name="po_created"]').val(new Date().toDateString());
+							$('#supplier_tin').text('');
 						});
+						
+						
 						po_detail_table = $('#po-dtl-table').dataTable({
 								"sPaginationType" : "two_button",
 								"iDisplayLength" : 3,
