@@ -80,13 +80,13 @@
 	</div>
 </div>
 <!-- Modal -->
+<form class="form-horizontal" role="form" action="" method="post" name="add-item" id="item-modal-form">
 <div class="modal fade" id="item-modal" tabindex="-1" role="dialog" aria-labelledby="mymodallabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title" id="my-modal-label"><span class="modal-form-state">Action Here</span></h4>
       </div>
-      <form class="form-horizontal" role="form" action="" method="post" name="add-item" id="item-modal-form">
 	  <div class="modal-body">
 			<input type="hidden" name="item_id"/>
 		  <div class="form-group">
@@ -147,10 +147,10 @@
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         <button type="submit" class="btn btn-primary" name=""><span class="modal-form-action">Save changes</span></button>
       </div>
-      </form>
     </div>
   </div>
 </div>
+</form>
 <?php include __DIR__.'/action.phtml'; ?>
 <script type="text/javascript" src="/assets/js/autocomplete.js"></script>
 <script type="text/javascript" src="/assets/js/modal_control.js"></script>

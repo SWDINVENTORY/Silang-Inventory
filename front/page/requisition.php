@@ -38,6 +38,23 @@ class Front_Page_Requisition extends Front_Page {
 		return $this->_page();
 	}
 	
+	protected function itemByStockNo() {
+		$post = $this->post;
+		$item = array();
+		if(isset($post['stock_no'])) {
+			$item = $this->Item()->getByStockNo($post['stock_no']);
+		}
+		if (IS_AJAX) {
+				header('Content-Type: application/json');
+				$ret = array();
+				$ret['data'] = $item;
+				echo json_encode($ret);
+				exit ;
+			}
+			exit;
+		//return $this;
+	}
+	
 	/* Protected Methods
 	-------------------------------*/
 	protected function _setErrors() {}
@@ -48,6 +65,9 @@ class Front_Page_Requisition extends Front_Page {
 		switch ($request) {
 			case 'furnish':
 				$this -> _add();
+				break;
+			case 'bystockno':
+					$this->itemByStockNo();
 				break;
 			default :
 				$this -> _requisition();

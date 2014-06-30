@@ -96,9 +96,8 @@
 	</div>
 </div>
 
-
-<div class="modal fade" id="ris-modal" tabindex="-1" role="dialog" 
-	aria-labelledby="mymodallabel" aria-hidden="true">
+<form method="post" action="/issuance/furnish/" id="ris-modal-form">
+<div class="modal fade" id="ris-modal" tabindex="-1" role="dialog" aria-labelledby="mymodallabel" aria-hidden="true">
 	<div class="modal-dialog ris-modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -107,7 +106,6 @@
 				</h4>
 			</div>
 			<div class="modal-body">
-				<form method="post" action="/ris/furnish/" id="ris-modal-form">
 					<input type="hidden" name="ris_id"/>
 					<div class="border">
 						<div class="form-horizontal row">
@@ -192,19 +190,19 @@
 							<span class="modal-form-action">Furnish</span>
 						</button>
 					</div>
-				</form>
 			</div>
 		</div>
 	</div>
 </div>
+</form>
 
+<form id="ris_dtl-modal-form" action='#'>
 <div class="modal fade" id="ris_dtl-modal" tabindex="-1" role="dialog" aria-labelledby="mymodallabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h4 class="modal-title" id="my-modal-label"><span class="modal-form-state">Action Here</span></h4>
 			</div>
-			<form id="ris_dtl-modal-form" action='#'>
 			<div class="modal-body">
 					<div class="row border">
 						<div class="border">
@@ -233,12 +231,10 @@
 						<span class="modal-form-action" >Save changes</span>
 					</button>
 				</div>
-				
 			</div>
-			</form>
 		</div>
 	</div>
-</div>
+</form>
 <?php include __DIR__.'/action.phtml'; ?>
 <script type="text/javascript" src="/assets/js/autocomplete.js"></script>
 <script type="text/javascript" src="/assets/js/modal_control.js"></script>
@@ -345,30 +341,6 @@
 				"bAutoWidth": false
 			});
 			
-			//AUTOCOMPLETE
-			$('#supplier_name').autocomplete({
-				serviceUrl : '/supplier/search',
-				params : {
-					field : 'supplier_name',
-					keyword : $(this).val()
-				},
-				paramName : 'keyword',
-				onSelect : function(suggestion) {
-					$('#supplier_address').val(suggestion.data.supplier_address);
-					$('input[name="ris_supplier_id"]').val(suggestion.data.supplier_id);
-				},
-				transformResult : function(resrisnse) {
-					resrisnse = JSON.parse(resrisnse);
-					return {
-						suggestions : $.map(resrisnse, function(dataItem) {
-							return {
-								value : dataItem.value,
-								data : dataItem.data
-							};
-						})
-					};
-				}
-			});
 			
 		});
 		
