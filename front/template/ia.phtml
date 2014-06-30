@@ -376,7 +376,7 @@
 	$('document').ready(function(){
 		ia_table = {};
 		ia_dtl_table = {};
-		current_ia_dtl_row = {};
+		current_ia_dtl_row = {}; //<- eto oh
 		current_ia_dtl = {} ;
 		action_template = $('#action_tpl').text().trim();
 		
@@ -526,12 +526,16 @@
 							'name':'ia',
 							'map': ia_mapping },
 							function(){
+								console.log(current_ia);
 								$.each(Object.keys(current_ia), function(i, v){
 									$('#ia-modal-form').find('input[name="'+v+'"]')
 										.attr('disabled', 'disabled');
 									$('#ia-modal-form').find('select').attr('disabled', 'disabled');
 									$('#'+v)
 										.attr('disabled', 'disabled');
+										
+									console.log(v);
+								
 								});
 								ia_dtl_table = $('#ia-dtl-table').dataTable({
 										"sPaginationType" : "two_button",
@@ -600,7 +604,7 @@
 							'data': current_ia_dtl,
 							'name':'ia_dtl',
 							'map': function(v, o) { return o[v]; }},
-						function(){
+							function(){
 								$('#ia_dtl-modal-form .secondary').hide();
 								$('#ia_dtl-modal-form').find('input').attr('disabled','disabled');
 							}
@@ -699,9 +703,9 @@
 			});
 			
 			//inspectator
-			$.each($('.acceptee.row'),function(i,e){
-				var name = $(e).find('input[vname="inspectors_name"]').val();
-				var position = $(e).find('input[vname="inspectors_position"]').val();
+			$.each($('.acceptee .row'),function(i,e){
+				var name = $(e).find('input[vname="acceptee_name"]').val();
+				var position = $(e).find('input[vname="acceptee_position"]').val();
 				hidden_aggregation.append('<input type="hidden" name="ia_signatories_acceptee['+i+'][name]" value="'+name+'"/>');
 				hidden_aggregation.append('<input type="hidden" name="ia_signatories_acceptee['+i+'][position]" value="'+position+'"/>');
 			});

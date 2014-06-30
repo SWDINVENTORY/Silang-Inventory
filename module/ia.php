@@ -87,7 +87,6 @@ class Ia extends Abstract_Model {
 			->innerJoinOn('dept', 'dept_id=ia_dept_id')
 			->sortByIaNo('ASC')
 			->getRows();
-		
 		for($i=0; $i<count($all); $i++){
 			$all[$i]['signatories'] = 
 				$this->search()
@@ -104,18 +103,24 @@ class Ia extends Abstract_Model {
 		if(!isset($id)){
 			return array();
 		}
-		return $this->search()
+		$ia = $this->search()
 			->innerJoinOn(Po::PO_TABLE, 'po_id=ia_po_id')
 			->innerJoinOn(Supplier::SUPPLIER_TABLE, 'po_supplier_id= supplier_id')
 			->innerJoinOn('dept', 'dept_id=ia_dept_id')
 			->filterByIaId($id)			
 			->sortByIaNo('ASC')
 			->getRow();
+		$ia['signatories'] = 
+				$this->search()
+					->setTable('signatories')
+					->filterByTransactionType('IA')
+					->addFilter('transaction_id = %s',$id)
+					->getRows();
+		return $ia;
 	}
 	
 	public function getDetail($id) {
-		return $this
-			->_getAll(array(
+		return $this->_getAll(array(
 				Ia::IA_DTL_ID,
 				Ia::IA_DTL_PO_DTL_ID,
 				Ia::IA_DTL_ITEM_QTY,
