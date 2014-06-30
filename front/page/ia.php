@@ -82,8 +82,10 @@ class Front_Page_Ia extends Front_Page {
 				if(!$po['po_is_cancelled'] && !$po['po_is_furnished']) {
 					$ia_dtl = $post['ia_dtl'];
 					$ia_signatories = $post['ia_signatories'];
+					$ia_signatories_acceptee = $post['ia_signatories_acceptee'];
 					
 					unset($post['ia_signatories']);
+					unset($post['ia_signatories_acceptee']);
 					unset($post['ia_dtl']);
 					
 					$this->_computeTotalAmount();
@@ -121,6 +123,14 @@ class Front_Page_Ia extends Front_Page {
 						$ia_signatories[$x]['type']='inspectors';
 						$ia_signatories[$x]['transaction_id']=$ia_id;
 						front() -> database() -> insertRow('signatories',$ia_signatories[$x])->getLastInsertedId();
+					}
+					
+					//acceptee
+					for($x=0;$x<count($ia_signatories_acceptee);$x++){
+						$ia_signatories_acceptee[$x]['transaction_type']='IA';
+						$ia_signatories_acceptee[$x]['type']='acceptee';
+						$ia_signatories_acceptee[$x]['transaction_id']=$ia_id;
+						front() -> database() -> insertRow('signatories',$ia_signatories_acceptee[$x])->getLastInsertedId();
 					}
 					
 					$status = array();

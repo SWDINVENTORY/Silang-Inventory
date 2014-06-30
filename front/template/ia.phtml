@@ -222,30 +222,48 @@
 									<div class="col-md-5">
 										<input type="input" class="form-control" placeholder="Name" vname="inspectors_name" >
 									</div>
-								</div>
-								<div class="col-md-12 row">
 									<div class="col-md-5">
-										<input type="input" class="form-control" placeholder="Name" vname="inspectors_name" >
+										<input type="hidden" class="form-control" placeholder="Position" vname="inspectors_position">
 									</div>
 								</div>
 								<div class="col-md-12 row">
 									<div class="col-md-5">
 										<input type="input" class="form-control" placeholder="Name" vname="inspectors_name" >
 									</div>
-								</div>
-								<div class="col-md-12 row">
 									<div class="col-md-5">
-										<input type="input" class="form-control" placeholder="Name" vname="inspectors_name" >
+										<input type="hidden" class="form-control" placeholder="Position" vname="inspectors_position">
 									</div>
 								</div>
 								<div class="col-md-12 row">
 									<div class="col-md-5">
 										<input type="input" class="form-control" placeholder="Name" vname="inspectors_name" >
 									</div>
+									<div class="col-md-5">
+										<input type="hidden" class="form-control" placeholder="Position" vname="inspectors_position">
+									</div>
 								</div>
 								<div class="col-md-12 row">
 									<div class="col-md-5">
 										<input type="input" class="form-control" placeholder="Name" vname="inspectors_name" >
+									</div>
+									<div class="col-md-5">
+										<input type="hidden" class="form-control" placeholder="Position" vname="inspectors_position">
+									</div>
+								</div>
+								<div class="col-md-12 row">
+									<div class="col-md-5">
+										<input type="input" class="form-control" placeholder="Name" vname="inspectors_name" >
+									</div>
+									<div class="col-md-5">
+										<input type="hidden" class="form-control" placeholder="Position" vname="inspectors_position">
+									</div>
+								</div>
+								<div class="col-md-12 row">
+									<div class="col-md-5">
+										<input type="input" class="form-control" placeholder="Name" vname="inspectors_name" >
+									</div>
+									<div class="col-md-5">
+										<input type="hidden" class="form-control" placeholder="Position" vname="inspectors_position">
 									</div>
 								</div>
 							</div>
@@ -679,7 +697,14 @@
 				hidden_aggregation.append('<input type="hidden" name="ia_signatories['+i+'][name]" value="'+name+'"/>');
 				hidden_aggregation.append('<input type="hidden" name="ia_signatories['+i+'][position]" value="'+position+'"/>');
 			});
-			console.log(hidden_aggregation);
+			
+			//inspectator
+			$.each($('.acceptee.row'),function(i,e){
+				var name = $(e).find('input[vname="inspectors_name"]').val();
+				var position = $(e).find('input[vname="inspectors_position"]').val();
+				hidden_aggregation.append('<input type="hidden" name="ia_signatories_acceptee['+i+'][name]" value="'+name+'"/>');
+				hidden_aggregation.append('<input type="hidden" name="ia_signatories_acceptee['+i+'][position]" value="'+position+'"/>');
+			});
 			
 		});
 		
