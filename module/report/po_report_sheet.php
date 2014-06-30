@@ -47,7 +47,7 @@ class POReport extends Formsheet{
 		$this->leftText(0.2,$y,'Supplier','','');
 		$this->leftText(4,$y,$datas['supplier_name'],'','');
 		
-		
+		//echo "<pre>";print_r($datas);exit();
 		$this->drawLine($y+0.1,'h',array(27.5,11.5));
 		$this->leftText(28,$y,$datas['po_no'],'','');
 		$this->leftText(25,$y++,'PO No.','','');
@@ -59,6 +59,8 @@ class POReport extends Formsheet{
 		$this->drawLine($y+0.1,'h',array(27,12));
 		$this->leftText(28,$y,date('F d, Y',strtotime($datas['po_created'])),'','');
 		$this->leftText(25,$y++,'Date','','');
+		
+		$this->leftText(0.2,$y,'TIN #:     '.$datas['supplier_tin'],'','');
 		
 		$this->drawLine($y+0.1,'h',array(3,20));
 		$this->drawLine($y+0.1,'h',array(32,7));
@@ -225,7 +227,9 @@ class POReport extends Formsheet{
 		$this->centerText(35,1.3,'Amount',5,'b');
 		$y=3;
 		$total_amount=0;
+		//echo "<pre>";print_r($datas['detail']);exit();
 		foreach($datas['detail'] as $detail){
+			$this->centerText(1,$y,$detail['po_dtl_item_no'],1,'');
 			$this->centerText(3,$y,$detail['po_dtl_item_unit'],5,'');
 			$this->centerText(7.5,$y,$detail['po_dtl_item_qty'],5,'');
 			$this->leftText(12.5,$y,$detail['po_dtl_item_desc'],18,'');
@@ -238,6 +242,7 @@ class POReport extends Formsheet{
 		$this->drawLine(43.5,'h');
 		$amount_in_words = $this->convert_number_to_words($total_amount);
 		$this->leftText(0.2,44.5,'(Total Amount in Words)             '.strtoupper($amount_in_words).' PESOS','','');
+		$this->leftText(33,44.5,'Total:  P '.number_format($total_amount,2,'.',''),'','');
 		return $total_amount;
 	}
 	
