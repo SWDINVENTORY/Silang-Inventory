@@ -126,7 +126,8 @@ class Po extends Abstract_Model {
 				'po_req_off',
 				'po_funds_off',
 				'po_dtl_stock_no',
-				'po_conforme'
+				'po_conforme',
+				'po_dtl_item_type'
 			))
 			->addFilter('po_id = %s', $id)
 			->leftJoinOn(Po::PO_DTL_TABLE, 'po_id = po_dtl_po_id')
