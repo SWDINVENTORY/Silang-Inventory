@@ -67,51 +67,12 @@ class Front_Page_ReportFilter extends Front_Page {
 				echo 'Report!';
 			break;
 		}
-		
-		//echo $this->request;
-		//exit;
-		//$this->body = 'Test';
-		//echo 'report-filter';
-		//exit;
-	    //$this->request = front()->registry()->get('request', 'variables','0');
-        
-		/*
-        switch ($this->request) {
-            case 'inventory-physical-count':
-                    return $this->report_PHYSICAL_COUNT();
-                break;
-            case 'bin-card':
-                    return $this->report_BIN_CARD();
-                break;
-            case 'issue-out':
-                    return $this->report_ISSUE_OUT();
-                break;
-            case 'monthly-report':
-                    return $this->report_MONTHLY();
-                break;
-            case 'ris':
-                    return $this->report_RIS();
-                break;
-            case 'rms':
-                    return $this->report_RMS();
-                break;
-            case 'old-reusable-stock':
-                    return $this->report_OLD_REUSABLE_STOCK();
-                break;
-            case 'stock-card':
-                    return $this->report_STOCK_CARD();
-                break;
-            default:
-                return $this->_page();
-                break;
-        }
-		*/
-		
+
         return $this->_page();
         exit;
 	}
     
-    protected function report_BIN_CARD()
+	protected function report_BIN_CARD()
     {
         $rc= new BinCard();
         $rc->hdr();
@@ -148,6 +109,10 @@ class Front_Page_ReportFilter extends Front_Page {
     
     protected function report_RIS()
     {
+		echo '<pre>';
+		print_r($this->get_RIS(2));
+		exit;
+	
         $rc= new RequisitionAndIssueSlip();
         $rc->hdr();
         $rc->table();

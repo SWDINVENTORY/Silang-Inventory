@@ -80,6 +80,19 @@ class Requisition extends Abstract_Model {
 			->getRow();
 	}
 	
+	public function getByRisNo($ris_no = null){
+		if(!isset($ris_no)){
+			return array();
+		}
+		$requisition = $this->search()
+			->filterByRisNo($ris_no)
+			->getRow();
+		$requisition['ris_dtl'] = $this->Requisition()
+			->getDetail($requisition['ris_id']);
+		
+		return $requisition;
+	}
+	
 	public function getDetail($id) {
 		return $this
 			->_getAll('*')

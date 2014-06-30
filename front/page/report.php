@@ -52,7 +52,10 @@ class Front_Page_Report extends Front_Page {
                     return $this->report_MONTHLY();
                 break;
             case 'ris':
-                    return $this->report_RIS();
+					
+					$data = $this->Requisition()->getByRisNo($_GET['ris_no']);//$CLONE THIS
+
+					return $this->report_RIS($data);
                 break;
             case 'rms':
                     return $this->report_RMS();
@@ -77,6 +80,14 @@ class Front_Page_Report extends Front_Page {
         exit;
 	}
     
+	protected function get_RIS($ris_no = 2)
+	{
+		$requisition = $this->Requisition->getByRisNo($ris_no);
+		$requisition['ris_dtl']= $this->Requisition
+			->getDetail($requisition['ris_id']);
+		return $requisition;
+	}
+	
     protected function report_BIN_CARD()
     {
         $rc= new BinCard();
