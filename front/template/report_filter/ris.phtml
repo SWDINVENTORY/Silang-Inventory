@@ -1,0 +1,32 @@
+<div style="padding-bottom:15px">
+	<div align="center">
+		<strong>Requisition & Issue Slip</strong> 
+	</div>
+	<br>
+	
+	
+	<label for="ris_no">RIS No</label>
+	<input type="input" placeholder="Enter RIS No" id="ris_no">	
+						
+	<button id="go_button" class="btn btn-primary">Go</button>
+</div>
+
+<iframe id="report-iframe" src="/report/ris" width="100%" height="100%">IFrame Not Supported!</iframe>
+
+<link rel="stylesheet" type="text/css" href="/assets/css/reports.css">
+<script type="text/javascript" src="/assets/js/reports.js"></script>
+
+<script>
+		
+(function($) {
+	$('#go_button').click(function(){
+		var ris_no = $('#ris_no').val();
+		if(ris_no != ""){
+			$('#report-iframe').attr('src','/report/ris?ris_no='+ris_no);
+		}else{
+			$('#report-iframe').attr('src','/report/ris');
+		}
+	});
+})(jQuery);
+
+</script>

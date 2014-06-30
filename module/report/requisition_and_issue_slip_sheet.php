@@ -9,13 +9,15 @@ class RequisitionAndIssueSlip extends Formsheet{
 	protected static $_available_line = 41;	
 	protected static $_allot_subjects = 15;
 	
-	function __construct(){
+	function __construct($data){
+		$this->data = $data;
 		$this->showLines = !true;
 		parent::__construct(RequisitionAndIssueSlip::$_orient, RequisitionAndIssueSlip::$_unit,array(RequisitionAndIssueSlip::$_width,RequisitionAndIssueSlip::$_height));
 		$this->createSheet();
 	}
 	
 	function hdr(){
+		$data =  $this->data;
 		$metrics = array(
 			'base_x'=> 0.25,
 			'base_y'=> 0.2,
@@ -42,7 +44,6 @@ class RequisitionAndIssueSlip extends Formsheet{
 		$this->drawLine(8,'v',array(4,3));
 		$this->drawLine(18,'v',array(4,3));
 		
-		
 		$this->drawLine($y+0.1,'h',array(2.5,5.5));
 		$this->leftText(0.2,$y,'Division','','');
 		$this->leftText(8.2,$y,'Responsibility Center','','');
@@ -50,22 +51,30 @@ class RequisitionAndIssueSlip extends Formsheet{
 		$this->leftText(18.2,$y,'RIS No.','','');
 		$this->drawLine($y+0.1,'h',array(26.5,3));
 		$this->leftText(25,$y++,'Date','','');
-
 		$this->drawLine($y+0.1,'h',array(2.5,5.5));
-		$this->leftText(0.2,$y,'Code','','');
+		$this->leftText(0.2,$y,'Code  ','','');
 		$this->leftText(8.2,$y,'Office','','');
-		
 		$this->drawLine($y+0.1,'h',array(20.25,4));
 		$this->leftText(18.2,$y,'SAI No.','','');
-		
 		$this->drawLine($y+0.1,'h',array(26.5,3));
-		$this->leftText(25,$y++,'Date','','');
-
-
+		$this->leftText(25,$y,'Date','','');
+		
+		if($data){
+			$y = 4.75;
+			$this->leftText(2.75,$y,$data['ris_division'],'','');
+			$this->leftText(13.75,$y,$data['ris_rcc'],'','');
+			$this->leftText(20.25,$y,$data['ris_no'],'','');
+			$this->leftText(26.5,$y++,date('M d,Y',strtotime($data['ris_created'])),'','');
+			$this->leftText(2.75,$y,'','','');
+			$this->leftText(10.5,$y,$data['ris_office'],'','');
+			$this->leftText(20.25,$y,'','','');
+			$this->leftText(26.5,$y++,'','','');
+		}
 	}
 	
 	
 	function table(){
+		$data =  $this->data;
 		$metrics = array(
 			'base_x'=> 0.25,
 			'base_y'=> 1.40,
@@ -101,6 +110,23 @@ class RequisitionAndIssueSlip extends Formsheet{
 		$this->drawLine(20,'v',array(1,24));
 		$this->drawLine(22,'v');
 		$this->drawLine(24,'v',array(1,24));
+		
+		//echo '<pre>';
+		//print_r($data);
+	//	exit;
+	
+		if(isset($data['ris_dtl'])){
+			$y++;
+			foreach($data['ris_dtl'] as $ris_dtl){
+				$this->centerText(0,$y,'',3,'');
+				$this->centerText(3,$y,$ris_dtl['ris_dtl_item_stock_no'],3,'');
+				$this->centerText(6,$y,$ris_dtl['ris_dtl_item_unit'],2,'');
+				$this->centerText(7,$y,$ris_dtl['ris_dtl_item_desc'],12,'');
+				
+				$this->centerText(20,$y,$ris_dtl['ris_dtl_item_qty'],2,'');
+				$y++;
+			}
+		}
 	}
 	
 	

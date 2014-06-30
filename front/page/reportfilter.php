@@ -110,7 +110,7 @@ class Front_Page_ReportFilter extends Front_Page {
     protected function report_RIS()
     {
 		echo '<pre>';
-		print_r($this->get_RIS(2));
+		print_r($this->get_RIS(12345));
 		exit;
 	
         $rc= new RequisitionAndIssueSlip();

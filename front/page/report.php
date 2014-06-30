@@ -52,13 +52,15 @@ class Front_Page_Report extends Front_Page {
                     return $this->report_MONTHLY();
                 break;
             case 'ris':
-					
-					$data = $this->Requisition()->getByRisNo($_GET['ris_no']);//$CLONE THIS
-
-					return $this->report_RIS($data);
+					if(isset($_GET['ris_no'])){
+						$data = $this->Requisition()->getByRisNo($_GET['ris_no']);//$CLONE THIS		
+						return $this->report_RIS($data);
+					}else{
+						return $this->report_RIS(0);
+					}
                 break;
             case 'rms':
-                    return $this->report_RMS();
+					return $this->report_RMS($data);
                 break;
             case 'old-reusable-stock':
                     return $this->report_OLD_REUSABLE_STOCK();
@@ -80,7 +82,7 @@ class Front_Page_Report extends Front_Page {
         exit;
 	}
     
-	protected function get_RIS($ris_no = 2)
+	protected function get_RIS($ris_no = 12345)
 	{
 		$requisition = $this->Requisition->getByRisNo($ris_no);
 		$requisition['ris_dtl']= $this->Requisition
@@ -123,18 +125,18 @@ class Front_Page_Report extends Front_Page {
             ->output();
     }
     
-    protected function report_RIS()
-    {
-        $rc= new RequisitionAndIssueSlip();
+    protected function report_RIS($data)
+    {	
+		$rc= new RequisitionAndIssueSlip($data);
         $rc->hdr();
         $rc->table();
         $rc->ftr();
         $rc->output();
     }
     
-    protected function report_RMS()
+    protected function report_RMS($data)
     {
-        $rc= new ReturnedMaterialSlip();
+        $rc= new ReturnedMaterialSlip($data);
         $rc->hdr();
         $rc->table();
         $rc->ftr();
