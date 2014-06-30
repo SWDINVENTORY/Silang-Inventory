@@ -141,7 +141,7 @@ class IAReport extends Formsheet{
 		$this->GRID['font_size']=10;	
 		$this->leftText(1,2,'Date Inspected: '.date('F d, Y',strtotime($detail['dept_created'])),'','');
 		$this->leftText(22,2,'Date Received:','','');
-		//echo "<pre>";print_r($detail);exit();
+		
 		
 		$this->GRID['font_size']=12;
 		$this->leftText(24.25,3.8,!$detail['ia_is_partial']?'x':'',1,'');
@@ -159,7 +159,32 @@ class IAReport extends Formsheet{
 		$this->GRID['font_size']=8;
 		$this->drawLine(7.50,'h',array(.40,7.60));
 		$this->drawLine(11.30,'h',array(.40,7.60));
-		$this->drawLine(14.30,'h',array(.40,7.60));
+		$this->drawLine(15,'h',array(.40,7.60));
+		$y = 8.20;
+		$x=1;
+		$ay=9;
+		$ax=23;
+		foreach($detail['signatories'] as $sig){
+			if($sig['type']=='inspectors'){
+				$this->centerText($x,$y,$sig['name'],6,'');
+				$y+=3.8;
+				if($y>16){
+					$y = 8.20;
+					$x = 12;
+				}
+			}
+			if($sig['type']=='acceptee'){
+				$this->centerText($ax,$ay+1,$sig['name'],6,'');
+				$this->centerText($ax,$ay,$sig['position'],6,'');
+				$ax+=10;
+				//echo $ax;
+				if($ax>=43){
+					$ay += 4;
+					$ax = 23;
+				}
+			}
+		}
+		//echo "<pre>";print_r($detail);exit();
 		//$this->leftText(1,8.20,'EDGARDO F. AMBULO','','');
 		//$this->leftText(1,12,'ANASTACIO CALDERON','','');
 		//$this->leftText(1,15.20,'MA. ANGELES SUMAGUI','','');
@@ -169,23 +194,23 @@ class IAReport extends Formsheet{
 		//$this->leftText(11.70,15.20,'REQUESTING DIVISION','','');
 		$this->drawLine(7.50,'h',array(11,7.60));
 		$this->drawLine(11.30,'h',array(11,7.60));
-		$this->drawLine(14.30,'h',array(11,7.60));
+		$this->drawLine(15,'h',array(11,7.60));
 		
 		//ACCEPTANCE
 		$this->drawLine(8.30,'h',array(22,7.60));
 		$this->drawLine(12,'h',array(22,8.10));
-		$this->leftText(23,9,'NOMER LEGASPI','','');
+		//$this->leftText(23,9,'NOMER LEGASPI','','');
 		$this->leftText(22,10.80,'Checked by:','','');
 		$this->leftText(32,10.80,'Noted by:','','');
-		$this->leftText(23,13,'ARIEL MADLANGSAKAY','','');
-		$this->leftText(23.10,14,'Acting Supply Officer - A','','');
+		//$this->leftText(23,13,'ARIEL MADLANGSAKAY','','');
+		//$this->leftText(23.10,14,'Acting Supply Officer - A','','');
 		
 		$this->drawLine(12,'h',array(32.50,8.20));
-		$this->leftText(33,13,'MARY GRACE E. BAYBAY','','');
-		$this->leftText(33.10,14,'Division Manager C - GSD','','');
+		//$this->leftText(33,13,'MARY GRACE E. BAYBAY','','');
+		//$this->leftText(33.10,14,'Division Manager C - GSD','','');
 		
 		$this->drawLine(8.30,'h',array(32.5,8.10));
-		$this->leftText(33,9,'VICTORINA ZAMORA, JR.','','');
+		//$this->leftText(33,9,'VICTORINA ZAMORA, JR.','','');
 		return $this;
 	}
 	
