@@ -174,8 +174,8 @@ class IAReport extends Formsheet{
 				}
 			}
 			if($sig['type']=='acceptee'){
-				$this->centerText($ax,$ay+1,$sig['name'],6,'');
-				$this->centerText($ax,$ay,$sig['position'],6,'');
+				$this->centerText($ax,$ay,$sig['name'],6,'');
+				$this->centerText($ax,$ay+1,$sig['position'],6,'');
 				$ax+=10;
 				//echo $ax;
 				if($ax>=43){
