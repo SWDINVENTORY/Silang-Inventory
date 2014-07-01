@@ -238,8 +238,8 @@ class POReport extends Formsheet{
 			$total_amount +=($detail['po_dtl_item_qty']*$detail['po_dtl_item_cost']);
 			$y++;
 		}
-		$this->leftText(14,40,$detail['po_purpose'],'','b');
-		$this->leftText(14,41,$detail['ia_is_partial']?'PARTIAL DELIVERY':'FULL DELIVERY','','b');
+		$this->leftText(14,40,$datas['po_purpose'],'','b');
+		$this->leftText(14,41,$datas['ia_is_partial']?'PARTIAL DELIVERY':'FULL DELIVERY','','b');
 		$this->GRID['font_size']=12;
 		$this->SetTextColor(250,0,0);
 		$this->leftText(14,42,isset($datas['detail'][0]['po_dtl_item_type'])?$datas['detail'][0]['po_dtl_item_type']:'','','b');
