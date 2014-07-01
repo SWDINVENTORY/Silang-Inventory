@@ -324,11 +324,13 @@ class Front_Page_Ia extends Front_Page {
 		if(!empty($itemfound)) {
 			$filter = array(
 				array('item_id=%s', $itemfound['item_id']));
+				
 			front() -> database() -> updateRows('item', array(
-					'item_qty' => $itemfound['item_qty']+intval($item['ia_dtl_item_qty']),
+					'item_qty' => $itemfound['item_qty'] + intval($item['ia_dtl_item_qty']),
 					'item_updated' => date('Y-m-d H:i:s')
 				), $filter);
-			
+				
+				
 			$cost = array(
 				'item_cost_item_id' => $itemfound['item_id'],
 				'item_cost_qty' => intval($item['ia_dtl_item_qty']),
@@ -357,6 +359,21 @@ class Front_Page_Ia extends Front_Page {
 			}
 		}
 		return $this;
+	}
+	
+	private function getAverageCosting($item, $po_dtl_qty, $po_dtl_cost) {
+		if(isset($item['item_id']) && !empty($item['item_id'])) {
+			
+			$previous_costs = front()->database()->search('item_cost')
+				->setColumns(
+					//'sum(item_cost_qty) as item_qty_sum,  sum(item_cost_unit_cost) as item_costs_total_sum, 
+					sprintf('sum(item_cost_unit_cost)+%d / sum(item_cost_qty)+%d  AS weighted_average_cost', $po_dtl_cost, $po_dtl_qty)
+					)
+				->filterByItemCostItemId($item['item_id'])
+				->getRow();
+			
+			return $previous_costs['weighted_average_cost'] ;
+		}
 	}
 
 	private function _updatePo($po_id){

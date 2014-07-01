@@ -43,15 +43,30 @@ class Item extends Abstract_Model {
 	-------------------------------*/
 		
 	public function getAll() {
-			return $this->_database
+			$all =  $this->_database
 				->query(
 					$this->_database
 					->select('*')
 					->from('item')
 					->innerJoin('article', 'article_id = item_article_id', false)
-					->innerJoin('(SELECT * FROM item_cost ORDER BY item_cost_updated DESC) i', 'item_cost_item_id=item_id', false)
+					//->innerJoin('(SELECT * FROM item_costs ORDER BY item_cost_updated DESC) i', 'item_cost_item_id=item_id', false)
 					->sortBy('item_desc', 'ASC')
 					->groupBy('item_id'));
+					
+			for($i=0; $i<count($all); $i++) {
+				$average_cost = front()->database()
+					->search()
+					->setTable('item_cost')
+					->setColumns('round(sum(item_cost_qty * item_cost_unit_cost)/ sum(item_cost_qty), 2) as unit_average_cost')
+					->filterByItemCostItemId($all[$i]['item_id'])
+					->getRow();
+					
+				$all[$i]['item_cost_unit_cost'] = $average_cost['unit_average_cost'];
+			}
+			//print_r($all);
+			//exit;
+			
+			return $all;
 	}
 	
 	public function model($value = NULL, $key = 'item_id') {
