@@ -276,7 +276,7 @@ class POReport extends Formsheet{
 		$this->centerText(24,$y,$datas['po_auth_off'],12,'b');
 		$y+=0.75;
 		//$this->centerText(24,$y,'General Manager',12,'b');
-		echo "<pre>";print_r($datas);exit();
+		//echo "<pre>";print_r($datas);exit();
 		$this->drawLine($y+0.2,'h',array(24,12));
 		$y+=0.75;
 		$this->centerText(24,$y++,'(Authorized Official)',12,'');
