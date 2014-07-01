@@ -105,10 +105,10 @@ class IAReport extends Formsheet{
 		$y = 1.5;
 		$total_per_item=0;
 		$total=0;
-		echo "<pre>";print_r($detail['detail']);exit();
+		//echo "<pre>";print_r($detail['detail']);exit();
 		foreach($detail['detail'] as $dtl){
 			$total+=$total_per_item = $dtl['po_dtl_item_cost']*$dtl['ia_dtl_item_qty'];
-			 $this->centerText(1,$y, isset($dtl['po_dtl_item_stock_no'])?$dtl['po_dtl_item_stock_no']:'',3,'');
+			 $this->centerText(1,$y, isset($dtl['po_dtl_stock_no'])?$dtl['po_dtl_stock_no']:'',3,'');
 			 $this->centerText(5.5,$y, $dtl['po_dtl_item_unit'],3,'');
 			 $this->centerText(9.5,$y, $dtl['ia_dtl_item_qty'],3,'');
 			 $this->leftText(14,$y,$dtl['po_dtl_item_desc'],'','');
