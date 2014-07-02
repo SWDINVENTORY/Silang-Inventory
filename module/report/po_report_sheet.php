@@ -59,10 +59,12 @@ class POReport extends Formsheet{
 		$this->drawLine($y+0.1,'h',array(27,12));
 		$this->leftText(28,$y,date('F d, Y',strtotime($datas['po_created'])),'','');
 		$this->leftText(25,$y++,'Date','','');
-		
-		$this->leftText(0.2,$y,'TIN:       '.$datas['supplier_tin'],'','');
-		$this->leftText(9,$y,''.$datas['supplier_vat'],'','');
-		$this->drawLine($y+0.1,'h',array(3,20));
+		$this->GRID['font_size']=8;
+		$this->leftText(0.2,$y,'TIN:       '.$datas['supplier_tin'].' '.$datas['supplier_vat'],'','');
+		$this->drawLine($y+0.1,'h',array(2,8));
+		$this->leftText(10.5,$y,'Contact Person: '.$datas['po_conforme'],'','');
+		$this->GRID['font_size']=10;
+		$this->drawLine($y+0.1,'h',array(14.5,8.5));
 		$this->drawLine($y+0.1,'h',array(32,7));
 		$this->leftText(33,$y,$datas['po_proc_mod'],'','');
 		$this->leftText(25,$y++,'Mode of Procurement','','');
