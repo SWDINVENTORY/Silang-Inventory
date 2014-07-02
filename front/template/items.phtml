@@ -64,10 +64,12 @@
 						<tr>
 							<th>Article</th>
 							<th>Description</th>
+							<th>Size</th>
+							<th>Acct No.</th>
 							<th>Stock No.</th>
 							<th>Type</th>
-							<th>Unit Of Measure</th>
 							<th>Qty</th>
+							<th>Unit</th>
 							<th>Unit Cost</th>
 							<th>Remarks</th>
 							<th>Actions</th>
@@ -95,10 +97,22 @@
 		      <input type="text" class="form-control" placeholder="Stock No" name="item_stock_no">
 		    </div>
 		  </div>
+		  <div class="form-group">
+		    <label for="input-tel" class="col-md-2 control-label">Acct No.:</label>
+		    <div class="col-md-4">
+		      <input type="text" class="form-control" placeholder="Acct No" name="item_acct_no">
+		    </div>
+		  </div>
 		  <div class="form-group ">
 		    <label for="input-name" class="col-md-2 control-label">Desc:</label>
 		    <div class="col-md-10">
 		      <input type="text" class="form-control"  placeholder="Description" name="item_desc" required="required">
+		    </div>
+		  </div>
+		  <div class="form-group ">
+		    <label for="input-name" class="col-md-2 control-label">Size:</label>
+		    <div class="col-md-4">
+		      <input type="text" class="form-control"  placeholder="Size" name="item_size" required="required">
 		    </div>
 		  </div>
 		  <div class="form-group">
@@ -164,10 +178,12 @@
 		item_columns = [
 			{ "mData": "article_name" },
 			{ "mData": "item_desc" },
+			{ "mData": "item_size" },
+			{ "mData": "item_acct_no" },
 			{ "mData": "item_stock_no" },
 			{ 'mData': "article_inventory_type" }, 
-			{ 'mData': 'item_unit_measure'},
 			{ 'mData': 'item_qty' },
+			{ 'mData': 'item_unit_measure'},
 			{ 'mData': function(data){ //ITEM UNIT COST
 				return parseFloat(data.item_cost_unit_cost).moneyFormat();
 			}},
