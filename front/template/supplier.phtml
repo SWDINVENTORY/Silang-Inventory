@@ -49,6 +49,7 @@
 						<tr>
 							<th>Name</th>
 							<th>TIN</th>
+							<th>VAT/NON-VAT</th>
 							<th>Address</th>
 							<th>Telephone No.</th>
 							<th>Action</th>
@@ -82,6 +83,16 @@
 		      <input type="text" class="form-control" id="input-name" placeholder="Enter TIN" name="supplier_tin" required="required">
 		    </div>
 		  </div>
+		  <div class="form-group ">
+		    <label for="input-name" class="col-sm-3 control-label">VAT </label>
+		    <div class="col-sm-6">
+		      <select class="form-control" name="supplier_vat" required="required">
+					<option value="">Select VAT/NON-VAT</option>
+					<option value="VAT">VAT</option>
+					<option value="NON-VAT">NON-VAT</option>
+					</select>
+		    </div>
+		  </div>
 		  <div class="form-group">
 		    <label for="input-address" class="col-sm-3 control-label">Address:</label>
 		    <div class="col-sm-6">
@@ -113,6 +124,7 @@
 		var supplier_columns = [
 			{ "mData": "supplier_name" },
 			{ "mData": "supplier_tin" },
+			{ "mData": "supplier_vat" },
 			{ "mData": "supplier_address" },
 			{ "mData": "supplier_tel_no" },
 			{
