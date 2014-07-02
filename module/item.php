@@ -11,13 +11,16 @@ class Item extends Abstract_Model {
 		
 	const ITEM_ID = 'item_id';
 	const ITEM_DESC = 'item_desc';
+	const ITEM_SIZE = 'item_size';
 	const ITEM_UNIT_MEASURE = 'item_unit_measure';
 	const ITEM_QTY = 'item_qty';
+	const ITEM_ACCT_NO = 'item_acct_no';
 	const ITEM_STOCK_NO = 'item_stock_no';
 	const ITEM_REMARKS = 'item_remarks';
 	const ITEM_ARTICLE_ID = 'item_article_id';
 	const ITEM_CREATED = 'item_created';
 	const ITEM_UPDATED = 'item_updated';
+	
 		
 	/* Public Properties
 	-------------------------------*/
@@ -50,7 +53,7 @@ class Item extends Abstract_Model {
 					->from('item')
 					->innerJoin('article', 'article_id = item_article_id', false)
 					//->innerJoin('(SELECT * FROM item_costs ORDER BY item_cost_updated DESC) i', 'item_cost_item_id=item_id', false)
-					->sortBy('item_desc', 'ASC')
+					->sortBy('item_stock_no', 'ASC')
 					->groupBy('item_id'));
 					
 			for($i=0; $i<count($all); $i++) {
@@ -90,7 +93,7 @@ class Item extends Abstract_Model {
 		return front()->database()
 			->search()
 			->setTable('item')
-			->setColumns('item_id', 'item_unit_measure', 'item_type', 'item_stock_no', 'item_desc', 'item_article_id')
+			->setColumns('item_id', 'item_unit_measure', 'item_type', 'item_stock_no', 'item_desc', 'item_article_id', 'item_acct_no', 'item_size')
 			->filterByItemStockNo($stock_no)
 			->getRow();
 	}
