@@ -61,7 +61,7 @@ class POReport extends Formsheet{
 		$this->leftText(25,$y++,'Date','','');
 		
 		$this->leftText(0.2,$y,'TIN:       '.$datas['supplier_tin'],'','');
-		
+		$this->leftText(9,$y,''.$datas['supplier_vat'],'','');
 		$this->drawLine($y+0.1,'h',array(3,20));
 		$this->drawLine($y+0.1,'h',array(32,7));
 		$this->leftText(33,$y,$datas['po_proc_mod'],'','');
