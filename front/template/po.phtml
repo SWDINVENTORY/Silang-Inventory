@@ -144,7 +144,13 @@
 									<div class="form-group">
 										<label class="col-sm-3 control-label">TIN</label>
 										<div class="col-sm-3">
-											<span class="form-control" id="supplier_tin"></span>
+											<span class="form-control" id="supplier_tin"></span> 
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label">VAT/NON-VAT</label>
+										<div class="col-sm-3">
+											<span class="form-control" id="supplier_vat"></span> 
 										</div>
 									</div>
 									<div class="form-group">
@@ -358,6 +364,13 @@
 										<div class="form-group col-sm-9">	
 											<input type="text" class="form-control" placeholder="Desc"
 												name="po_dtl_item_desc" required="required">
+										</div>
+									</div>
+									<div class="col-sm-12">
+										<label for="input-name" class="col-sm-3 control-label">Size</label>
+										<div class="form-group col-sm-3">	
+											<input type="text" class="form-control" placeholder="Size"
+												name="po_dtl_item_size" required="required">
 										</div>
 									</div>
 									<div class="col-sm-12">
@@ -592,6 +605,7 @@
 					$('#supplier_address').val(suggestion.data.supplier_address);
 					$('input[name="po_supplier_id"]').val(suggestion.data.supplier_id);
 					$('#supplier_tin').text(suggestion.data.supplier_tin);
+					$('#supplier_vat').text(suggestion.data.supplier_vat);
 					if(!suggestion.data.supplier_tin){
 						$('#supplier_tin').text('No TIN');
 					}
@@ -622,6 +636,7 @@
 								var po_dtl_data ={};
 								
 								po_dtl_data['po_dtl_item_desc'] = data.data['item_desc'];
+								po_dtl_data['po_dtl_item_size'] = data.data['item_size'];
 								po_dtl_data['po_dtl_item_unit'] = data.data['item_unit_measure'];
 								po_dtl_data['po_dtl_item_type'] = data.data['item_type'];
 								po_dtl_data['po_dtl_article_id'] = data.data['item_article_id'];

@@ -37,6 +37,7 @@ class Po extends Abstract_Model {
 	const PO_DTL_ITEM_UNIT = 'po_dtl_item_unit';
 	const PO_DTL_ITEM_QTY= 'po_dtl_item_qty';
 	const PO_DTL_ITEM_DESC= 'po_dtl_item_desc';
+	const PO_DTL_ITEM_SIZE= 'po_dtl_item_size';
 	const PO_DTL_ITEM_COST= 'po_dtl_item_cost';
 	const PO_DTL_ITEM_CREATED = 'po_dtl_item_created';
 	const PO_DTL_STOCK_NO = 'po_dtl_stock_no';
