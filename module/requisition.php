@@ -18,6 +18,9 @@ class Requisition extends Abstract_Model {
 	const REQUISITION_DTL_PO_DTL_ID = 'ris_dtl_po_dtl_id';
 	const REQUISITION_DTL_ITEM_QTY= 'ris_dtl_item_qty';
 	const REQUISITION_DTL_ITEM_CREATED = 'ris_dtl_item_created';
+	const REQUISITION_CHARGING = 'ris_charging';
+	const REQUISITION_DTL_ITEM_ACCT_NO = 'ris_dtl_item_acct_no';
+	const REQUISITION_DTL_ITEM_SIZE = 'ris_dtl_item_size';
 		
 	/* Public Properties
 	-------------------------------*/
