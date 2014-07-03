@@ -121,7 +121,6 @@ class Po extends Abstract_Model {
 				Po::PO_DTL_ITEM_QTY,
 				Po::PO_DTL_ITEM_DESC,
 				Po::PO_DTL_ITEM_COST,
-				Po::PO_DTL_ITEM_COST,
 				Po::PO_DTL_ITEM_CREATED,
 				'po_auth_off',
 				'po_req_off',
