@@ -8,6 +8,10 @@ class Requisition extends Abstract_Model {
 	const MODEL = 'Requisition_Model';
 	
 	const REQUISITION_TABLE = 'ris';
+	const REQUISITION_REQUEST = 'ris_request';
+	const REQUISITION_APPROVED = 'ris_approval';
+	const REQUISITION_ISSUED = 'ris_issued';
+	const REQUISITION_RECEIVED = 'ris_received';
 	
 	const REQUISITION_ID = 'ris_id';
 	

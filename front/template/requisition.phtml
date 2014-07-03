@@ -93,6 +93,7 @@
 						<th>RIS No</th>
 						<th>RIS Date</th>
 						<th>Purpose</th>
+						<th>Charging</th>
 						<th>Action</th>
 					</tr>
 				</thead>
@@ -130,8 +131,32 @@
 											<input type="input" class="form-control" placeholder="Office" name="ris_office">
 										</div>
 									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label">Requested:</label>
+										<div class="col-sm-9">
+											<input type="input" class="form-control" placeholder="Requestor" name="ris_request">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label">Approved:</label>
+										<div class="col-sm-9">
+											<input type="input" class="form-control" placeholder="Approval" name="ris_approval">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label">Issued:</label>
+										<div class="col-sm-9">
+											<input type="input" class="form-control" placeholder="Issuance" name="ris_issued">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label">Received:</label>
+										<div class="col-sm-9">
+											<input type="input" class="form-control" placeholder="Receiver" name="ris_received">
+										</div>
+									</div>
 								</div>
-								<div class="col-sm-4">
+								<div class="col-sm-5">
 									<div class="form-group">
 										<label class="col-sm-6 control-label">Responsibility Center Code</label>
 										<div class="col-sm-6">
@@ -139,7 +164,7 @@
 										</div>
 									</div>
 								</div>
-								<div class="col-sm-3">
+								<div class="col-sm-5">
 									<div class="form-group">
 										<label class="col-sm-6 control-label">RIS No.</label>
 										<div class="col-sm-6">
@@ -147,22 +172,32 @@
 										</div>
 									</div>
 								</div>
-								<div class="col-sm-2">
+								<div class="col-sm-5">
 									<div class="form-group">
-										<div class="col-sm-12">
-											<input type="text" class="form-control" id="ris_created" placeholder="RIS Date" disabled>
+										<label class="col-sm-6 control-label">RIS Date</label>
+										<div class="col-sm-6">
+											<input type="text" class="form-control" name="ris_created" placeholder="RIS Date">
 										</div>
 									</div>
 								</div>
-							</div>
-							<div class="row-fluid">
-								<div class="col-sm-8">
+								<div class="col-sm-5">
 									<div class="form-group">
-										<label >Purpose</label>
-										<textarea placeholder="Purpose" name="ris_purpose" class="form-control"></textarea>
+										<label class="col-sm-6 control-label">Purpose</label>
+										<div class="col-sm-6">
+											<input type="text" class="form-control" name="ris_purpose" placeholder="Purpose">
+										</div>
 									</div>
 								</div>
+								<div class="col-sm-5">
+									<div class="form-group">
+										<label class="col-sm-6 control-label">Charging</label>
+										<div class="col-sm-6">
+											<input type="text" class="form-control" name="ris_charging" placeholder="Charging">
+										</div>
+									</div>
+								</div>																
 							</div>
+
 						</div>
 						<hr/>
 						<div class="border">
@@ -299,6 +334,7 @@
 			            	return moment(data.ris_created).format('ddd, MMM Do YYYY');
 			            }},
 			            { "mData": "ris_purpose" },
+						{ "mData": "ris_charging" },
 			            {
 			            	'mData': function(data) {
 			            		var model = new RegExp('//model//','g');
