@@ -323,7 +323,7 @@ class Front_Page_Ia extends Front_Page {
 		//if there's a match on item list
 		if(!empty($itemfound)) {
 			$filter = array(
-				array('item_id=%s', $itemfound['item_id']));
+				array('item_id=%s', $itemfound['item_stock_no']));
 				
 			front() -> database() -> updateRows('item', array(
 					'item_qty' => $itemfound['item_qty'] + intval($item['ia_dtl_item_qty']),
@@ -332,7 +332,7 @@ class Front_Page_Ia extends Front_Page {
 				
 				
 			$cost = array(
-				'item_cost_item_id' => $itemfound['item_id'],
+				'item_cost_item_id' => $itemfound['item_stock_no'],
 				'item_cost_qty' => intval($item['ia_dtl_item_qty']),
 				'item_cost_unit_cost' => floatval($po_dtl['po_dtl_item_cost']),
 				'item_cost_updated' => date('Y-m-d H:i:s')
