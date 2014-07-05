@@ -145,6 +145,7 @@ class Ia extends Abstract_Model {
 			->filterByItemDesc($data['po_dtl_item_desc'])
 			->addFilter('item_unit_measure=%s', $data['po_dtl_item_unit'])
 			->addFilter('item_article_id=%s', $data['po_dtl_article_id'])
+			->addFilter('item_stock_no=%s', $data['po_dtl_stock_no'])
 			->getRow();	
 	}
 	/* Protected Methods
