@@ -66,11 +66,13 @@ class Front_Page_Items extends Front_Page {
 			$item = array_filter($item);
 			$item[Item::ITEM_CREATED] = date('Y-m-d H:i:s');
 			$item[Item::ITEM_UPDATED] = date('Y-m-d H:i:s');
+			
 			if(!empty($item['item_cost_unit_cost'])){
 				$item_unit_cost = $item['item_cost_unit_cost'];
 				unset($item['item_cost_unit_cost']);
 			}
 			$item_id = $this->Item()->add($item);
+			
 			if($item_unit_cost) {
 				front()->database()
 					->insertRow('item_cost', array(
@@ -90,7 +92,7 @@ class Front_Page_Items extends Front_Page {
 	protected function _edit() {
 		$item = $this->post;
 		
-		if(isset($item['edit-item']) && !empty($item['item_id'])){
+		if(isset($item['edit-item']) && !empty($item['item_id'])) {
 			$item = array_filter($item);
 			unset($item['item_cost_unit_cost']);
 			if($this->Item()->model()->itemUpdate($item)){

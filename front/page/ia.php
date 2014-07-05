@@ -77,7 +77,7 @@ class Front_Page_Ia extends Front_Page {
 		if (isset($post['ia_id']) && empty($post['ia_id'])) {
 			if (isset($post['ia_dtl']) && is_array($post['ia_dtl']) && !empty($post['ia_dtl'])) {
 				$po = front()->database()
-					->getRow('po', 'po_id', $post['ia_po_id']);
+					->getRow('po', 'po_id', $post['ia_po_id']); //Get PO
 					
 				if(!$po['po_is_cancelled'] && !$po['po_is_furnished']) {
 					$ia_dtl = $post['ia_dtl'];
@@ -323,24 +323,28 @@ class Front_Page_Ia extends Front_Page {
 		//if there's a match on item list
 		if(!empty($itemfound)) {
 			$filter = array(
-				array('item_id=%s', $itemfound['item_stock_no']));
-				
+				array('item_id=%s', $itemfound['item_id']));
+			
+			//update qty on items,
 			front() -> database() -> updateRows('item', array(
 					'item_qty' => $itemfound['item_qty'] + intval($item['ia_dtl_item_qty']),
 					'item_updated' => date('Y-m-d H:i:s')
-				), $filter);
+				), $filter);						
 				
-				
+			// save new record on item_costs;	
 			$cost = array(
-				'item_cost_item_id' => $itemfound['item_stock_no'],
+				'item_cost_item_id' => $itemfound['item_id'],
 				'item_cost_qty' => intval($item['ia_dtl_item_qty']),
 				'item_cost_unit_cost' => floatval($po_dtl['po_dtl_item_cost']),
 				'item_cost_updated' => date('Y-m-d H:i:s')
 			);
-			front()->database()->insertRow('item_cost', $cost);
+			
+			front()->database()->insertRow('item_cost', $cost); 
 		}
+		
 		//If theres no match on item list
 		if(empty($itemfound)) {
+			//add new item if no match found
 			$item_id = front()->database()->insertRow('item', array(
 				'item_desc' => $po_dtl['po_dtl_item_desc'],
 				'item_unit_measure' => $po_dtl['po_dtl_item_unit'],
@@ -349,6 +353,8 @@ class Front_Page_Ia extends Front_Page {
 				'item_created' => date('Y-m-d H:i:s'),
 				'item_updated' => date('Y-m-d H:i:s')
 			))->getLastInsertedId();
+			
+			//insert new price
 			if($item_id){
 				front()->database()->insertRow('item_cost', array(
 					'item_cost_item_id' => $item_id,
@@ -359,21 +365,6 @@ class Front_Page_Ia extends Front_Page {
 			}
 		}
 		return $this;
-	}
-	
-	private function getAverageCosting($item, $po_dtl_qty, $po_dtl_cost) {
-		if(isset($item['item_id']) && !empty($item['item_id'])) {
-			
-			$previous_costs = front()->database()->search('item_cost')
-				->setColumns(
-					//'sum(item_cost_qty) as item_qty_sum,  sum(item_cost_unit_cost) as item_costs_total_sum, 
-					sprintf('sum(item_cost_unit_cost)+%d / sum(item_cost_qty)+%d  AS weighted_average_cost', $po_dtl_cost, $po_dtl_qty)
-					)
-				->filterByItemCostItemId($item['item_id'])
-				->getRow();
-			
-			return $previous_costs['weighted_average_cost'] ;
-		}
 	}
 
 	private function _updatePo($po_id){
