@@ -1,0 +1,213 @@
+<style>
+	.staff .border { padding: 5px; }
+	.staff .border-space{ padding: 5px 5px; }
+	#staff-table th:last-child { width: 5%; }
+	
+	.dataTables_filter label{
+		width:250px;
+	}
+	[name="staff-table_length"],[name="staff-dtl-table_length"]{
+		display: inline;
+		width: 100px;
+		height: 34px;
+		padding: 6px 12px;
+		font-size: 14px;
+		line-height: 1.428571429;
+		color: #555555;
+		vertical-align: middle;
+		background-color: #ffffff;
+		background-image: none;
+		border: 1px solid #cccccc;
+		border-radius: 4px;
+	}
+</style>
+<div class="row">
+	<div class="col-md-12">
+		<h3>Staff <small>Silang Water District Personnel</small></h3>
+		<ol class="breadcrumb">
+			<li>
+				<a href="/"><i class="icon-dashboard"></i> Inventory</a>
+			</li>
+			<li class="active">
+				<i class="icon-file-alt"></i> Staff
+			</li>
+		</ol>
+		<?php include(dirname(__FILE__).'\_message.phtml'); ?>
+	</div>
+</div>
+<div class="border">
+	<div class="border-space col-md-offset-11 col-md-1">
+		<button class="btn btn-primary pull-right" data-toggle="modal" data-target="#staff-modal" 
+			data-backdrop="static" data-keyboard="false" id="create-staff">Add</button>
+	</div>
+	<hr />
+	<div class="row staff-list border-space">
+		<div class="col-md-12">
+			<div class="table-responsive">
+				<table class="table table-hover table-striped table-bordered" id="staff-table">
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Position</th>
+							<th>ID No</th>
+							<th>Action</th>
+						</tr>
+					</thead>
+					<tbody></tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Modal -->
+<form class="form-horizontal" role="form" action="" method="post" id="staff-modal-form">
+<div class="modal fade" id="staff-modal" tabindex="-1" role="dialog" aria-labelledby="mymodallabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="my-modal-label"><span class="modal-form-state">Action Here</span></h4>
+      </div>
+      <div class="modal-body">
+			<input type="hidden" name="staff_id"/>
+		  <div class="form-group ">
+		    <label for="input-name" class="col-sm-3 control-label">Name:</label>
+		    <div class="col-sm-6">
+		      <input type="text" class="form-control" id="input-name" placeholder="Enter Name" name="staff_name" required="required">
+		    </div>
+		  </div>
+		  <div class="form-group ">
+		    <label for="input-name" class="col-sm-3 control-label">Position</label>
+		    <div class="col-sm-6">
+		      <input type="text" class="form-control" id="input-name" placeholder="Enter Position" name="staff_position" required="required">
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="input-name" class="col-sm-3 control-label">ID No:</label>
+		    <div class="col-sm-6">
+		      <input type="text" class="form-control" id="input-name" placeholder="Enter ID No" name="staff_id_no" required="required">
+		    </div>
+		  </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary" name="staff"><span class="modal-form-action">Save changes</span></button>
+      </div>
+    </div>
+  </div>
+</div>
+</form>
+<?php include __DIR__.'/action.phtml'; ?>
+<script type="text/javascript" src="/assets/js/modal_control.js"></script>
+<script type="text/javascript">
+(function($) {
+	$(document).ready(function() {
+		var staff_table = {};
+		var action_template = $('#action_tpl').text().trim();
+		var staff_columns = [
+			{ "mData": "staff_name" },
+			{ "mData": "staff_position" },
+			{ "mData": "staff_id_no" },
+			{
+				'mData': function(data){
+					var model = new RegExp('//model//','g');
+					var model_id = new RegExp('/model_id/','g'); 
+					var target_modal = new RegExp('//target-modal//','g'); 
+					var action = action_template
+						.replace(model, 'staff')
+						.replace(target_modal, 'staff')
+						.replace(model_id, data.staff_id);
+					return action;
+				}
+			}];
+		var staff_table = $('#staff-table').dataTable({
+			'sPaginationType' : "two_button",
+			"iDisplayLength" : 10,
+			"sDom" : '<"pad-it"<"pull-right"f>l>t<"pull-right"i>p>',
+			'sAjaxSource': '/staff/',
+			'sAjaxDataProp': 'data',
+			"bAutoWidth": false,
+			"aoColumns": staff_columns,
+			"fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {
+			  oSettings.jqXHR = $.ajax( {
+				"dataType": 'json',
+				"type": "POST",
+				"url": sSource,
+				"data": {staff:'all'},
+				"success": fnCallback
+			  } );
+			}
+		})
+		
+		//CREATE staff
+		$('#create-staff').click(function(){
+			changeModal({
+					'action':'/staff/add',
+					'model':'staff',
+					'submit_name': 'create-staff',
+					'pr_button':'Add',
+					'modal_label': 'Add staff',
+					'run': function(){
+						clear_form('staff');
+					}
+			});
+		});
+		
+		$(document).on('click','a',function(){
+			var action_handle = $(this);
+			var row = action_handle.parents('tr:first');
+			var  staff_id;
+			//EDIT  staff
+			if(action_handle.hasClass('edit-staff')) {
+				var row_position = staff_table.fnGetPosition(row[0]); 
+				var row_data = staff_table.fnGetData(row[0]);
+				current_staff = row_data;
+				current_staff_row = row_position;
+				changeModal({
+					'action':'/staff/edit',
+					'model':'staff',
+					'submit_name': 'edit-staff',
+					'pr_button':'Save Changes',
+					'modal_label': 'Edit staff',
+					'run': function(){
+						populate({
+							'data': current_staff,
+							'name':'staff',
+							'map': function(v, o){ return o[v]; }
+						}, function(){
+							$('#staff-modal .secondary').show();
+						});	
+						$('#staff-modal-form').find('input').removeAttr('disabled');
+					}
+				});
+			}
+			//VIEW staff
+			if(action_handle.hasClass('view-staff')) {
+				var row_position = staff_table.fnGetPosition(row[0]); 
+				var row_data = staff_table.fnGetData(row[0]);
+				current_staff = row_data;
+				current_staff_row = row_position;
+				changeModal({
+					'action':'/staff',
+					'model':'staff',
+					'submit_name': 'view-staff',
+					'pr_button':'Back To List',
+					'modal_label': 'View staff',
+					'run': function(){
+						populate({
+							'data': current_staff,
+							'name':'staff',
+							'map': function(v, o){ return o[v]; }},
+							function(){
+								$('#staff-modal .secondary').hide();
+								$('#staff-modal-form').find('input').attr('disabled','disabled');
+							}
+							);
+						
+					}
+				});
+			}
+		});
+		
+	});
+})(jQuery);
+</script>

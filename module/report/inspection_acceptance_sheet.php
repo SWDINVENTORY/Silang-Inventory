@@ -140,8 +140,8 @@ class IAReport extends Formsheet{
 		);	
 		$this->section($metrics);
 		$this->GRID['font_size']=10;	
-		$this->leftText(1,2,'Date Inspected: '.date('F d, Y',strtotime($detail['dept_created'])),'','');
-		$this->leftText(22,2,'Date Received: '.date('F d, Y',strtotime($detail['dept_created'])),'','');
+		$this->leftText(1,2,'Date Inspected: '.date('M d, Y',strtotime($detail['ia_inspection'])),'','i');
+		$this->leftText(22,2,'Date Received: '.date('M d, Y',strtotime($detail['ia_inspection'])),'','i');
 		
 		
 		$this->GRID['font_size']=12;

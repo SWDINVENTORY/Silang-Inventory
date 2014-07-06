@@ -73,12 +73,11 @@ class Front_Page_Ia extends Front_Page {
 
 	protected function _add() {
 		$post = $this -> post;
-		
 		if (isset($post['ia_id']) && empty($post['ia_id'])) {
 			if (isset($post['ia_dtl']) && is_array($post['ia_dtl']) && !empty($post['ia_dtl'])) {
 				$po = front()->database()
 					->getRow('po', 'po_id', $post['ia_po_id']); //Get PO
-					
+				
 				if(!$po['po_is_cancelled'] && !$po['po_is_furnished']) {
 					$ia_dtl = $post['ia_dtl'];
 					$ia_signatories = $post['ia_signatories'];
@@ -99,7 +98,9 @@ class Front_Page_Ia extends Front_Page {
 					$post = array_filter($post);
 					$post[Ia::IA_CREATED] = date('Y-m-d H:i:s');
 					$ia_id = $this->Ia()->add($post);
+					
 					$ia_details = array();
+					
 					foreach ($ia_dtl as $dtls) {
 						$dtl = $dtls;
 						$dtl[Ia::IA_DTL_IA_ID] = $ia_id;
