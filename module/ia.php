@@ -25,6 +25,7 @@ class Ia extends Abstract_Model {
 	const IA_IS_PARTIAL = 'ia_is_partial';
 	const IA_IS_PARTIAL_QTY = 'ia_is_partial_qty';
 	const IA_CREATED = 'ia_created';
+	const IA_INSPECTION = 'ia_inspection';
 	
 	const IA_DTL_TABLE = 'ia_dtl';
 	
