@@ -93,7 +93,7 @@
 						<th>IAR No.</th>
 						<th>Inv. No.</th>
 						<th>DR. No.</th>
-						<th>IAR Date</th>
+						<th>Date</th>
 						<th>Requisitiong Office/Dept</th>
 						<th>Total Amount</th>
 						<th>Action</th>
@@ -119,71 +119,59 @@
 				<!---IA Proper -->
 				<div class="border">
 					<!--Page body-->
-					<div class="form-horizontal row">		
-						<div class="col-md-3">
-							<label class="control-label col-md-3">PO No:</label>
-							<div class="col-md-9">
-								<input type="input" class="form-control" placeholder="PO No." id="po_no" required="required">
-								<input type="hidden" name="ia_po_id" id="po_id">
-							</div>
-						</div>
-						<div class="col-md-3">
-							<label class="control-label col-md-3">PO Date:</label>
-							<div class="col-md-9">
-								<input type="input" class="form-control" placeholder="Date" id="po_created" disabled="disabled">
-							</div>
-						</div>
-						<div class="col-md-6">
+					<div class="form-horizontal row">
+						<div class="col-md-8">
 							<div class="form-group">
-								<label class="col-sm-2 control-label">Supplier</label>
+								<label class="col-sm-1 control-label">Supplier</label>
 								<div class="col-sm-9">
 									<input type="input" class="form-control" placeholder="Name" id="supplier_name" disabled="disabled">
 								</div>
 							</div>
-						</div>								
-					</div>
-					<div class="form-horizontal row">
+						</div>
 						<div class="col-md-3">
 							<div class="form-group">
-								<label class="col-sm-3 control-label">IAR No:</label>
-								<div class="col-sm-7">
+								<label class="col-sm-3 control-label">IAR No.</label>
+								<div class="col-sm-5">
 									<input type="input" class="form-control" placeholder="IAR No." name="ia_no" required="required">
 								</div>
 							</div>
-						</div>						
-						<div class="col-md-3">
-							<label class="control-label col-md-3">Inv. No:</label>
+						</div>
+					</div>
+					<div class="form-horizontal row">
+						<div class="col-md-2">
+							<label class="control-label col-md-5">PO No.</label>
 							<div class="col-md-7">
-								<input type="input" class="form-control" placeholder="Inv No." name="ia_inv_no">
+								<input type="input" class="form-control" placeholder="PO No." id="po_no" required="required">
+								<input type="hidden" name="ia_po_id" id="po_id">
+							</div>
+						</div>
+						<div class="col-md-2">
+							<label class="control-label col-md-3">Date:</label>
+							<div class="col-md-9">
+								<input type="input" class="form-control" placeholder="Date" id="po_created" disabled="disabled">
 							</div>
 						</div>
 						<div class="col-md-3">
-							<label class="control-label col-md-3">DR No:</label>
+							<label class="control-label col-md-4">Inv. No:</label>
+							<div class="col-md-8">
+								<input type="input" class="form-control" placeholder="Inv No." name="ia_inv_no">
+							</div>
+						</div>
+						<div class="col-md-2">
+							<label class="control-label col-md-5">DR No.</label>
 							<div class="col-md-7">
 								<input type="input" class="form-control" placeholder="Dr No." name="ia_dr_no">
 							</div>
 						</div>
-					</div>
-					<div class="form-horizontal row">
-						<div class="col-md-3">
-							<label class=" control-label col-md-3">IAR Date:</label>
-							<div class="col-md-7">
+						<div class="col-md-2">
+							<label class=" control-label col-md-3">Date:</label>
+							<div class="col-md-9">
 								<input type="input" class="form-control" placeholder="Date" name="ia_created"/>
 							</div>
 						</div>
-						<div class="form-group">
-							<label class="col-sm-2 control-label">Inspection Date:</label>
-							<div class="col-sm-2">
-								<div class='input-group date ia-inspection'>
-									<input type='text' name="ia_inspection" class="form-control" required="required"/>
-									<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
-									</span>
-								</div>
-							</div>
-						</div>						
-					</div>					
+					</div>
 					<div class="border row">
-						<div class="col-sm-4">
+						<div class="col-sm-7">
 							<label class="col-sm-4 control-label">Requesitioning Office/Dept:</label>
 							<div class="col-sm-7">
 								<select class="form-control" name="ia_dept_id" required="required">
@@ -225,100 +213,6 @@
 						</table>
 					</div>
 				</div>
-				<div class="row item-list border-space">
-					<div class="col-lg-12">
-						<div class="col-lg-6">
-							<h4 align="center">INSPECTORS</h4>
-							<div class="form-horizontal row inspectors">
-								<div class="col-md-12 row">
-									<div class="col-md-5">
-										<input type="input" class="form-control" placeholder="Name" order='1' vname="inspectors_name" >
-									</div>
-									<div class="col-md-5">
-										<input type="hidden" class="form-control" placeholder="Position" order='1' vname="inspectors_position">
-									</div>
-								</div>
-								<div class="col-md-12 row">
-									<div class="col-md-5">
-										<input type="input" class="form-control" placeholder="Name" order='2' vname="inspectors_name" >
-									</div>
-									<div class="col-md-5">
-										<input type="hidden" class="form-control" placeholder="Position" order='2' vname="inspectors_position">
-									</div>
-								</div>
-								<div class="col-md-12 row">
-									<div class="col-md-5">
-										<input type="input" class="form-control" placeholder="Name" order='3' vname="inspectors_name" >
-									</div>
-									<div class="col-md-5">
-										<input type="hidden" class="form-control" placeholder="Position" order='3' vname="inspectors_position">
-									</div>
-								</div>
-								<div class="col-md-12 row">
-									<div class="col-md-5">
-										<input type="input" class="form-control" placeholder="Name" order='4' vname="inspectors_name" >
-									</div>
-									<div class="col-md-5">
-										<input type="hidden" class="form-control" placeholder="Position" order='4' vname="inspectors_position">
-									</div>
-								</div>
-								<div class="col-md-12 row">
-									<div class="col-md-5">
-										<input type="input" class="form-control" placeholder="Name" order='5' vname="inspectors_name" >
-									</div>
-									<div class="col-md-5">
-										<input type="hidden" class="form-control" placeholder="Position" order='5' vname="inspectors_position">
-									</div>
-								</div>
-								<div class="col-md-12 row">
-									<div class="col-md-5">
-										<input type="input" class="form-control" placeholder="Name" order='6' vname="inspectors_name" >
-									</div>
-									<div class="col-md-5">
-										<input type="hidden" class="form-control" placeholder="Position" order='6' vname="inspectors_position">
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-lg-6">
-							<h4 align="center">ACCEPTEE</h4>
-							<div class="form-horizontal row acceptee">
-								<div class="col-md-12 row">
-									<div class="col-md-5">
-										<input type="input" class="form-control" placeholder="Name" order='1' vname="acceptee_name">
-									</div>
-									<div class="col-md-5">
-										<input type="input" class="form-control" placeholder="Position" order='1' vname="acceptee_position" >
-									</div>
-								</div>
-								<div class="col-md-12 row">
-									<div class="col-md-5">
-										<input type="input" class="form-control" placeholder="Name" order='2' vname="acceptee_name">
-									</div>
-									<div class="col-md-5">
-										<input type="input" class="form-control" placeholder="Position" order='2' vname="acceptee_position" >
-									</div>
-								</div>
-								<div class="col-md-12 row">
-									<div class="col-md-5">
-										<input type="input" class="form-control" placeholder="Name" order='3' vname="acceptee_name">
-									</div>
-									<div class="col-md-5">
-										<input type="input" class="form-control" placeholder="Position" order='3' vname="acceptee_position" >
-									</div>
-								</div>
-								<div class="col-md-12 row">
-									<div class="col-md-5">
-										<input type="input" class="form-control" placeholder="Name" order='4' vname="acceptee_name">
-									</div>
-									<div class="col-md-5">
-										<input type="input" class="form-control" placeholder="Position" order='4' vname="acceptee_position" >
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
 				<div id="hidden_data"></div>	
 				<!-- IA Proper End -->
 				<div class="modal-footer">
@@ -335,7 +229,6 @@
 	</div>
 </div>
 </form>
-<form id="ia_dtl-modal-form" action='#'>
 <div class="modal fade" id="ia_dtl-modal" tabindex="-1" role="dialog" aria-labelledby="mymodallabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
@@ -343,6 +236,7 @@
 				<h4 class="modal-title" id="my-modal-label"><span class="modal-form-state">Action Here</span></h4>
 			</div>
 			<div class="modal-body">
+				<form id="ia_dtl-modal-form" action='#'>
 				<div class="row border">
 							<div class="border">
 								<div class="col-sm-12">
@@ -379,7 +273,6 @@
 		</div>
 	</div>
 </div>
-</form>
 <?php include __DIR__.'/action.phtml'; ?>
 <script type="text/javascript" src="/assets/js/autocomplete.js"></script>
 <script type="text/javascript" src="/assets/js/modal_control.js"></script>
@@ -388,10 +281,9 @@
 	$('document').ready(function(){
 		ia_table = {};
 		ia_dtl_table = {};
-		current_ia_dtl_row = {}; //<- eto oh
+		current_ia_dtl_row = {};
 		current_ia_dtl = {} ;
 		action_template = $('#action_tpl').text().trim();
-		$('.ia-inspection').datetimepicker();
 		
 		var ia_columns = [
 			            { "mData": "supplier_name" },
@@ -432,8 +324,8 @@
 		
 		ia_dtl_columns = [
 				{ "mData": function(data){ //stock_no 
-					if(data.po_dtl_stock_no){
-						return data.po_dtl_stock_no;
+					if(data.item_stock_no){
+						return data.item_stock_no;
 					}
 					return " "; 
 				}},
@@ -475,7 +367,7 @@
 		ia_mapping = function(value, obj) {
 			switch(value) {
 				case 'ia_date_inspected':
-					return moment(obj[value]).format('M/D/YYYY');
+					return moment(obj[value]).format('ddd, MMM Do YYYY');
 				case 'ia_date_received':
 					return moment(obj[value]).format('ddd, MMM Do YYYY');
 				case 'ia_created':
@@ -539,20 +431,6 @@
 							'name':'ia',
 							'map': ia_mapping },
 							function(){
-								console.log(current_ia.signatories);
-								var ictr = 1;
-								var actr = 1;
-								$.each(current_ia.signatories,function(a,b){
-									if(b.type == 'inspectors'){
-										$('input[vname="inspectors_name"][order="'+ictr+'"]').val(b.name);
-										ictr++;
-									}
-									if(b.type == 'acceptee'){
-										$('input[vname="acceptee_name"][order="'+actr+'"]').val(b.name);
-										$('input[vname="acceptee_position"][order="'+actr+'"]').val(b.position);
-										actr++;
-									}
-								});
 								$.each(Object.keys(current_ia), function(i, v){
 									$('#ia-modal-form').find('input[name="'+v+'"]')
 										.attr('disabled', 'disabled');
@@ -581,7 +459,7 @@
 									});
 								var bVis = ia_dtl_table.fnSettings().aoColumns[6].bVisible;
 								ia_dtl_table.fnSetColumnVis( 6, bVis ? false : true );
-							});
+						});
 					}
 				});
 			}
@@ -627,7 +505,7 @@
 							'data': current_ia_dtl,
 							'name':'ia_dtl',
 							'map': function(v, o) { return o[v]; }},
-							function(){
+						function(){
 								$('#ia_dtl-modal-form .secondary').hide();
 								$('#ia_dtl-modal-form').find('input').attr('disabled','disabled');
 							}
@@ -683,10 +561,8 @@
 		//HEADER SUBMIT HANDLER
 		$('#ia-modal-form').submit(function(e){
 			//e.preventDefault();
-			
 			$('#hidden_data').html('');
 			var data = ia_dtl_table.fnGetData();
-			
 			$.each(data, function(index, o){
 				(Object.keys(o)).forEach(function(v, i, a){
 						switch(v){
@@ -706,9 +582,6 @@
 						}
 				});
 			});
-			
-			console.log(data);
-			
 			var hidden_aggregation = $('#hidden_data');
 			$.each(data, function(index, o){
 				Object.keys(o).forEach(function(v,i,a){
@@ -716,23 +589,6 @@
 						'<input type="hidden" name="ia_dtl['+index+']['+v+']" value="'+o[v]+'"/>');
 					});
 			});
-			
-			//inspectator
-			$.each($('.inspectors .row'),function(i,e){
-				var name = $(e).find('input[vname="inspectors_name"]').val();
-				var position = $(e).find('input[vname="inspectors_position"]').val();
-				hidden_aggregation.append('<input type="hidden" name="ia_signatories['+i+'][name]" value="'+name+'"/>');
-				hidden_aggregation.append('<input type="hidden" name="ia_signatories['+i+'][position]" value="'+position+'"/>');
-			});
-			
-			//inspectator
-			$.each($('.acceptee .row'),function(i,e){
-				var name = $(e).find('input[vname="acceptee_name"]').val();
-				var position = $(e).find('input[vname="acceptee_position"]').val();
-				hidden_aggregation.append('<input type="hidden" name="ia_signatories_acceptee['+i+'][name]" value="'+name+'"/>');
-				hidden_aggregation.append('<input type="hidden" name="ia_signatories_acceptee['+i+'][position]" value="'+position+'"/>');
-			});
-			
 		});
 		
 		//CREATE PO
