@@ -210,14 +210,11 @@
 										<thead>
 											<tr>
 												<th>Item No</th>
-												<th>Acct No</th>
 												<th>Stock No</th>
 												<th>Unit</th>
 												<th>Description</th>
 												<th>Size</th>
 												<th>Qty</th>
-												<th>Issuance Qty</th>
-												<th>Issuance Remarks</th>
 												<th>Action</th>
 											</tr>
 										</thead>
@@ -255,13 +252,6 @@
 							<div class="form-group col-sm-5">	
 								<input type="text" class="form-control" placeholder="Stock No"
 									name="ris_dtl_item_stock_no">
-							</div>
-						</div>
-						<div class="col-sm-12">
-							<label for="input-name" class="col-sm-3 control-label">Acct No</label>
-							<div class="form-group col-sm-5">	
-								<input type="text" class="form-control" placeholder="Acct No"
-									name="ris_dtl_item_acct_no">
 							</div>
 						</div>
 						<div class="col-sm-12">
@@ -341,9 +331,8 @@
 			            }];
 		
 		ris_dtl_columns = [{ "mData": function(data){
-				return '';
+				return data.ris_dtl_item_no;
 			}},
-			{ "mData": "ris_dtl_item_acct_no" },
 			{ "mData": function(data){
 				if(data.ris_dtl_item_stock_no){
 					return data.ris_dtl_item_stock_no;
@@ -354,18 +343,6 @@
 			{ "mData": "ris_dtl_item_desc" },
 			{ "mData": "ris_dtl_item_size" },
 			{ "mData": "ris_dtl_item_qty" },
-			{ "mData": function(data){
-				if(data.ris_dtl_item_issued){
-					return data.ris_dtl_item_issued;
-				}
-				return "";
-			}},
-			{ "mData": function(data){
-				if(data.ris_dtl_item_remarks){
-					return data.ris_dtl_item_remarks;	
-				}
-				return "";
-			}},
 			{ 
 				'mData': function(data) {
 					var model = new RegExp('//model//','g');
@@ -657,6 +634,7 @@
 					'pr_button':'Request',
 					'modal_label': 'Request Item',
 					'run': function(){
+						
 						clear_form('ris_dtl');
 					} 
 				});
@@ -674,6 +652,7 @@
 						'<input type="hidden" name="ris_dtl['+index+']['+v+']" value="'+o[v]+'"/>');
 					});
 			});
+			//console.log(hidden_aggregation);
 		});
 				
 		//DETAIL SUBMIT HANDLER
@@ -722,7 +701,6 @@
 					$.post('requisition/bystockno', {stock_no : item_stock_no}, function(data){
 						item = (data.data)?data.data:false;
 						if(item){
-							$('[name="ris_dtl_item_acct_no"]').val(item.item_acct_no);
 							$('[name="ris_dtl_item_desc"]').val(item.item_desc);
 							$('[name="ris_dtl_item_size"]').val(item.item_size);
 							$('[name="ris_dtl_item_unit"]').val(item.item_unit_measure);

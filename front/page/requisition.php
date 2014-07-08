@@ -79,21 +79,26 @@ class Front_Page_Requisition extends Front_Page {
 		$post = $this -> post;
 		
 		
-		
+		//echo "<pre>";print_r($post);exit();
 		//If id for requisition
 		if (isset($post['ris_id']) && empty($post['ris_id'])) {
 			if (isset($post['ris_dtl']) && is_array($post['ris_dtl']) &&
 				!empty($post['ris_dtl'])) {
 					$post['ris_created']=date('Y-m-d H:i:s');
+					$ris_dtl = $post['ris_dtl'];
 					unset($post['ris_id']);
 					unset($post['ris_dtl']);
 					unset($post['furnish']);
 					
+					$ris_id = $this->Requisition()->add($post);
 					
-					
-					front()->database()
-						->insertRow('ris', $post);
-					
+					foreach ($ris_dtl as $dtls) {
+						$dtl = $dtls;
+						$dtl['ris_dtl_ris_id'] = $ris_id;
+						$dtl['ris_dtl_item_created'] = date('Y-m-d H:i:s');
+						$dtl_id = front()->database()
+							->insertRow('ris_dtl', $dtl);
+					}
 					
 					$status = array();
 					$status['status'] = 1;
