@@ -84,7 +84,7 @@
 <div class="row-fluid border">
 	<div class="col-sm-12" style="padding-top:20px">
 		<div class="table-resrisnsive">
-			<table class="table table-hover table-striped table-bordered tablesorter" id="ris-table">
+			<table class="table table-hover table-bordered tablesorter" id="ris-table">
 				<thead>
 					<tr>
 						<th>Division</th>
@@ -377,6 +377,14 @@
 					"data": {ris:'all'},
 					"success": fnCallback
 				  } );
+				},
+				"fnRowCallback": function( nRow, aData, iDisplayIndex ) {
+					if(parseInt(aData.ris_is_issued)){
+						$(nRow).addClass('success');
+					};
+					if(!parseInt(aData.ris_is_issued)){
+						$(nRow).addClass('warning');
+					};
 				}
 			});
 			
