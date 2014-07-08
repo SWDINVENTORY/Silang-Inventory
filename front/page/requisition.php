@@ -69,6 +69,9 @@ class Front_Page_Requisition extends Front_Page {
 			case 'bystockno':
 					$this->itemByStockNo();
 				break;
+			case 'cancel':
+					$this->_cancel();
+				break;
 			default :
 				$this -> _requisition();
 				break;
@@ -244,7 +247,21 @@ class Front_Page_Requisition extends Front_Page {
 		}
 		return $this;
 	}
-
+	
+	protected function _cancel() {
+		$variables = $this->variables;
+		
+		if(isset($variables[1])) {
+			$id = $variables[1];
+			$filter[] = array('ris_id=%s', $id); 
+			front()->database()
+				->updateRows('ris', array('ris_is_cancelled'=>1), $filter);
+		}
+				
+		$this->_addMessage('Requisition Cancelled', 'success', true);
+		header('Location: /ris');
+		exit;
+	}
 	
 	/* Private Methods
 	-------------------------------*/

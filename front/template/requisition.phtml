@@ -318,6 +318,27 @@
 									.replace(model, 'ris')
 									.replace(target_modal, 'ris')
 									.replace(model_id, data.ris_id);
+								action = $(action).clone();
+			            		var li = $(action).find('a.delete-ris').parent();
+								li.find('a').remove();
+								li = $(action).find('a.edit-ris').parent();
+								li.find('a').remove();
+								/*action.find('ul.dropdown-menu').append(
+								'<li><a class="print_report-po" href="/po/report/'+data.po_id+
+									'" target="_blank" title="Print from pdf file."'+
+									' onclick="return confirm('+"'"+
+									'Do you want to print a report to a pdf file?'+"'"+
+									')">Print</a></li>');*/
+								if(!parseInt(data.ris_is_cancelled) &&
+									(!parseInt(data.ris_is_issued) && !parseInt(data.ris_is_cancelled)) &&
+										!parseInt(data.ris_is_issued)
+									){
+									li.append('<a href="/ris/cancel/'+data.ris_id+'" class="cancel-ris"'+
+									'onclick="return confirm('+"'"+
+									'Do you really want to cancel Requisition no.'+
+									data.ris_no+"'"+')">Cancel</a>');
+								}
+								action = action.html();
 			            		return action;
 			            	}
 			            }];
@@ -379,11 +400,15 @@
 				  } );
 				},
 				"fnRowCallback": function( nRow, aData, iDisplayIndex ) {
-					if(parseInt(aData.ris_is_issued)){
+					if(parseInt(aData.ris_is_cancelled)){
+						$(nRow).addClass('warning');
+					};
+					if(parseInt(aData.ris_is_issued) && !parseInt(aData.ris_is_cancelled)) {
 						$(nRow).addClass('success');
 					};
-					if(!parseInt(aData.ris_is_issued)){
-						$(nRow).addClass('warning');
+					
+					if(parseInt(aData.ris_is_issued) && !parseInt(aData.ris_is_cancelled)){
+						$(nRow).addClass('danger');
 					};
 				}
 			});
@@ -467,9 +492,9 @@
 					'model':'ris',
 					'submit_name': 'view-ris',
 					'pr_button':'Back To List',
-					'modal_label': 'View Purchase Order',
+					'modal_label': 'View Requisition',
 					'run': function(){
-						$('#add-to-purchase').hide();
+						$('#request_item').hide();
 						$('.secondary').hide();
 						
 						populate({
@@ -510,6 +535,8 @@
 										  } );
 										}
 									});
+								bVis = ris_dtl_table.fnSettings().aoColumns[6].bVisible;
+								ris_dtl_table.fnSetColumnVis( 6, bVis ? false : true );
 						});
 					}
 				});
@@ -604,7 +631,7 @@
 					'pr_button':'Furnish Request',
 					'modal_label': 'Create Requisition',
 					'run': function(){
-						$('#add-to-purchase').show();
+						$('#request_item').show();
 						clear_form('ris', function(){
 							$('input[name="ris_created"]').val(new Date().toDateString());
 						});
