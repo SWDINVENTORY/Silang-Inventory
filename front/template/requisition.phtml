@@ -93,7 +93,6 @@
 						<th>RIS No</th>
 						<th>RIS Date</th>
 						<th>Purpose</th>
-						<th>Charging</th>
 						<th>Action</th>
 					</tr>
 				</thead>
@@ -179,12 +178,6 @@
 										<label class="col-sm-6 control-label">Purpose</label>
 										<div class="col-sm-5">
 											<input type="text" class="form-control" name="ris_purpose" placeholder="Purpose">
-										</div>
-									</div>
-									<div class="form-group">
-										<label class="col-sm-6 control-label">Charging</label>
-										<div class="col-sm-5">
-											<input type="text" class="form-control" name="ris_charging" placeholder="Charging">
 										</div>
 									</div>
 								</div>																
@@ -316,7 +309,6 @@
 			            	return moment(data.ris_created).format('ddd, MMM Do YYYY');
 			            }},
 			            { "mData": "ris_purpose" },
-						{ "mData": "ris_charging" },
 			            {
 			            	'mData': function(data) {
 			            		var model = new RegExp('//model//','g');
@@ -693,14 +685,15 @@
 		
 		//ITEM POPULATION
 		$('[name="ris_dtl_item_stock_no"]').on('keypress', function(e){
-			console.log(e.which);
 			if(e.which == 13){
 				var input = $(this);
 				var item_stock_no = input.val();
 				if(item_stock_no.length){
 					$.post('requisition/bystockno', {stock_no : item_stock_no}, function(data){
 						item = (data.data)?data.data:false;
-						if(item){
+						if(!data.found){
+								alert('No Item Match Found!');
+						} else {
 							$('[name="ris_dtl_item_desc"]').val(item.item_desc);
 							$('[name="ris_dtl_item_size"]').val(item.item_size);
 							$('[name="ris_dtl_item_unit"]').val(item.item_unit_measure);
