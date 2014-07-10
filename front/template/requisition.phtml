@@ -726,7 +726,8 @@
 				if(item_stock_no.length){
 					$.post('requisition/bystockno', {stock_no : item_stock_no}, function(data){
 						item = (data.data)?data.data:false;
-						if(!data.found){
+						console.log(item);
+						if(!item){
 								alert('No Item Match Found!');
 						} else {
 							$('[name="ris_dtl_item_desc"]').val(item.item_desc);
