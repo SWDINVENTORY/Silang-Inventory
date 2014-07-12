@@ -78,6 +78,8 @@ class Front_Page_Requisition extends Front_Page {
 	protected function _add() {
 		$post = $this -> post;
 		
+		
+		
 		//If id for requisition
 		if (isset($post['ris_id']) && empty($post['ris_id'])) {
 			if (isset($post['ris_dtl']) && is_array($post['ris_dtl']) &&
@@ -87,8 +89,11 @@ class Front_Page_Requisition extends Front_Page {
 					unset($post['ris_dtl']);
 					unset($post['furnish']);
 					
+					
+					
 					front()->database()
 						->insertRow('ris', $post);
+					
 					
 					$status = array();
 					$status['status'] = 1;
