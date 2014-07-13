@@ -60,7 +60,7 @@ class Front_Page_Report extends Front_Page {
 					}
                 break;
             case 'rms':
-					return $this->report_RMS($data);
+					return $this->report_RMS('');
                 break;
             case 'old-reusable-stock':
                     return $this->report_OLD_REUSABLE_STOCK();
