@@ -102,7 +102,20 @@ class Requisition extends Abstract_Model {
 	
 	public function getDetail($id) {
 		return $this
-			->_getAll('*')
+			->_getAll(array(
+				'ris_dtl_id',
+				'ris_dtl_ris_id',
+				'ris_dtl_item_acct_no',
+				'ris_dtl_item_stock_no',
+				'ris_dtl_item_no',
+				'ris_dtl_item_desc',
+				'ris_dtl_item_size',
+				'ris_dtl_item_unit',
+				'ris_dtl_item_qty',
+				'ris_dtl_item_issued',
+				'ris_dtl_item_remarks',
+
+			))
 			->addFilter('ris_id = %s', $id)
 			->innerJoinOn('ris_dtl', 'ris_id = ris_dtl_ris_id')
 			->getRows();

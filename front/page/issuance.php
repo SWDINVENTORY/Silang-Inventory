@@ -10,7 +10,7 @@ class Front_Page_Issuance extends Front_Page {
 	/* Protected Properties
 	-------------------------------*/
 	protected $_title = 'SWD-Inventory : Issuance';
-	protected $_class = 'ris';
+	protected $_class = 'issuance';
 	protected $_template = '/issuance.phtml';
 	protected $_errors = null;
 	
@@ -46,7 +46,7 @@ class Front_Page_Issuance extends Front_Page {
 
 	protected function _process() {
 		$request = strtolower($this -> request);
-		unset($this->post['ris-dtl-table_length']);
+		unset($this->post['issuance-dtl-table_length']);
 		switch ($request) {
 			case 'furnish':
 				$this -> _add();
@@ -59,60 +59,47 @@ class Front_Page_Issuance extends Front_Page {
 
 	protected function _add() {
 		$post = $this -> post;
-		front()->output($post);
-		exit;
-		if (isset($post['ris_id']) && empty($post['ris_id'])) {
+		
+		if (isset($post['ris_id']) && !empty($post['ris_id'])) {
+		
 			if (isset($post['ris_dtl']) && is_array($post['ris_dtl']) &&
 				!empty($post['ris_dtl'])) {
-				$po = front()->database()
-					->getRow('po', 'po_id', $post['ris_po_id']);
-				if(!$po['po_is_cancelled'] && !$po['po_is_furnished']) {
-					$ris_dtl = $post['ris_dtl'];
-					unset($post['ris_dtl']);
-					$this->_computeTotalAmount();
-					$post['ris_is_partial'] = $this->is_partial;
-					$post['ris_partial_qty'] = $this->partial_count;
-					$post['ris_total_amount'] = $this->total_amount;
-					if(!$this->is_partial){
-						unset($post['ris_is_partial']);
-						unset($post['ris_partial_qty']);
+					$issuance_details =  $post['ris_dtl'];
+					$issuance_id = $this->Issuance()->add(array(
+						'issuance_no' => $post['issuance_no'],
+						'issuance_ris_id' => $post['ris_id'],
+						'issuance_charging' => $post['ris_charging'],
+						'created' => date('Y-m-d h:i:s', time())
+					));
+					
+					foreach($issuance_details as $dtl) {
+						front()->database()
+							->insertRow('issuance_dtl', array(
+								'issuance_dtl_issuance_id' => $issuance_id,
+								'issuance_dtl_ris_dtl_id' => $dtl['ris_dtl_id'],
+								'issuance_dtl_item_issued' => $dtl['ris_dtl_item_issued'],
+								'issuance_dtl_item_remarks' => $dtl['ris_dtl_item_remarks'],
+								'issuance_dtl_item_created' => date('Y-m-d h:i:s', time())
+							));
 					}
-					$post = array_filter($post);
-					$post[Ia::IA_CREATED] = date('Y-m-d H:i:s');
-					$ris_id = $this->Ia()->add($post);
-					$ris_details = array();
-					foreach ($ris_dtl as $dtls) {
-						$dtl = $dtls;
-						$dtl[Ia::IA_DTL_IA_ID] = $ris_id;
-						unset($dtl['po_dtl_item_qty']);
-						unset($dtl['po_dtl_item_cost']);
-						$dtl[Ia::IA_DTL_ITEM_CREATED] = date('Y-m-d H:i:s');
-						$dtl_id = front() -> database() -> insertRow(Ia::IA_DTL_TABLE, $dtl)
-							->getLastInsertedId();
-						
-						if($dtl_id){
-							$this->_itemToInventory($dtl);
-						}
-						$dtl['ris_dtl_id'] = $dtl_id;
-						array_push($ris_details, $dtl);
-					}
-					$this->_updatePo($post['ris_po_id']);
+					
 					$status = array();
 					$status['status'] = 1;
-					$status['msg'] = 'Successfully Inspected and Accepted Order '; //. $post[Ia:] . '!';
-					$status['data'] = array('ris_id' => $ris_id, 'ia' => $post, 'ris_dtl' => $ris_details);
+					$status['msg'] = 'Successfully Issued Requisition Order'; 
+					
 					if (IS_AJAX) {
 						header('Content-Type: application/json');
 						echo json_encode($status);
 						exit ;
 					}
 					$this -> _addMessage($status['msg'], 'success', true);
-					header('Location: /ia');
+					header('Location: /issuance');
 					exit ;
 				}
+				
 				$status = array();
 				$status['status'] = 0;
-				$status['msg'] = 'Sorry, Purchase Order is already cancelled or completed';
+				$status['msg'] = 'Sorry, Requisition Order is already cancelled or completed';
 
 				if (IS_AJAX) {
 					header('Content-Type: application/json');
@@ -125,20 +112,20 @@ class Front_Page_Issuance extends Front_Page {
 				exit ;
 			}
 
-			$status = array();
-			$status['status'] = 0;
-			$status['msg'] = 'Sorry, Unable to furnish purchase order';
+		$status = array();
+		$status['status'] = 0;
+		$status['msg'] = 'Sorry, Unable to furnish issuance order';
 
-			if (IS_AJAX) {
-				header('Content-Type: application/json');
-				echo json_encode($status);
-				exit ;
-			}
-
-			$this -> _addMessage($status['msg'], 'danger', true);
-			header('Location: /ia');
+		if (IS_AJAX) {
+			header('Content-Type: application/json');
+			echo json_encode($status);
 			exit ;
 		}
+
+		$this -> _addMessage($status['msg'], 'danger', true);
+		header('Location: /issuance');
+		exit ;
+		
 		return $this;
 	}
 
@@ -234,20 +221,18 @@ class Front_Page_Issuance extends Front_Page {
 
 	protected function _issuance() {
 		$post = $this -> post;
-		$issuance = front()->database()
-			->search('ris')
-			->filterByRisIsIssued(1)
-			->getRows();
-			
+		
+		if (isset($post['issuance'])) {
+			$issuance = front()->database()
+				->search('issuance')
+				->innerJoinOn('ris', 'issuance_ris_id=ris_id')
+				->getRows();
+		}
+		
 		if (isset($post['ris_no'])) {
-			if (!empty($post['ris_no'])) {
-				$ris_no = $post['ris_no'];
-				if ($ris_no) {
-					$issuance = front()->database()->getRow('ris','ris_no',$ris_no);
-					$issuance['ris_dtl']=$this -> Requisition() -> getDetail($issuance['ris_id']);
-					
-				}
-			}			
+			
+			$issuance = front()->database()->getRow('ris','ris_no',$post['ris_no']);
+			$issuance['ris_dtl']=$this -> Requisition() -> getDetail($issuance['ris_id']);
 		}
 		if (IS_AJAX) {
 			header('Content-Type: application/json');
