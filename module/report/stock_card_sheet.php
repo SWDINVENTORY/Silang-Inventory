@@ -84,7 +84,7 @@ class StockCard extends Formsheet{
 		
 		
 		$x_ntrvl = 4;
-		$x = 3;
+		$x = -1;
 		$this->centerText($x+=$x_ntrvl,4.8,'(IAR)',$x_ntrvl,'b');
 		$this->centerText($x+=$x_ntrvl,4.8,'(RIS)',$x_ntrvl,'b');
 		$this->centerText($x+=$x_ntrvl,4.8,'Qty',$x_ntrvl,'b');
