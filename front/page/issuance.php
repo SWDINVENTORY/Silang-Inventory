@@ -234,6 +234,13 @@ class Front_Page_Issuance extends Front_Page {
 			$issuance = front()->database()->getRow('ris','ris_no',$post['ris_no']);
 			$issuance['ris_dtl']=$this -> Requisition() -> getDetail($issuance['ris_id']);
 		}
+		
+		if (isset($post['issuance_no'])) {
+			
+			$issuance = front()->database()->getRow('issuance','issuance_no',$post['issuance_no']);
+			$issuance = $this -> Issuance() -> getDetail($issuance['issuance_id']);
+		}
+		
 		if (IS_AJAX) {
 			header('Content-Type: application/json');
 			$ret = array();

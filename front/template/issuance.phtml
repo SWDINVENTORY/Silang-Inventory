@@ -276,7 +276,7 @@
 							<label for="input-tel" class="col-sm-3 control-label">Issued Qty</label>
 							<div class="form-group col-sm-2">
 								<input type="text" class="form-control" placeholder="QTY"
-									name="ris_dtl_item_issued" required="required">
+									name="issuance_dtl_item_issued" required="required">
 							</div>
 						</div>
 					</div>
@@ -316,6 +316,7 @@
 						{ "mData": 'issuance_charging' },
 			            {
 			            	'mData': function(data) {
+								console.log(data);
 			            		var model = new RegExp('//model//','g');
 			            		var model_id = new RegExp('/model_id/','g'); 
 			            		var target_modal = new RegExp('//target-modal//','g'); 
@@ -323,11 +324,32 @@
 									.replace(model, 'ris')
 									.replace(target_modal, 'ris')
 									.replace(model_id, data.ris_id);
+								action = $(action).clone();
+			            		var li = $(action).find('a.delete-ris').parent();
+								li.find('a').remove();
+								li = $(action).find('a.edit-ris').parent();
+								li.find('a').remove();
+								action.find('ul.dropdown-menu').append(
+								'<li><a class="print_report-issuance" href="/issuance/report/'+data.issuance_id+
+									'" target="_blank" title="Print from pdf file."'+
+									' onclick="return confirm('+"'"+
+									'Do you want to print a report to a pdf file?'+"'"+
+									')">Print</a></li>');
+								if(!parseInt(data.ris_is_cancelled) &&
+									(!parseInt(data.ris_is_issued) && !parseInt(data.ris_is_cancelled)) &&
+										!parseInt(data.ris_is_issued)
+									) {
+									li.append('<a href="/issuance/cancel/'+data.ris_id+'" class="cancel-ris"'+
+									'onclick="return confirm('+"'"+
+									'Do you really want to cancel Issuance no.'+
+									data.issuance_no+"'"+')">Cancel</a>');
+								}
+								action = action.html();
 			            		return action;
 			            	}
 			            }];
 		
-		ris_dtl_columns = [{ "mData": function(data){
+		ris_dtl_columns = [{ "mData": function(data) {
 				return data.ris_dtl_item_no;
 			}},
 			{ "mData": function(data){
@@ -340,9 +362,11 @@
 			{ "mData": "ris_dtl_item_desc" },
 			{ "mData": "ris_dtl_item_size" },
 			{ "mData": "ris_dtl_item_qty" },
-			{ "mData": function(data) {
-				return (data.ris_dtl_item_issued)?data.ris_dtl_item_issued:"";
-			}},
+			{ "mData": function(data){
+				return (data.issuance_dtl_item_issued)?data.issuance_dtl_item_issued:null;
+				
+				}
+			},
 			{ 
 				'mData': function(data) {
 					var model = new RegExp('//model//','g');
@@ -408,11 +432,13 @@
 				});
 				
 				$.post('/issuance/', {ris_no : ris_number}, function(data){
+					
 					ris = (data.data)?data.data:false;
 					if(!ris.ris_dtl.length) {
 						alert('Requisition Number '+ris_number+' not existing!');
 						input.empty().focus();
 					}
+					
 					if(ris){
 						ris.ris_is_issued = parseInt(ris.ris_is_issued); 
 						ris.ris_is_cancelled = parseInt(ris.ris_is_cancelled); 
@@ -526,11 +552,11 @@
 				current_ris = row_data;
 				current_ris_row = row_position;
 				changeModal({
-					'action':'/ris',
+					'action':'/issuance',
 					'model':'ris',
 					'submit_name': 'view-ris',
 					'pr_button':'Back To List',
-					'modal_label': 'View Purchase Order',
+					'modal_label': 'View Issuance',
 					'run': function(){
 						$('#add-to-purchase').hide();
 						$('.secondary').hide();
@@ -547,7 +573,8 @@
 										return (new Date(o[v]).toLocaleDateString());
 									}									
 									return o[v];
-						}}, function(){
+						}}, function() {
+								console.log(current_ris, '<- current ris');
 								$.each(Object.keys(current_ris), function(i, v){
 									$('#ris-modal-form').find('input[name="'+v+'"]')
 										.attr('disabled', 'disabled');
@@ -558,7 +585,7 @@
 										"sPaginationType" : "two_button",
 										"iDisplayLength" : 3,
 										"sDom" : '<"pad-it"<"pull-right"f>l>tip>',
-										'sAjaxSource': '/ris/',
+										'sAjaxSource': '/issuance/',
 										'sAjaxDataProp': 'data',
 										"bDestroy" : true,
 										"bAutoWidth": false,
@@ -568,12 +595,15 @@
 											"dataType": 'json',
 											"type": "POST",
 											"url": sSource,
-											"data": {ris:current_ris['ris_id']},
+											"data": {issuance_no:current_ris['issuance_no']},
 											"success": fnCallback
 										  } );
 										}
 									});
 						});
+						bVis = ris_dtl_table.fnSettings().aoColumns[7].bVisible;
+						ris_dtl_table.fnSetColumnVis( 7, bVis ? false : true );
+						
 					}
 				});
 			}
