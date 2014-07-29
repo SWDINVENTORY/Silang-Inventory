@@ -1,4 +1,6 @@
 <?php //-->
+include(realpath(__DIR__.'/../../module/report/requisition_and_issue_slip_sheet.php'));
+use Report\RequisitionAndIssueSlip as RequisitionAndIssueSlip;
 /**
  * Default logic to output a page
  */
@@ -50,6 +52,9 @@ class Front_Page_Issuance extends Front_Page {
 		switch ($request) {
 			case 'furnish':
 				$this -> _add();
+				break;
+			case 'report':
+				$this -> _report();
 				break;
 			default :
 				$this -> _issuance();
@@ -211,10 +216,29 @@ class Front_Page_Issuance extends Front_Page {
 
 	protected function _report() {
 		if(isset($this->variables[1])) {
-			$ris_id = $this->variables[1];
-			$ia = $this->Ia()->getIa($ris_id);
-			$ia['detail'] = $this->Ia()->getDetail($ris_id);
-			recieve_data($ia);
+			$issuance_id = $this->variables[1];
+			$issuance = front()->database()
+				->search('issuance')
+				->innerJoinOn('ris', 'issuance_ris_id=ris_id')
+				->filterByIssuanceId($issuance_id)
+				->getRow();
+				
+			if(!empty($issuance)) {
+				$issuance['ris_dtl'] = 
+					front()->database()
+						->search('issuance_dtl')
+						->addFilter('issuance_dtl_issuance_id = %s', $issuance_id)
+						->innerJoinOn('ris_dtl', 'issuance_dtl_ris_dtl_id = ris_dtl_id')
+						->getRows();
+				}
+			//echo '<pre>';
+			//print_r($issuance);exit;
+				
+			$report= new RequisitionAndIssueSlip($issuance);
+			$report->hdr($issuance);
+			$report->table($issuance);
+			$report->ftr($issuance);
+			$report->output();
 			exit;
 		}
 	}
