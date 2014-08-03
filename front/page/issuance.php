@@ -82,7 +82,7 @@ class Front_Page_Issuance extends Front_Page {
 							->insertRow('issuance_dtl', array(
 								'issuance_dtl_issuance_id' => $issuance_id,
 								'issuance_dtl_ris_dtl_id' => $dtl['ris_dtl_id'],
-								'issuance_dtl_item_issued' => $dtl['ris_dtl_item_issued'],
+								'issuance_dtl_item_issued' => $dtl['issuance_dtl_item_issued'],
 								'issuance_dtl_item_remarks' => $dtl['ris_dtl_item_remarks'],
 								'issuance_dtl_item_created' => date('Y-m-d h:i:s', time())
 							));
