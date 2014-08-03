@@ -73,7 +73,7 @@ class Front_Page_Issuance extends Front_Page {
 					$issuance_id = $this->Issuance()->add(array(
 						'issuance_no' => $post['issuance_no'],
 						'issuance_ris_id' => $post['ris_id'],
-						'issuance_charging' => $post['ris_charging'],
+						'issuance_charging' => $post['issuance_charging'],
 						'created' => date('Y-m-d h:i:s', time())
 					));
 					
