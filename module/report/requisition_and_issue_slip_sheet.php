@@ -113,7 +113,7 @@ class RequisitionAndIssueSlip extends Formsheet{
 		
 		//echo '<pre>';
 		//print_r($data);
-	//	exit;
+		//exit;
 	
 		if(isset($data['ris_dtl'])){
 			$y++;
@@ -124,6 +124,7 @@ class RequisitionAndIssueSlip extends Formsheet{
 				$this->centerText(7,$y,$ris_dtl['ris_dtl_item_desc'],12,'');
 				
 				$this->centerText(20,$y,$ris_dtl['ris_dtl_item_qty'],2,'');
+				$this->centerText(22,$y,$ris_dtl['issuance_dtl_item_issued'],2,'');
 				$y++;
 			}
 		}
