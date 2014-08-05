@@ -66,20 +66,21 @@ abstract class Front_Page extends Eden_Class {
 	-------------------------------*/
 	protected function _page() {
 		$this->_head['page'] = $this->_class;
-		//session_destroy();
+		$tpl = front()->path('template');
+		$head = front()->trigger('head')->template($tpl.'/_head.phtml', $this->_head);
 		//if logged out
-		if(!isset($_SESSION['hello'])){
-			$_SESSION['hello'] = 'hi';	
-		}
-				
+		
 		if(isset($_GET['logout'])) {
 			session_destroy();
-			front()->output('logged out');
-			exit;
-			header('Location: /');
-			exit;
+			header('Location: /login');
+			//exit;
 		}
 		
+		if(!isset($_SESSION['user'])) {
+			$this->_template = '/login.phtml';
+			$this->_title = 'SWD-Inventory : Login';
+			$head = '';
+		}
 		//get the messages
 		if(isset($_SESSION['messages']) && is_array($_SESSION['messages'])) {
 			foreach($_SESSION['messages'] as $message) {
@@ -91,12 +92,8 @@ abstract class Front_Page extends Eden_Class {
 		}
 		
 		$this->_body['messages'] = $this->_messages;
-		$tpl = front()->path('template');
-		
-		$head = front()->trigger('head')->template($tpl.'/_head.phtml', $this->_head);
 		$body = front()->trigger('body')->template($tpl.$this->_template, $this->_body);
 		$foot = front()->trigger('foot')->template($tpl.'/_foot.phtml', $this->_foot);
-		
 		//page
 		return front()->template($tpl.'/_page.phtml', array(
 			'meta' 			=> $this->_meta,

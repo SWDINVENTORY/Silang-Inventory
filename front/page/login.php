@@ -13,6 +13,13 @@ class Front_Page_Login extends Front_Page {
 	protected $_errors = null;
 	
 	public function render() {		
+		if(isset($_POST) && !empty($_POST['username']) && !empty($_POST['password'])) {
+			if($_POST['username'] == 'admin' &&  $_POST['password'] == 'password') {
+				$_SESSION['user'] = 'me';
+				header('Location: /');
+				exit;
+			}
+		}
 		return $this->_page();
 	}
 }
