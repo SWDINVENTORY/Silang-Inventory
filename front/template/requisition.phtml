@@ -121,37 +121,37 @@
 									<div class="form-group">
 										<label class="col-sm-4 control-label">Division</label>
 										<div class="col-sm-6">
-											<input type="input" class="form-control" placeholder="Division" name="ris_division">
+											<input type="input" class="form-control" placeholder="Division" name="ris_division" required="required">
 										</div>
 									</div>
 									<div class="form-group">
 										<label class="col-sm-4 control-label">Office</label>
 										<div class="col-sm-6">
-											<input type="input" class="form-control" placeholder="Office" name="ris_office">
+											<input type="input" class="form-control" placeholder="Office" name="ris_office" required="required">
 										</div>
 									</div>
 									<div class="form-group">
 										<label class="col-sm-4 control-label">Requested:</label>
 										<div class="col-sm-6">
-											<input type="input" class="form-control" placeholder="Requestor" name="ris_request">
+											<input type="input" class="form-control" placeholder="Requestor" name="ris_request" required="required">
 										</div>
 									</div>
 									<div class="form-group">
 										<label class="col-sm-4 control-label">Approved:</label>
 										<div class="col-sm-6">
-											<input type="input" class="form-control" placeholder="Approval" name="ris_approval">
+											<input type="input" class="form-control" placeholder="Approval" name="ris_approval" required="required">
 										</div>
 									</div>
 									<div class="form-group">
 										<label class="col-sm-4 control-label">Issued:</label>
 										<div class="col-sm-6">
-											<input type="input" class="form-control" placeholder="Issuance" name="ris_issued">
+											<input type="input" class="form-control" placeholder="Issuance" name="ris_issued" required="required">
 										</div>
 									</div>
 									<div class="form-group">
 										<label class="col-sm-4 control-label">Received:</label>
 										<div class="col-sm-6">
-											<input type="input" class="form-control" placeholder="Receiver" name="ris_received">
+											<input type="input" class="form-control" placeholder="Receiver" name="ris_received" required="required">
 										</div>
 									</div>
 								</div>
@@ -159,25 +159,25 @@
 									<div class="form-group">
 										<label class="col-sm-6 control-label">Responsibility Center Code</label>
 										<div class="col-sm-5">
-											<input type="text" class="form-control" name="ris_rcc" placeholder="RCC">
+											<input type="text" class="form-control" name="ris_rcc" placeholder="RCC" required="required">
 										</div>
 									</div>
 									<div class="form-group">
 										<label class="col-sm-6 control-label">RIS No.</label>
 										<div class="col-sm-5">
-											<input type="text" class="form-control" name="ris_no" placeholder="RIS No.">
+											<input type="text" class="form-control" name="ris_no" placeholder="RIS No." required="required">
 										</div>
 									</div>
 									<div class="form-group">
 										<label class="col-sm-6 control-label">RIS Date</label>
 										<div class="col-sm-5">
-											<input type="text" class="form-control" name="ris_created" placeholder="RIS Date">
+											<input type="text" class="form-control" name="ris_created" placeholder="RIS Date" required="required">
 										</div>
 									</div>
 									<div class="form-group">
 										<label class="col-sm-6 control-label">Purpose</label>
 										<div class="col-sm-5">
-											<input type="text" class="form-control" name="ris_purpose" placeholder="Purpose">
+											<input type="text" class="form-control" name="ris_purpose" placeholder="Purpose" required="required">
 										</div>
 									</div>
 								</div>																
@@ -203,6 +203,7 @@
 										<thead>
 											<tr>
 												<th>Item No</th>
+												<th>Acct No</th>
 												<th>Stock No</th>
 												<th>Unit</th>
 												<th>Description</th>
@@ -245,6 +246,13 @@
 							<div class="form-group col-sm-5">	
 								<input type="text" class="form-control" placeholder="Stock No"
 									name="ris_dtl_item_stock_no">
+							</div>
+						</div>
+						<div class="col-sm-12">
+							<label for="input-name" class="col-sm-3 control-label">Acct No</label>
+							<div class="form-group col-sm-5">	
+								<input type="text" class="form-control" placeholder="Acct No"
+									name="ris_dtl_item_acct_no">
 							</div>
 						</div>
 						<div class="col-sm-12">
@@ -346,6 +354,7 @@
 		ris_dtl_columns = [{ "mData": function(data){
 				return data.ris_dtl_item_no;
 			}},
+			{ "mData": "ris_dtl_item_acct_no" },
 			{ "mData": function(data){
 				if(data.ris_dtl_item_stock_no){
 					return data.ris_dtl_item_stock_no;
@@ -729,6 +738,7 @@
 						if(!item){
 								alert('No Item Match Found!');
 						} else {
+							$('[name="ris_dtl_item_acct_no"]').val(item.item_acct_no);
 							$('[name="ris_dtl_item_desc"]').val(item.item_desc);
 							$('[name="ris_dtl_item_size"]').val(item.item_size);
 							$('[name="ris_dtl_item_unit"]').val(item.item_unit_measure);
