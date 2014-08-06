@@ -27,6 +27,7 @@ class Po extends Abstract_Model {
 	const PO_ALOBS_NO = 'po_alobs_no';
 	const PO_IS_FURNISHED = 'po_is_furnished';
 	const PO_CREATED = 'po_created';
+	const PO_DEPT_ID = 'po_dept_id';
 	
 	const PO_DTL_TABLE = 'po_dtl';
 	
