@@ -122,10 +122,13 @@ class IAReport extends Formsheet{
 		$this->leftText(14,$y+=2.5,$detail['ia_is_partial']?'PARTIAL DELIVERY':'FULL DELIVERY','','b');
 		$this->GRID['font_size']=12;
 		$this->SetTextColor(250,0,0);
-		$this->leftText(14,$y+1.5,isset($detail['detail'][0]['po_dtl_item_type'])?$detail['detail'][0]['po_dtl_item_type']:'','','b');
+		$this->leftText(14,$y+1,isset($detail['detail'][0]['po_dtl_item_type'])?$detail['detail'][0]['po_dtl_item_type']:'','','b');
 		$this->GRID['font_size']=9;
 		$this->SetTextColor(0,0,0);
 		$this->rightText(38,35.60,number_format($total, 2, '.', ','),3,'');
+		$this->GRID['font_size']=10;
+		$this->leftText(14,34,('Account No.:'),'','b');
+		$this->leftText(19,34,$detail['po_account_no'],'','b');
 		return $this;
 	}
 	
@@ -157,11 +160,11 @@ class IAReport extends Formsheet{
 		$this->fitParagraph(26,3.90,'Complete',10);
 		$this->fitParagraph(26,4.90,'Partial (pls. specify quantity) '.$detail['ia_partial_qty'].($detail['ia_partial_qty']>1?' items':' item'),10);
 		//inspectors
-		$this->GRID['font_size']=8;
+		$this->GRID['font_size']=10;
 		$this->drawLine(7.50,'h',array(.40,7.60));
 		$this->drawLine(11.30,'h',array(.40,7.60));
 		$this->drawLine(15,'h',array(.40,7.60));
-		$y = 8.20;
+		$y = 7.25;
 		$x=1;
 		$ay=9;
 		$ax=23;
