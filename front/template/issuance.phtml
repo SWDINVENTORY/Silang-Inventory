@@ -94,7 +94,6 @@
 						<th>RIS No</th>
 						<th>RIS Date</th>
 						<th>Purpose</th>
-						<th>Charging</th>
 						<th>Action</th>
 					</tr>
 				</thead>
@@ -187,12 +186,6 @@
 											<input type="text" class="form-control" name="ris_purpose" placeholder="Purpose">
 										</div>
 									</div>
-									<div class="form-group">
-										<label class="col-sm-6 control-label">Charging</label>
-										<div class="col-sm-5">
-											<input type="text" class="form-control" name="issuance_charging" placeholder="Charging">
-										</div>
-									</div>
 								</div>																
 							</div>
 
@@ -213,6 +206,7 @@
 												<th>Size</th>
 												<th>Qty</th>
 												<th>Issued Qty</th>
+												<th>Charging</th>
 												<th>Action</th>
 											</tr>
 										</thead>
@@ -253,13 +247,6 @@
 							</div>
 						</div>
 						<div class="col-sm-12">
-							<label for="input-name" class="col-sm-3 control-label">Acct No</label>
-							<div class="form-group col-sm-5">	
-								<input type="text" class="form-control" placeholder="Acct No"
-									name="ris_dtl_item_acct_no" disabled="disabled">
-							</div>
-						</div>
-						<div class="col-sm-12">
 							<label for="input-address" class="col-sm-3 control-label">Desc</label>
 							<div class="form-group col-sm-9">
 								<input type="text" class="form-control" placeholder="Description"
@@ -278,6 +265,13 @@
 							<div class="form-group col-sm-2">
 								<input type="text" class="form-control" placeholder="UNIT"
 									name="ris_dtl_item_unit" disabled="disabled">
+							</div>
+						</div>
+						<div class="col-sm-12">
+							<label for="input-name" class="col-sm-3 control-label">Charging</label>
+							<div class="form-group col-sm-5">	
+								<input type="text" class="form-control" placeholder="Charging"
+									name="issuance_dtl_item_charging" >
 							</div>
 						</div>
 						<div class="col-sm-12">
@@ -321,7 +315,6 @@
 			            	return moment(data.ris_created).format('ddd, MMM Do YYYY');
 			            }},
 			            { "mData": "ris_purpose" },
-						{ "mData": 'issuance_charging' },
 			            {
 			            	'mData': function(data) {
 								console.log(data);
@@ -373,11 +366,13 @@
 			{ "mData": "ris_dtl_item_qty" },
 			{ "mData": function(data){
 				return (data.issuance_dtl_item_issued)?data.issuance_dtl_item_issued:null;
-				
 				}
 			},
-			{ 
-				'mData': function(data) {
+			{ "mData": function(data){
+				return (data.issuance_dtl_item_charging)?data.issuance_dtl_item_charging:null;
+				}
+			},
+			{'mData': function(data) {
 					var model = new RegExp('//model//','g');
 					var model_id = new RegExp('/model_id/','g'); 
 					var target_modal = new RegExp('//target-modal//','g'); 
