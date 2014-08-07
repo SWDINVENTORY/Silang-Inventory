@@ -72,10 +72,16 @@ class RequisitionAndIssueSlip extends Formsheet{
 			$this->leftText(26.5,$y++,'','','');
 			
 			$y = 44.7;
-			$this->leftText(4.2,$y,$data['ris_request'],'','b');
-			$this->leftText(11.2,$y,$data['ris_approval'],'','b');
-			$this->leftText(17.2,$y,$data['ris_issued'],'','b');
-			$this->leftText(24.2,$y,$data['ris_received'],'','b');
+			$this->centerText(7.5,$y,$data['ris_request'],'','b');
+			$this->centerText(14,$y,$data['ris_approval'],'','b');
+			$this->centerText(20,$y,$data['ris_issued'],'','b');
+			$this->centerText(27,$y,$data['ris_received'],'','b');
+			
+			$y = 46;
+			$this->centerText(7.2,$y,$data['ris_request_pos'],'','');
+			$this->centerText(14.2,$y,$data['ris_approval_pos'],'','');
+			$this->centerText(20.2,$y,$data['ris_issued_pos'],'','');
+			$this->centerText(27.2,$y,$data['ris_received_pos'],'','');
 									
 			$y = 40;
 			$this->leftText(4.2,$y,$data['ris_purpose'],'','b');

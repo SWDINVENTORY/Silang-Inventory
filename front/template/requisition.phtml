@@ -121,37 +121,140 @@
 									<div class="form-group">
 										<label class="col-sm-4 control-label">Division</label>
 										<div class="col-sm-6">
-											<input type="input" class="form-control" placeholder="Division" name="ris_division" required="required">
+											<input type="hidden" class="form-control" placeholder="Division" name="ris_division" required="required">
+											<select name="ris_division" class="form-control">
+												<option value="">Select Division</option>
+												<option value="Office of the BOD">Office of the BOD</option>
+												<option value="Office of the GM">Office of the GM</option>
+												<option value="Administrative">Administrative</option>
+												<option value="Human Resource">Human Resource</option>
+												<option value="General Service">General Service</option>
+												<option value="Accouting">Accouting</option>
+												<option value="Budget">Budget</option>
+												<option value="Water System Maintenance">Water System Maintenance</option>
+												<option value="Production">Production</option>
+												<option value="Planning and Design">Planning and Design</option>
+												<option value="Costumer Account">Costumer Account</option>
+												<option value="Costumer Service">Costumer Service</option>
+											  </select>
 										</div>
 									</div>
 									<div class="form-group">
 										<label class="col-sm-4 control-label">Office</label>
 										<div class="col-sm-6">
-											<input type="input" class="form-control" placeholder="Office" name="ris_office" required="required">
+											<input type="hidden" class="form-control" placeholder="Office" name="ris_office" required="required">
+											<select name="ris_office" class="form-control">
+												<option value="">Select Office</option>
+												<option value="SWD Main">SWD Main</option>
+												<option value="SWD Annex">SWD Annex</option>
+												<option value="SWD Bulihan Unit Office">SWD Bulihan Unit Office</option>
+												<option value="SWDLUMIL">SWD Lumil Unit Office</option>
+												<option value="SWD Lumil Unit Office">SWD Warehouse</option>
+											</select>
 										</div>
 									</div>
 									<div class="form-group">
 										<label class="col-sm-4 control-label">Requested:</label>
-										<div class="col-sm-6">
-											<input type="input" class="form-control" placeholder="Requestor" name="ris_request" required="required">
+										<div class="col-sm-7">
+											<input type="hidden" class="form-control" placeholder="Requestor" name="ris_request" required="required">
+											<div class="col-sm-10">
+											<select class="form-control" name="ris_request">
+												<option value="">Official</option>
+												<?php if(!empty($depts)):?>
+												<?php foreach($depts as $dept):?>
+												<option value="<?php echo $dept['dept_staff']; ?>"><?php echo $dept['dept_staff']; ?></option>
+												<?php endforeach;?>
+												<?php endif;?>
+											</select>
+											</div>
+											<div class="col-sm-10">
+											<select class="form-control" name="ris_request_pos">
+												<option value="">Position</option>
+												<?php if(!empty($depts)):?>
+												<?php foreach($depts as $dept):?>
+												<option value="<?php echo $dept['dept_staff_pos']; ?>"><?php echo $dept['dept_staff_pos']; ?></option>
+												<?php endforeach;?>
+												<?php endif;?>
+											</select>
+											</div>
 										</div>
 									</div>
 									<div class="form-group">
 										<label class="col-sm-4 control-label">Approved:</label>
-										<div class="col-sm-6">
-											<input type="input" class="form-control" placeholder="Approval" name="ris_approval" required="required">
+										<div class="col-sm-7">
+											<input type="hidden" class="form-control" placeholder="Approval" name="ris_approval" required="required">
+											<div class="col-sm-10">
+											<select class="form-control" name="ris_approval">
+												<option value="">Official</option>
+												<?php if(!empty($depts)):?>
+												<?php foreach($depts as $dept):?>
+												<option value="<?php echo $dept['dept_staff']; ?>"><?php echo $dept['dept_staff']; ?></option>
+												<?php endforeach;?>
+												<?php endif;?>
+											</select>
+											</div>
+											<div class="col-sm-10">
+											<select class="form-control" name="ris_approval_pos">
+												<option value="">Position</option>
+												<?php if(!empty($depts)):?>
+												<?php foreach($depts as $dept):?>
+												<option value="<?php echo $dept['dept_staff_pos']; ?>"><?php echo $dept['dept_staff_pos']; ?></option>
+												<?php endforeach;?>
+												<?php endif;?>
+											</select>
+											</div>
 										</div>
 									</div>
 									<div class="form-group">
 										<label class="col-sm-4 control-label">Issued:</label>
-										<div class="col-sm-6">
-											<input type="input" class="form-control" placeholder="Issuance" name="ris_issued" required="required">
+										<div class="col-sm-7">
+											<input type="hidden" class="form-control" placeholder="Issuance" name="ris_issued" required="required">
+											<div class="col-sm-10">
+											<select class="form-control" name="ris_issued">
+												<option value="">Official</option>
+												<?php if(!empty($depts)):?>
+												<?php foreach($depts as $dept):?>
+												<option value="<?php echo $dept['dept_staff']; ?>"><?php echo $dept['dept_staff']; ?></option>
+												<?php endforeach;?>
+												<?php endif;?>
+											</select>
+											</div>
+											<div class="col-sm-10">
+											<select class="form-control" name="ris_issued_pos">
+												<option value="">Position</option>
+												<?php if(!empty($depts)):?>
+												<?php foreach($depts as $dept):?>
+												<option value="<?php echo $dept['dept_staff_pos']; ?>"><?php echo $dept['dept_staff_pos']; ?></option>
+												<?php endforeach;?>
+												<?php endif;?>
+											</select>
+											</div>
 										</div>
 									</div>
 									<div class="form-group">
 										<label class="col-sm-4 control-label">Received:</label>
-										<div class="col-sm-6">
-											<input type="input" class="form-control" placeholder="Receiver" name="ris_received" required="required">
+										<div class="col-sm-7">
+											<input type="hidden" class="form-control" placeholder="Receiver" name="ris_received" required="required">
+											<div class="col-sm-10">
+											<select class="form-control" name="ris_received">
+												<option value="">Official</option>
+												<?php if(!empty($depts)):?>
+												<?php foreach($depts as $dept):?>
+												<option value="<?php echo $dept['dept_staff']; ?>"><?php echo $dept['dept_staff']; ?></option>
+												<?php endforeach;?>
+												<?php endif;?>
+											</select>
+											</div>
+											<div class="col-sm-10">
+											<select class="form-control" name="ris_received_pos">
+												<option value="">Position</option>
+												<?php if(!empty($depts)):?>
+												<?php foreach($depts as $dept):?>
+												<option value="<?php echo $dept['dept_staff_pos']; ?>"><?php echo $dept['dept_staff_pos']; ?></option>
+												<?php endforeach;?>
+												<?php endif;?>
+											</select>
+											</div>
 										</div>
 									</div>
 								</div>

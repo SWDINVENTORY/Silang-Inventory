@@ -23,6 +23,7 @@ class Front_Page_Requisition extends Front_Page {
 		$this -> request = front()->registry()->get('request', 'variables', '0');
 		$this -> variables = front() -> registry() -> get('request', 'variables') -> getArray();
 		$this -> get = front() -> registry() -> get('get') -> getArray();
+		$this->dept = $this->Dept()-> getAll();
 		
 		if (isset($this -> post)) {
 			$this -> _setErrors();
@@ -33,7 +34,7 @@ class Front_Page_Requisition extends Front_Page {
 				//-> post processing
 			}
 		}
-		
+		$this -> _body['depts'] = $this->dept;
 		$this -> _body['error'] = $this -> _errors;
 		return $this->_page();
 	}

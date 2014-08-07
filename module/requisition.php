@@ -12,6 +12,11 @@ class Requisition extends Abstract_Model {
 	const REQUISITION_APPROVED = 'ris_approval';
 	const REQUISITION_ISSUED = 'ris_issued';
 	const REQUISITION_RECEIVED = 'ris_received';
+	const REQUISITION_REQUEST_POS = 'ris_request_pos';
+	const REQUISITION_APPROVED_POS = 'ris_approval_pos';
+	const REQUISITION_ISSUED_POS = 'ris_issued_pos';
+	const REQUISITION_RECEIVED_POS = 'ris_received_pos';
+	
 	
 	const REQUISITION_ID = 'ris_id';
 	
