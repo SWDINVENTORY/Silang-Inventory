@@ -161,14 +161,16 @@ class IAReport extends Formsheet{
 		$this->fitParagraph(26,4.90,'Partial (pls. specify quantity) '.$detail['ia_partial_qty'].($detail['ia_partial_qty']>1?' items':' item'),10);
 		//inspectors
 		$this->GRID['font_size']=10;
-		$this->drawLine(7.50,'h',array(.40,7.60));
-		$this->drawLine(11.30,'h',array(.40,7.60));
-		$this->drawLine(15,'h',array(.40,7.60));
+		$this->drawLine(7.50,'h',array(1,7.60));
+		$this->drawLine(11.30,'h',array(1,7.60));
+		$this->drawLine(15,'h',array(1,7.60));
 		$y = 7.25;
 		$x=1;
 		$ay=9;
 		$ax=23;
-		foreach($detail['signatories'] as $sig){
+
+		
+		/*		foreach($detail['signatories'] as $sig){
 			if($sig['type']=='inspectors'){
 				$this->centerText($x,$y,$sig['name'],6,'');
 				$y+=3.8;
@@ -187,14 +189,20 @@ class IAReport extends Formsheet{
 					$ax = 23;
 				}
 			}
-		}
+		} */
 		//echo "<pre>";print_r($detail);exit();
+		$this->centerText(4.7,7.3,$detail['ia_insp1'],'','');
 		//$this->leftText(1,8.20,'EDGARDO F. AMBULO','','');
+		$this->centerText(4.7,11.1,$detail['ia_insp3'],'','');
 		//$this->leftText(1,12,'ANASTACIO CALDERON','','');
+		$this->centerText(4.7,14.9,$detail['ia_insp5'],'','');
 		//$this->leftText(1,15.20,'MA. ANGELES SUMAGUI','','');
 		
+		$this->centerText(15,7.2,$detail['ia_insp2'],'','');
 		//$this->leftText(12,8.20,'MARIO ATIENZA','','');
+		$this->leftText(11.2,11.1,$detail['ia_insp4'],'','');
 		//$this->leftText(12,12,'DENNIS B. ANARNA','','');
+		$this->centerText(15,14.9,$detail['ia_insp6'],'','');
 		//$this->leftText(11.70,15.20,'REQUESTING DIVISION','','');
 		$this->drawLine(7.50,'h',array(11,7.60));
 		$this->drawLine(11.30,'h',array(11,7.60));
@@ -202,17 +210,30 @@ class IAReport extends Formsheet{
 		
 		//ACCEPTANCE
 		$this->drawLine(8.30,'h',array(22,7.60));
-		$this->drawLine(12,'h',array(22,8.10));
+		$this->drawLine(14,'h',array(22,8.10));
+		$this->centerText(26,8.1,$detail['ia_accp1'],'','b');
+		$this->centerText(26,9.2,$detail['ia_accp1_pos'],'','');
+		
+		$this->centerText(36.5,8.1,$detail['ia_accp2'],'','b');
+		$this->centerText(36.5,9.2,$detail['ia_accp2_pos'],'','');
 		//$this->leftText(23,9,'NOMER LEGASPI','','');
-		$this->leftText(22,10.80,'Checked by:','','');
-		$this->leftText(32,10.80,'Noted by:','','');
+		$this->leftText(22,12,'Checked by:','','');
+		$this->leftText(32,12,'Noted by:','','');
 		//$this->leftText(23,13,'ARIEL MADLANGSAKAY','','');
 		//$this->leftText(23.10,14,'Acting Supply Officer - A','','');
 		
-		$this->drawLine(12,'h',array(32.50,8.20));
+		$this->drawLine(14,'h',array(32.50,8.20));
+		$this->centerText(36.5,13.7,$detail['ia_noted'],'','b');
+		$this->GRID['font_size']=9;
+		$this->centerText(36.5,14.9,$detail['ia_noted_pos'],'','');
+		
+		$this->GRID['font_size']=10;
+		$this->centerText(26,13.7,$detail['ia_checked'],'','b');
+		$this->GRID['font_size']=9;
+		$this->centerText(26,14.9,$detail['ia_checked_pos'],'','');
 		//$this->leftText(33,13,'MARY GRACE E. BAYBAY','','');
 		//$this->leftText(33.10,14,'Division Manager C - GSD','','');
-		
+		$this->GRID['font_size']=10;
 		$this->drawLine(8.30,'h',array(32.5,8.10));
 		//$this->leftText(33,9,'VICTORINA ZAMORA, JR.','','');
 		return $this;

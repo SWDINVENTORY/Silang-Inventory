@@ -230,10 +230,72 @@
 					<div class="col-lg-12">
 						<div class="col-lg-6">
 							<h4 align="center">INSPECTORS</h4>
+				
+									<div class="col-sm-5">
+										<select class="form-control" name="ia_insp1">
+											<option value="">Inspector 1</option>
+											<?php if(!empty($depts)):?>
+											<?php foreach($depts as $dept):?>
+											<option value="<?php echo $dept['dept_staff']; ?>"><?php echo $dept['dept_staff']; ?></option>
+											<?php endforeach;?>
+											<?php endif;?>
+										</select>
+									</div>
+									<div class="col-sm-5">
+										<select class="form-control" name="ia_insp2">
+											<option value="">Inspector 2</option>
+											<?php if(!empty($depts)):?>
+											<?php foreach($depts as $dept):?>
+											<option value="<?php echo $dept['dept_staff']; ?>"><?php echo $dept['dept_staff']; ?></option>
+											<?php endforeach;?>
+											<?php endif;?>
+										</select>
+									</div>
+									<div class="col-sm-5">
+										<select class="form-control" name="ia_insp3">
+											<option value="">Inspector 3</option>
+											<?php if(!empty($depts)):?>
+											<?php foreach($depts as $dept):?>
+											<option value="<?php echo $dept['dept_staff']; ?>"><?php echo $dept['dept_staff']; ?></option>
+											<?php endforeach;?>
+											<?php endif;?>
+										</select>
+									</div>
+									<div class="col-sm-5">
+										<select class="form-control" name="ia_insp4">
+											<option value="">Inspector 4</option>
+											<?php if(!empty($depts)):?>
+											<?php foreach($depts as $dept):?>
+											<option value="<?php echo $dept['dept_staff']; ?>"><?php echo $dept['dept_staff']; ?></option>
+											<?php endforeach;?>
+											<?php endif;?>
+										</select>
+									</div>
+									<div class="col-sm-5">
+										<select class="form-control" name="ia_insp5">
+											<option value="">Inspector 5</option>
+											<?php if(!empty($depts)):?>
+											<?php foreach($depts as $dept):?>
+											<option value="<?php echo $dept['dept_staff']; ?>"><?php echo $dept['dept_staff']; ?></option>
+											<?php endforeach;?>
+											<?php endif;?>
+										</select>
+									</div>
+									<div class="col-sm-5">
+										<select class="form-control" name="ia_insp6">
+											<option value="">Inspector 6</option>
+											<?php if(!empty($depts)):?>
+											<?php foreach($depts as $dept):?>
+											<option value="<?php echo $dept['dept_staff']; ?>"><?php echo $dept['dept_staff']; ?></option>
+											<?php endforeach;?>
+											<?php endif;?>
+										</select>
+									</div>
+								
 							<div class="form-horizontal row inspectors">
 								<div class="col-md-12 row">
 									<div class="col-md-5">
-										<input type="input" class="form-control" placeholder="Name" order='1' vname="inspectors_name" >
+										<input type="hidden" class="form-control" placeholder="Name" order='1' vname="inspectors_name" >
 									</div>
 									<div class="col-md-5">
 										<input type="hidden" class="form-control" placeholder="Position" order='1' vname="inspectors_position">
@@ -241,7 +303,7 @@
 								</div>
 								<div class="col-md-12 row">
 									<div class="col-md-5">
-										<input type="input" class="form-control" placeholder="Name" order='2' vname="inspectors_name" >
+										<input type="hidden" class="form-control" placeholder="Name" order='2' vname="inspectors_name" >
 									</div>
 									<div class="col-md-5">
 										<input type="hidden" class="form-control" placeholder="Position" order='2' vname="inspectors_position">
@@ -249,7 +311,7 @@
 								</div>
 								<div class="col-md-12 row">
 									<div class="col-md-5">
-										<input type="input" class="form-control" placeholder="Name" order='3' vname="inspectors_name" >
+										<input type="hidden" class="form-control" placeholder="Name" order='3' vname="inspectors_name" >
 									</div>
 									<div class="col-md-5">
 										<input type="hidden" class="form-control" placeholder="Position" order='3' vname="inspectors_position">
@@ -257,7 +319,7 @@
 								</div>
 								<div class="col-md-12 row">
 									<div class="col-md-5">
-										<input type="input" class="form-control" placeholder="Name" order='4' vname="inspectors_name" >
+										<input type="hidden" class="form-control" placeholder="Name" order='4' vname="inspectors_name" >
 									</div>
 									<div class="col-md-5">
 										<input type="hidden" class="form-control" placeholder="Position" order='4' vname="inspectors_position">
@@ -265,7 +327,7 @@
 								</div>
 								<div class="col-md-12 row">
 									<div class="col-md-5">
-										<input type="input" class="form-control" placeholder="Name" order='5' vname="inspectors_name" >
+										<input type="hidden" class="form-control" placeholder="Name" order='5' vname="inspectors_name" >
 									</div>
 									<div class="col-md-5">
 										<input type="hidden" class="form-control" placeholder="Position" order='5' vname="inspectors_position">
@@ -273,7 +335,7 @@
 								</div>
 								<div class="col-md-12 row">
 									<div class="col-md-5">
-										<input type="input" class="form-control" placeholder="Name" order='6' vname="inspectors_name" >
+										<input type="hidden" class="form-control" placeholder="Name" order='6' vname="inspectors_name" >
 									</div>
 									<div class="col-md-5">
 										<input type="hidden" class="form-control" placeholder="Position" order='6' vname="inspectors_position">
@@ -283,37 +345,119 @@
 						</div>
 						<div class="col-lg-6">
 							<h4 align="center">ACCEPTEE</h4>
+							
+									<div class="col-sm-5">
+										<select class="form-control" name="ia_accp1">
+											<option value="">Acceptee 1</option>
+											<?php if(!empty($depts)):?>
+											<?php foreach($depts as $dept):?>
+											<option value="<?php echo $dept['dept_staff']; ?>"><?php echo $dept['dept_staff']; ?></option>
+											<?php endforeach;?>
+											<?php endif;?>
+										</select>
+									</div>
+									<div class="col-sm-5">
+										<select class="form-control" name="ia_accp1_pos">
+											<option value="">Position</option>
+											<?php if(!empty($depts)):?>
+											<?php foreach($depts as $dept):?>
+											<option value="<?php echo $dept['dept_staff_pos']; ?>"><?php echo $dept['dept_staff_pos']; ?></option>
+											<?php endforeach;?>
+											<?php endif;?>
+										</select>
+									</div>
+									<div class="col-sm-5">
+										<select class="form-control" name="ia_accp2">
+											<option value="">Acceptee 2</option>
+											<?php if(!empty($depts)):?>
+											<?php foreach($depts as $dept):?>
+											<option value="<?php echo $dept['dept_staff']; ?>"><?php echo $dept['dept_staff']; ?></option>
+											<?php endforeach;?>
+											<?php endif;?>
+										</select>
+									</div>
+									<div class="col-sm-5">
+										<select class="form-control" name="ia_accp2_pos">
+											<option value="">Position</option>
+											<?php if(!empty($depts)):?>
+											<?php foreach($depts as $dept):?>
+											<option value="<?php echo $dept['dept_staff_pos']; ?>"><?php echo $dept['dept_staff_pos']; ?></option>
+											<?php endforeach;?>
+											<?php endif;?>
+										</select>
+									</div>
+									<div class="col-sm-5">
+										<select class="form-control" name="ia_checked">
+											<option value="">Checked By:</option>
+											<?php if(!empty($depts)):?>
+											<?php foreach($depts as $dept):?>
+											<option value="<?php echo $dept['dept_staff']; ?>"><?php echo $dept['dept_staff']; ?></option>
+											<?php endforeach;?>
+											<?php endif;?>
+										</select>
+									</div>
+									<div class="col-sm-5">
+										<select class="form-control" name="ia_checked_pos">
+											<option value="">Position</option>
+											<?php if(!empty($depts)):?>
+											<?php foreach($depts as $dept):?>
+											<option value="<?php echo $dept['dept_staff_pos']; ?>"><?php echo $dept['dept_staff_pos']; ?></option>
+											<?php endforeach;?>
+											<?php endif;?>
+										</select>
+									</div>
+									<div class="col-sm-5">
+										<select class="form-control" name="ia_noted">
+											<option value="">Noted By:</option>
+											<?php if(!empty($depts)):?>
+											<?php foreach($depts as $dept):?>
+											<option value="<?php echo $dept['dept_staff']; ?>"><?php echo $dept['dept_staff']; ?></option>
+											<?php endforeach;?>
+											<?php endif;?>
+										</select>
+									</div>
+									<div class="col-sm-5">
+										<select class="form-control" name="ia_noted_pos">
+											<option value="">Position</option>
+											<?php if(!empty($depts)):?>
+											<?php foreach($depts as $dept):?>
+											<option value="<?php echo $dept['dept_staff_pos']; ?>"><?php echo $dept['dept_staff_pos']; ?></option>
+											<?php endforeach;?>
+											<?php endif;?>
+										</select>
+									</div>
+									
 							<div class="form-horizontal row acceptee">
 								<div class="col-md-12 row">
 									<div class="col-md-5">
-										<input type="input" class="form-control" placeholder="Name" order='1' vname="acceptee_name">
+										<input type="hidden" class="form-control" placeholder="Name" order='1' vname="acceptee_name">
 									</div>
 									<div class="col-md-5">
-										<input type="input" class="form-control" placeholder="Position" order='1' vname="acceptee_position" >
-									</div>
-								</div>
-								<div class="col-md-12 row">
-									<div class="col-md-5">
-										<input type="input" class="form-control" placeholder="Name" order='2' vname="acceptee_name">
-									</div>
-									<div class="col-md-5">
-										<input type="input" class="form-control" placeholder="Position" order='2' vname="acceptee_position" >
+										<input type="hidden" class="form-control" placeholder="Position" order='1' vname="acceptee_position" >
 									</div>
 								</div>
 								<div class="col-md-12 row">
 									<div class="col-md-5">
-										<input type="input" class="form-control" placeholder="Name" order='3' vname="acceptee_name">
+										<input type="hidden" class="form-control" placeholder="Name" order='2' vname="acceptee_name">
 									</div>
 									<div class="col-md-5">
-										<input type="input" class="form-control" placeholder="Position" order='3' vname="acceptee_position" >
+										<input type="hidden" class="form-control" placeholder="Position" order='2' vname="acceptee_position" >
 									</div>
 								</div>
 								<div class="col-md-12 row">
 									<div class="col-md-5">
-										<input type="input" class="form-control" placeholder="Name" order='4' vname="acceptee_name">
+										<input type="hidden" class="form-control" placeholder="Name" order='3' vname="acceptee_name">
 									</div>
 									<div class="col-md-5">
-										<input type="input" class="form-control" placeholder="Position" order='4' vname="acceptee_position" >
+										<input type="hidden" class="form-control" placeholder="Position" order='3' vname="acceptee_position" >
+									</div>
+								</div>
+								<div class="col-md-12 row">
+									<div class="col-md-5">
+										<input type="hidden" class="form-control" placeholder="Name" order='4' vname="acceptee_name">
+									</div>
+									<div class="col-md-5">
+										<input type="hidden" class="form-control" placeholder="Position" order='4' vname="acceptee_position" >
 									</div>
 								</div>
 							</div>
