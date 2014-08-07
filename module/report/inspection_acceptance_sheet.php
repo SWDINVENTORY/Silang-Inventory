@@ -38,12 +38,12 @@ class IAReport extends Formsheet{
 		$this->centerText(0,$y++,'Agency',42,'i');
 		$y +=3;
 		$this->drawLine(6.80,'h',array(0,42));
-		$this->leftText(2,8,'Supplier:','','i');
-		$this->leftText(6,7.9,$hdr['supplier_name'],'','i');
-		$this->drawLine(8.10,'h',array(5,15));
-		$this->leftText(28,8,'LAR No.:','','i');
-		$this->leftText(32,7.9,$hdr['ia_no'],'','i');
-		$this->drawLine(8.10,'h',array(31,10));
+		$this->leftText(2,9,'Supplier:','','i');
+		$this->leftText(6,8.9,$hdr['supplier_name'],'','i');
+		$this->drawLine(9.10,'h',array(5,15));
+		$this->leftText(28,9,'IAR No.:','','i');
+		$this->leftText(32,8.9,$hdr['ia_no'],'','i');
+		$this->drawLine(9.10,'h',array(31,10));
 		$this->leftText(2,11,'PO No.:','','i');
 		$this->centerText(7,10.9,$hdr['po_no'],'','i');
 		$this->drawLine(11.10,'h',array(5,4));
@@ -144,8 +144,9 @@ class IAReport extends Formsheet{
 		$this->section($metrics);
 		$this->GRID['font_size']=10;	
 		$this->leftText(1,2,'Date Inspected: '.date('M d, Y',strtotime($detail['ia_date_inspected'])),'','i');
+		$this->drawLine(2.1,'h',array(6,6));
 		$this->leftText(22,2,'Date Received: '.date('M d, Y',strtotime($detail['ia_date_inspected'])),'','i');
-		
+		$this->drawLine(2.1,'h',array(27,6));
 		
 		$this->GRID['font_size']=12;
 		$this->leftText(24.25,3.8,!$detail['ia_is_partial']?'x':'',1,'');
@@ -203,6 +204,7 @@ class IAReport extends Formsheet{
 		$this->leftText(11.2,11.1,$detail['ia_insp4'],'','');
 		//$this->leftText(12,12,'DENNIS B. ANARNA','','');
 		$this->centerText(15,14.9,$detail['ia_insp6'],'','');
+		$this->centerText(15,15.8,'END-USER','','');
 		//$this->leftText(11.70,15.20,'REQUESTING DIVISION','','');
 		$this->drawLine(7.50,'h',array(11,7.60));
 		$this->drawLine(11.30,'h',array(11,7.60));
