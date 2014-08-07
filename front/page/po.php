@@ -24,6 +24,8 @@ class Front_Page_Po extends Front_Page {
 		$this->request = front()->registry()->get('request', 'variables','0');
 		$this->variables = front()->registry()->get('request', 'variables')->getArray();
 		$this->get = front()->registry()->get('get')->getArray();
+		$this->dept = $this->Dept()-> getAll();
+		$this->staff = $this->Staff()-> getAll();
 		$article = $this->Article()-> getAll();
 		
 		if(isset($this->post)) {
@@ -33,7 +35,8 @@ class Front_Page_Po extends Front_Page {
 				$this->_process(); //-> post processing
 			}
 		}
-		
+		$this -> _body['depts'] = $this->dept;
+		$this -> _body['staffs'] = $this->staff;
 		$this->_body['articles'] = $article;
 		$this->_body['error'] = $this->_errors;
 

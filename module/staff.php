@@ -1,5 +1,4 @@
 <?php
-
 class Staff extends Abstract_Model {
 	/* Constants
 	-------------------------------*/
@@ -53,18 +52,13 @@ class Staff extends Abstract_Model {
 	}
 
 	public function getAll() {
-		return $this->_getAll(
-				array(
-				Staff::STAFF_ID,
-				Staff::STAFF_NAME,
-				Staff::STAFF_POSITION,
-				Staff::STAFF_ID_NO,
+		return $this->_getAll('*')
 			->sortByStaffCreated('ASC')
 			->getRows();
 	}
 	
 	public function model($value = NULL, $key = 'user_id') {
-		$model = $this->Supplier_Model()->setDatabase($this->_database);
+		$model = $this->Staff_Model()->setDatabase($this->_database);
 		
 		if(!is_null($value)) {
 			

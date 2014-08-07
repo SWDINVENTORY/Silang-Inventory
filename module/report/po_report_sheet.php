@@ -3,7 +3,7 @@ namespace Report;
 
 class POReport extends Formsheet{
 	protected static $_width = 8.5;
-	protected static $_height = 13;
+	protected static $_height = 11;
 	protected static $_unit = 'in';
 	protected static $_orient = 'P';
 	protected static $_available_line = 41;	
@@ -25,7 +25,7 @@ class POReport extends Formsheet{
 			'rows'=> 10,	
 		);
 		$this->section($metrics);
-		$this->GRID['font_size']=12;	
+		$this->GRID['font_size']=14;	
 
 		$y=3;
 		$this->drawLine($y,'h');
@@ -204,9 +204,9 @@ class POReport extends Formsheet{
 	function table($datas){
 		$metrics = array(
 			'base_x'=> 0.25,
-			'base_y'=> 2.3,
+			'base_y'=> 2.275,
 			'width'=> 8,
-			'height'=> 7.5,
+			'height'=> 6,
 			'cols'=> 40,
 			'rows'=> 45,	
 		);
@@ -240,7 +240,7 @@ class POReport extends Formsheet{
 			$total_amount +=($detail['po_dtl_item_qty']*$detail['po_dtl_item_cost']);
 			$y++;
 		}
-		$this->leftText(14,41,$datas['po_purpose'],'','b');
+		$this->leftText(14,40.5,$datas['po_purpose'],'','b');
 		//$this->leftText(14,41,$datas['ia_is_partial']?'PARTIAL DELIVERY':'FULL DELIVERY','','b');
 		$this->GRID['font_size']=12;
 		$this->SetTextColor(250,0,0);
@@ -248,6 +248,11 @@ class POReport extends Formsheet{
 		$this->GRID['font_size']=9;
 		$this->SetTextColor(0,0,0);
 		
+		$this->GRID['font_size']=10;
+		$this->leftText(14,43,('Account No.:'),'','b');
+		$this->leftText(18.5,43,$datas['po_account_no'],'','b');
+		
+		$this->GRID['font_size']=9;
 		$this->drawLine(43.5,'h');
 		$amount_in_words = $this->convert_number_to_words($total_amount);
 		$this->leftText(0.2,44.5,'(Total Amount in Words)             '.strtoupper($amount_in_words).' PESOS','','');
@@ -261,9 +266,9 @@ class POReport extends Formsheet{
 	function ftr($datas,$total_amount){
 		$metrics = array(
 			'base_x'=> 0.25,
-			'base_y'=> 9.85,
+			'base_y'=> 8.3,
 			'width'=> 8,
-			'height'=> 3,
+			'height'=> 2.45,
 			'cols'=> 39,
 			'rows'=> 15,	
 		);
@@ -275,16 +280,17 @@ class POReport extends Formsheet{
 		$this->leftText(1,$y++,'everyday of delay shall be imposed.','','');
 		
 		$this->centerText(24,$y++,'Very truly yours,',12,'');
-		$this->centerText(24,$y,$datas['po_auth_off'],12,'b');
+		
 		$y+=0.75;
-		//$this->centerText(24,$y,'General Manager',12,'b');
+		$this->centerText(24,$y++,$datas['po_auth_off'],12,'b');
+		$this->centerText(24,$y,'General Manager',12,'b');
 		//echo "<pre>";print_r($datas);exit();
 		$this->drawLine($y+0.2,'h',array(24,12));
-		$y+=0.75;
+		$y+=0.9;
 		$this->centerText(24,$y++,'(Authorized Official)',12,'');
 		
-		$this->leftText(1,$y,'Conforme:','','');
-		$y+=1.25;
+		$this->leftText(1,$y-1.5,'Conforme:','','');
+		$y+=0.25;
 		$this->drawLine($y,'h',array(1,15));
 		$y+=0.75;
 		$this->centerText(1,$y-1,$datas['po_conforme'],15,'');

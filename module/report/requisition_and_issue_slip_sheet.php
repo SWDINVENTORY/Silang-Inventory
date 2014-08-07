@@ -27,59 +27,68 @@ class RequisitionAndIssueSlip extends Formsheet{
 			'rows'=> 7,	
 		);
 		$this->section($metrics);
-		$this->GRID['font_size']=10;	
+		$this->GRID['font_size']=12;	
 		$this->drawBox(0,0,30,7);
 
 		$y=1;
 		$this->centerText(0,$y++,'REQUISITION AND ISSUE SLIP',30,'b');
 		$y+=0.75;
 		
-		$this->GRID['font_size']=8;	
+		$this->GRID['font_size']=10;	
 		$this->centerText(0,$y,'SILANG WATER DISTRICT',30,'b');
 		$y+=0.75;
 		$this->centerText(0,$y,'(Agency)',30,'');
-		$y+=1.25;
+		$y+=1.5;
 		
+		$this->GRID['font_size']=8.5;
 		$this->drawLine(4,'h');
 		$this->drawLine(8,'v',array(4,3));
 		$this->drawLine(18,'v',array(4,3));
 		
 		$this->drawLine($y+0.1,'h',array(2.5,5.5));
-		$this->leftText(0.2,$y,'Division','','');
+		$this->leftText(0.2,$y,'Division:','','');
 		$this->leftText(8.2,$y,'Responsibility Center','','');
 		$this->drawLine($y+0.1,'h',array(20.25,4));
 		$this->leftText(18.2,$y,'RIS No.','','');
 		$this->drawLine($y+0.1,'h',array(26.5,3));
 		$this->leftText(25,$y++,'Date','','');
 		$this->drawLine($y+0.1,'h',array(2.5,5.5));
-		$this->leftText(0.2,$y,'Code  ','','');
-		$this->leftText(8.2,$y,'Office','','');
+		$this->leftText(8.2,$y,'Code  ','','');
+		$this->leftText(0.2,$y,'Office:','','');
 		$this->drawLine($y+0.1,'h',array(20.25,4));
 		$this->leftText(18.2,$y,'SAI No.','','');
 		$this->drawLine($y+0.1,'h',array(26.5,3));
 		$this->leftText(25,$y,'Date','','');
 		
 		if($data){
-			$y = 4.75;
-			$this->leftText(2.75,$y,$data['ris_division'],'','');
-			$this->leftText(13.75,$y,$data['ris_rcc'],'','');
+			$y = 5;
+			$this->GRID['font_size']=7;
+			$this->leftText(2.65,$y,$data['ris_division'],'','');
+			$this->leftText(2.65,$y+1,$data['ris_office'],'','');
+			$this->GRID['font_size']=8.5;
+			$this->leftText(14,$y,$data['ris_rcc'],'','');
 			$this->leftText(20.25,$y,$data['ris_no'],'','');
 			$this->leftText(26.5,$y++,date('M d,Y',strtotime($data['ris_created'])),'','');
 			$this->leftText(2.75,$y,'','','');
-			$this->leftText(10.5,$y,$data['ris_office'],'','');
 			$this->leftText(20.25,$y,'','','');
 			$this->leftText(26.5,$y++,'','','');
 			
 			$y = 44.7;
-			$this->leftText(4.2,$y,$data['ris_request'],'','b');
-			$this->leftText(11.2,$y,$data['ris_approval'],'','b');
-			$this->leftText(17.2,$y,$data['ris_issued'],'','b');
-			$this->leftText(24.2,$y,$data['ris_received'],'','b');
+			$this->GRID['font_size']=7.5;
+			$this->centerText(7.5,$y,$data['ris_request'],'','b');
+			$this->centerText(14,$y,$data['ris_approval'],'','b');
+			$this->centerText(20.5,$y,$data['ris_issued'],'','b');
+			$this->centerText(27,$y,$data['ris_received'],'','b');
+			
+			$y = 46;
+			$this->GRID['font_size']=8.5;
+			$this->centerText(7.2,$y,$data['ris_request_pos'],'','');
+			$this->centerText(14.2,$y,$data['ris_approval_pos'],'','');
+			$this->centerText(20.2,$y,$data['ris_issued_pos'],'','');
+			$this->centerText(27.2,$y,$data['ris_received_pos'],'','');
 									
-			$y = 41.2;
-			$this->leftText(4.2,$y,$data['ris_purpose'],'','b');
 			$y = 40;
-			$this->leftText(4.2,$y,$data['issuance_charging'],'','b');
+			$this->leftText(4.2,$y,$data['ris_purpose'],'','b');
 		}
 	}
 	
@@ -95,21 +104,23 @@ class RequisitionAndIssueSlip extends Formsheet{
 			'rows'=> 25,	
 		);
 		$this->section($metrics);
-		$this->GRID['font_size']=10;	
+		$this->GRID['font_size']=12;	
 		$y = 0.8;
 		//LABEL
 		$this->centerText(0,$y,'REQUISITION',22,'b');
 		$this->centerText(22,$y++,'ISSUANCE',8,'b');
 		$this->GRID['font_size']=9;	
-		$this->centerText(0,$y,'Acct. No',3,'');
+		$this->centerText(0,$y,'Charging',3,'');
 		$this->centerText(3,$y,'Stock No',3,'');
 		$this->centerText(6,$y,'Unit',2,'');
 		$this->centerText(7,$y,'Description',12,'');
 		$this->centerText(17.5,$y,'Size',3,'');
 		$this->centerText(20,$y,'Qty',2,'');
 		$this->centerText(22,$y,'Qty',2,'');
-		$this->centerText(24,$y,'Remarks',6,'');
-		
+		$this->GRID['font_size']=8;
+		$this->centerText(22.2,$y,'OR No.',6,'');
+		$this->centerText(25.2,$y,'METER No.',6,'');
+		$this->GRID['font_size']=9;
 		
 		//BOX
 		$this->drawBox(0,0,30,25);
@@ -121,6 +132,7 @@ class RequisitionAndIssueSlip extends Formsheet{
 		$this->drawLine(20,'v',array(1,24));
 		$this->drawLine(22,'v');
 		$this->drawLine(24,'v',array(1,24));
+		$this->drawLine(26.5,'v',array(1,24));
 		
 		//echo '<pre>';
 		//print_r($data);
@@ -130,13 +142,16 @@ class RequisitionAndIssueSlip extends Formsheet{
 			$y++;
 			foreach($data['ris_dtl'] as $ris_dtl){
 				$this->centerText(0,$y,'',3,'');
-				$this->centerText(0.1,$y,$ris_dtl['ris_dtl_item_acct_no'],3,'');
+				$this->centerText(0.1,$y,$ris_dtl['issuance_dtl_item_charging'],3,'');
 				$this->centerText(3,$y,$ris_dtl['ris_dtl_item_stock_no'],3,'');
 				$this->centerText(6,$y,$ris_dtl['ris_dtl_item_unit'],2,'');
 				$this->centerText(7,$y,$ris_dtl['ris_dtl_item_desc'],12,'');
 				$this->centerText(13,$y,$ris_dtl['ris_dtl_item_size'],12,'');
 				$this->centerText(20,$y,$ris_dtl['ris_dtl_item_qty'],2,'');
 				$this->centerText(22,$y,$ris_dtl['issuance_dtl_item_issued'],2,'');
+				$this->GRID['font_size']=8;
+				$this->centerText(24.2,$y,$ris_dtl['issuance_dtl_or_no'],2,'');
+				$this->centerText(27.2,$y,$ris_dtl['issuance_dtl_meter_no'],2,'');
 				$y++;
 			}
 		}
@@ -155,9 +170,9 @@ class RequisitionAndIssueSlip extends Formsheet{
 		$this->section($metrics);
 		$this->GRID['font_size']=8;
 		$y=0.8;
-		$this->leftText(0.2,$y++,'CHARGING:','','b');
 		$this->leftText(0.2,$y++,'PURPOSE:','','b');
-		$this->centerText(1.5,$y,'Request by:',12,'b');
+		$this->leftText(0.2,$y++,'','','b');
+		$this->centerText(1.7,$y,'Request by:',12,'b');
 		$this->centerText(10.5,$y,'Approved by:',7,'b');
 		$this->centerText(17.5,$y,'Issued by:',6,'b');
 		$this->centerText(24,$y++,'Received by:',6,'b');

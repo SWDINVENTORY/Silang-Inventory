@@ -246,12 +246,16 @@
 							</div>
 							<div class="form-horizontal row">
 									<div class="col-sm-7">
-										<div class="form-group">
-											<label class="col-sm-3 control-label">Official</label>
+										<label class="col-sm-3 control-label">Official:</label>
 											<div class="col-sm-7">
-												<input type="input" class="form-control" placeholder="Official" name="po_auth_off"
-												required="required" >
-											</div>
+											<select class="form-control" name="po_auth_off" required="required">
+												<option value="">Select Official</option>
+												<?php if(!empty($staffs)):?>
+												<?php foreach($staffs as $staff):?>
+												<option value="<?php echo $staff['staff_name']; ?>"><?php echo $staff['staff_name']; ?></option>
+												<?php endforeach;?>
+												<?php endif;?>
+											</select>
 										</div>
 									</div>
 									<div class="col-sm-5">
@@ -266,21 +270,29 @@
 							</div>
 							<div class="form-horizontal row">
 									<div class="col-sm-7">
-										<div class="form-group">
-											<label class="col-sm-3 control-label">Requisition Dept</label>
+										<label class="col-sm-3 control-label">Requisition Dept:</label>
 											<div class="col-sm-7">
-												<input type="input" class="form-control" placeholder="Authorized Official" name="po_req_off"
-												required="required" >
-											</div>
+											<select class="form-control" name="po_req_off" required="required">
+												<option value="">Select Official</option>
+												<?php if(!empty($staffs)):?>
+												<?php foreach($staffs as $staff):?>
+												<option value="<?php echo $staff['staff_name']; ?>"><?php echo $staff['staff_name']; ?></option>
+												<?php endforeach;?>
+												<?php endif;?>
+											</select>
 										</div>
 									</div>
 									<div class="col-sm-5">
-										<div class="form-group">
-											<label class="col-sm-4 control-label">Chief Accountant</label>
+										<label class="col-sm-4 control-label">Chief Accountant:</label>
 											<div class="col-sm-8">
-												<input type="input" class="form-control" placeholder="Accountant" name="po_funds_off"
-												required="required" >
-											</div>
+											<select class="form-control" name="po_funds_off" required="required">
+												<option value="">Select Official</option>
+												<?php if(!empty($staffs)):?>
+												<?php foreach($staffs as $staff):?>
+												<option value="<?php echo $staff['staff_name']; ?>"><?php echo $staff['staff_name']; ?></option>
+												<?php endforeach;?>
+												<?php endif;?>
+											</select>
 										</div>
 									</div>
 							</div>

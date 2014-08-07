@@ -34,6 +34,22 @@ class Ia extends Abstract_Model {
 	const IA_DTL_PO_DTL_ID = 'ia_dtl_po_dtl_id';
 	const IA_DTL_ITEM_QTY= 'ia_dtl_item_qty';
 	const IA_DTL_ITEM_CREATED = 'ia_dtl_item_created';
+	
+	const IA_INSP1 = 'ia_insp1';
+	const IA_INSP2 = 'ia_insp2';
+	const IA_INSP3 = 'ia_insp3';
+	const IA_INSP4 = 'ia_insp4';
+	const IA_INSP5 = 'ia_insp5';
+	const IA_INSP6 = 'ia_insp6';
+	
+	const IA_ACCP1 = 'ia_accp1';
+	const IA_ACCP2 = 'ia_accp2';
+	const IA_NOTED = 'ia_noted';
+	const IA_CHECKED = 'ia_checked';
+	const IA_ACCP1_POS = 'ia_accp1_pos';
+	const IA_ACCP2_POS = 'ia_accp2_pos';
+	const IA_NOTED_POS = 'ia_noted_pos';
+	const IA_CHECKED_POS = 'ia_checked_pos';
 		
 	/* Public Properties
 	-------------------------------*/
