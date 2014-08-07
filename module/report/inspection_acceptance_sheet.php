@@ -213,10 +213,14 @@ class IAReport extends Formsheet{
 		//ACCEPTANCE
 		$this->drawLine(8.30,'h',array(22,7.60));
 		$this->drawLine(14,'h',array(22,8.10));
+		$this->GRID['font_size']=10;
 		$this->centerText(26,8.1,$detail['ia_accp1'],'','b');
+		$this->GRID['font_size']=8;
 		$this->centerText(26,9.2,$detail['ia_accp1_pos'],'','');
 		
+		$this->GRID['font_size']=10;
 		$this->centerText(36.5,8.1,$detail['ia_accp2'],'','b');
+		$this->GRID['font_size']=8;
 		$this->centerText(36.5,9.2,$detail['ia_accp2_pos'],'','');
 		//$this->leftText(23,9,'NOMER LEGASPI','','');
 		$this->leftText(22,12,'Checked by:','','');
@@ -226,12 +230,12 @@ class IAReport extends Formsheet{
 		
 		$this->drawLine(14,'h',array(32.50,8.20));
 		$this->centerText(36.5,13.7,$detail['ia_noted'],'','b');
-		$this->GRID['font_size']=9;
+		$this->GRID['font_size']=8;
 		$this->centerText(36.5,14.9,$detail['ia_noted_pos'],'','');
 		
 		$this->GRID['font_size']=10;
 		$this->centerText(26,13.7,$detail['ia_checked'],'','b');
-		$this->GRID['font_size']=9;
+		$this->GRID['font_size']=8;
 		$this->centerText(26,14.9,$detail['ia_checked_pos'],'','');
 		//$this->leftText(33,13,'MARY GRACE E. BAYBAY','','');
 		//$this->leftText(33.10,14,'Division Manager C - GSD','','');

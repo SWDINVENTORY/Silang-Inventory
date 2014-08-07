@@ -25,6 +25,7 @@ class Front_Page_Ia extends Front_Page {
 		$this -> variables = front() -> registry() -> get('request', 'variables') -> getArray();
 		$this -> get = front() -> registry() -> get('get') -> getArray();
 		$this->dept = $this->Dept()-> getAll();
+		$this->staff = $this->Staff()-> getAll();
 		$this->article = $this->Article()-> getAll();
 		
 		if (isset($this -> post)) {
@@ -38,6 +39,7 @@ class Front_Page_Ia extends Front_Page {
 		}
 
 		$this -> _body['depts'] = $this->dept;
+		$this -> _body['staffs'] = $this->staff;
 		$this -> _body['articles'] = $this->article;
 		$this -> _body['error'] = $this -> _errors;
 		return $this -> _page();
