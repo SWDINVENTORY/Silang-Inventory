@@ -250,9 +250,9 @@
 											<div class="col-sm-7">
 											<select class="form-control" name="po_auth_off" required="required">
 												<option value="">Select Official</option>
-												<?php if(!empty($depts)):?>
-												<?php foreach($depts as $dept):?>
-												<option value="<?php echo $dept['dept_staff']; ?>"><?php echo $dept['dept_staff']; ?></option>
+												<?php if(!empty($staffs)):?>
+												<?php foreach($staffs as $staff):?>
+												<option value="<?php echo $staff['staff_name']; ?>"><?php echo $staff['staff_name']; ?></option>
 												<?php endforeach;?>
 												<?php endif;?>
 											</select>
@@ -274,9 +274,9 @@
 											<div class="col-sm-7">
 											<select class="form-control" name="po_req_off" required="required">
 												<option value="">Select Official</option>
-												<?php if(!empty($depts)):?>
-												<?php foreach($depts as $dept):?>
-												<option value="<?php echo $dept['dept_staff']; ?>"><?php echo $dept['dept_staff']; ?></option>
+												<?php if(!empty($staffs)):?>
+												<?php foreach($staffs as $staff):?>
+												<option value="<?php echo $staff['staff_name']; ?>"><?php echo $staff['staff_name']; ?></option>
 												<?php endforeach;?>
 												<?php endif;?>
 											</select>
@@ -287,9 +287,9 @@
 											<div class="col-sm-8">
 											<select class="form-control" name="po_funds_off" required="required">
 												<option value="">Select Official</option>
-												<?php if(!empty($depts)):?>
-												<?php foreach($depts as $dept):?>
-												<option value="<?php echo $dept['dept_staff']; ?>"><?php echo $dept['dept_staff']; ?></option>
+												<?php if(!empty($staffs)):?>
+												<?php foreach($staffs as $staff):?>
+												<option value="<?php echo $staff['staff_name']; ?>"><?php echo $staff['staff_name']; ?></option>
 												<?php endforeach;?>
 												<?php endif;?>
 											</select>

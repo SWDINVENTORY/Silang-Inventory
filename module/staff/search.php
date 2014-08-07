@@ -25,7 +25,7 @@ class Staff_Search extends Abstract_Search {
 	public function getAll() {
 		$search = $this->Staff()->search()
 			->setTable($this->_table)
-			->setColumns(array(Staff::STAFF_ID, Staff::STAFF_NAME, Staff::STAFF_POSITION, Staff::STAFF_ID_NO))
+			->setColumns(array(Staff::STAFF_ID, Staff::STAFF_NAME, Staff::STAFF_POSITION, Staff::STAFF_ID_NO Staff::STAFF_CREATED Staff::STAFF_UPDATED))
 			->sortByStaffCreated('ASC');
 		return $search->getRows();
 	}
