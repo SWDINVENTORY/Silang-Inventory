@@ -53,8 +53,8 @@ class RequisitionAndIssueSlip extends Formsheet{
 		$this->drawLine($y+0.1,'h',array(26.5,3));
 		$this->leftText(25,$y++,'Date','','');
 		$this->drawLine($y+0.1,'h',array(2.5,5.5));
-		$this->leftText(0.2,$y,'Code  ','','');
-		$this->leftText(8.2,$y,'Office','','');
+		$this->leftText(8.2,$y,'Code  ','','');
+		$this->leftText(0.2,$y,'Office','','');
 		$this->drawLine($y+0.1,'h',array(20.25,4));
 		$this->leftText(18.2,$y,'SAI No.','','');
 		$this->drawLine($y+0.1,'h',array(26.5,3));
