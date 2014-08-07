@@ -77,6 +77,7 @@ class Front_Page_Issuance extends Front_Page {
 						'created' => date('Y-m-d h:i:s', time())
 					));
 					
+					
 					foreach($issuance_details as $dtl) {
 						front()->database()
 							->insertRow('issuance_dtl', array(
@@ -86,6 +87,7 @@ class Front_Page_Issuance extends Front_Page {
 								'issuance_dtl_item_remarks' => $dtl['ris_dtl_item_remarks'],
 								'issuance_dtl_item_created' => date('Y-m-d h:i:s', time())
 							));
+						$this->deductToMaster($dtl);
 					}
 					
 					$status = array();
@@ -275,7 +277,23 @@ class Front_Page_Issuance extends Front_Page {
 		return $this;
 	}
 
-	
+	protected function deductToMaster($item) {
+		$match = front()->Item()
+			->getMatchBy('item_stock_no', $item['ris_dtl_item_stock_no']);
+		
+		$match=$match[0];
+		
+		$settings = array(
+			'item_qty' => $match['item_qty'] - $item['issuance_dtl_item_issued']
+		);
+		
+		$filter[] = array('item_id=%s', $match['item_id']);
+		
+		front()->database()
+			->updateRows('item',$settings, $filter);
+		return true;
+		
+	}
 	/* Private Methods
 	-------------------------------*/
 }

@@ -764,7 +764,6 @@
 			e.preventDefault();
 			
 			var inputs = form.find('input[name]');
-												
 			switch(button_action){
 				case 'edit-ris_dtl':	
 					$.each(inputs, function(i, o) {
@@ -788,8 +787,8 @@
 				default:
 					break;
 			};
-			$('#ris_dtl-modal').modal('hide');
-			$('#ris_dtl-modal-form').find('input').removeAttr('disabled');
+				$('#ris_dtl-modal').modal('hide');
+				$('#ris_dtl-modal-form').find('input').removeAttr('disabled');
 		});
 		
 		
