@@ -280,16 +280,17 @@ class POReport extends Formsheet{
 		$this->leftText(1,$y++,'everyday of delay shall be imposed.','','');
 		
 		$this->centerText(24,$y++,'Very truly yours,',12,'');
-		$this->centerText(24,$y,$datas['po_auth_off'],12,'b');
+		
 		$y+=0.75;
+		$this->centerText(24,$y++,$datas['po_auth_off'],12,'b');
 		$this->centerText(24,$y,'General Manager',12,'b');
 		//echo "<pre>";print_r($datas);exit();
 		$this->drawLine($y+0.2,'h',array(24,12));
 		$y+=0.9;
 		$this->centerText(24,$y++,'(Authorized Official)',12,'');
 		
-		$this->leftText(1,$y,'Conforme:','','');
-		$y+=1.25;
+		$this->leftText(1,$y-1.5,'Conforme:','','');
+		$y+=0.25;
 		$this->drawLine($y,'h',array(1,15));
 		$y+=0.75;
 		$this->centerText(1,$y-1,$datas['po_conforme'],15,'');
