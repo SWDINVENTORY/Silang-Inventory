@@ -46,7 +46,7 @@ class RequisitionAndIssueSlip extends Formsheet{
 		$this->drawLine(18,'v',array(4,3));
 		
 		$this->drawLine($y+0.1,'h',array(2.5,5.5));
-		$this->leftText(0.2,$y,'Division','','');
+		$this->leftText(0.2,$y,'Division:','','');
 		$this->leftText(8.2,$y,'Responsibility Center','','');
 		$this->drawLine($y+0.1,'h',array(20.25,4));
 		$this->leftText(18.2,$y,'RIS No.','','');
@@ -54,7 +54,7 @@ class RequisitionAndIssueSlip extends Formsheet{
 		$this->leftText(25,$y++,'Date','','');
 		$this->drawLine($y+0.1,'h',array(2.5,5.5));
 		$this->leftText(8.2,$y,'Code  ','','');
-		$this->leftText(0.2,$y,'Office','','');
+		$this->leftText(0.2,$y,'Office:','','');
 		$this->drawLine($y+0.1,'h',array(20.25,4));
 		$this->leftText(18.2,$y,'SAI No.','','');
 		$this->drawLine($y+0.1,'h',array(26.5,3));
@@ -67,7 +67,7 @@ class RequisitionAndIssueSlip extends Formsheet{
 			$this->leftText(20.25,$y,$data['ris_no'],'','');
 			$this->leftText(26.5,$y++,date('M d,Y',strtotime($data['ris_created'])),'','');
 			$this->leftText(2.75,$y,'','','');
-			$this->leftText(10.5,$y,$data['ris_office'],'','');
+			$this->leftText(2.75,$y,$data['ris_office'],'','');
 			$this->leftText(20.25,$y,'','','');
 			$this->leftText(26.5,$y++,'','','');
 			
@@ -113,8 +113,10 @@ class RequisitionAndIssueSlip extends Formsheet{
 		$this->centerText(17.5,$y,'Size',3,'');
 		$this->centerText(20,$y,'Qty',2,'');
 		$this->centerText(22,$y,'Qty',2,'');
-		$this->centerText(24,$y,'Remarks',6,'');
-		
+		$this->GRID['font_size']=8;
+		$this->centerText(22.2,$y,'OR No.',6,'');
+		$this->centerText(25.2,$y,'METER No.',6,'');
+		$this->GRID['font_size']=9;
 		
 		//BOX
 		$this->drawBox(0,0,30,25);
@@ -126,6 +128,7 @@ class RequisitionAndIssueSlip extends Formsheet{
 		$this->drawLine(20,'v',array(1,24));
 		$this->drawLine(22,'v');
 		$this->drawLine(24,'v',array(1,24));
+		$this->drawLine(26.5,'v',array(1,24));
 		
 		//echo '<pre>';
 		//print_r($data);
