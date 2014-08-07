@@ -31,7 +31,7 @@ class IAReport extends Formsheet{
 		$this->DrawImage(7.80,-.10,.80,.80, realpath(__DIR__.'/image/logo.jpg'));
 		$this->centerText(0,$y++,'INSPECTION AND ACCEPTANCE REPORT',42,'b');
 		$y ++;
-		$this->centerText(0,$y++,'SILANG WATER DISTRIC',42,'b');
+		$this->centerText(0,$y++,'SILANG WATER DISTRICT',42,'b');
 		$this->drawLine($y-.90,'h',array(16,10));
 		$y+.90;
 		$this->GRID['font_size']=10;	
