@@ -62,22 +62,26 @@ class RequisitionAndIssueSlip extends Formsheet{
 		
 		if($data){
 			$y = 5;
-			$this->leftText(2.75,$y,$data['ris_division'],'','');
+			$this->GRID['font_size']=7;
+			$this->leftText(2.65,$y,$data['ris_division'],'','');
+			$this->leftText(2.65,$y+1,$data['ris_office'],'','');
+			$this->GRID['font_size']=8.5;
 			$this->leftText(14,$y,$data['ris_rcc'],'','');
 			$this->leftText(20.25,$y,$data['ris_no'],'','');
 			$this->leftText(26.5,$y++,date('M d,Y',strtotime($data['ris_created'])),'','');
 			$this->leftText(2.75,$y,'','','');
-			$this->leftText(2.75,$y,$data['ris_office'],'','');
 			$this->leftText(20.25,$y,'','','');
 			$this->leftText(26.5,$y++,'','','');
 			
 			$y = 44.7;
+			$this->GRID['font_size']=7.5;
 			$this->centerText(7.5,$y,$data['ris_request'],'','b');
 			$this->centerText(14,$y,$data['ris_approval'],'','b');
-			$this->centerText(20,$y,$data['ris_issued'],'','b');
+			$this->centerText(20.5,$y,$data['ris_issued'],'','b');
 			$this->centerText(27,$y,$data['ris_received'],'','b');
 			
 			$y = 46;
+			$this->GRID['font_size']=8.5;
 			$this->centerText(7.2,$y,$data['ris_request_pos'],'','');
 			$this->centerText(14.2,$y,$data['ris_approval_pos'],'','');
 			$this->centerText(20.2,$y,$data['ris_issued_pos'],'','');
@@ -145,6 +149,9 @@ class RequisitionAndIssueSlip extends Formsheet{
 				$this->centerText(13,$y,$ris_dtl['ris_dtl_item_size'],12,'');
 				$this->centerText(20,$y,$ris_dtl['ris_dtl_item_qty'],2,'');
 				$this->centerText(22,$y,$ris_dtl['issuance_dtl_item_issued'],2,'');
+				$this->GRID['font_size']=8;
+				$this->centerText(24.2,$y,$ris_dtl['issuance_dtl_or_no'],2,'');
+				$this->centerText(27.2,$y,$ris_dtl['issuance_dtl_meter_no'],2,'');
 				$y++;
 			}
 		}

@@ -207,6 +207,8 @@
 												<th>Qty</th>
 												<th>Issued Qty</th>
 												<th>Charging</th>
+												<th>OR No.</th>
+												<th>Meter No.</th>
 												<th>Action</th>
 											</tr>
 										</thead>
@@ -279,6 +281,20 @@
 							<div class="form-group col-sm-2">
 								<input type="text" class="form-control" placeholder="QTY"
 									name="issuance_dtl_item_issued" required="required">
+							</div>
+						</div>
+						<div class="col-sm-12">
+							<label for="input-tel" class="col-sm-3 control-label">OR No:</label>
+							<div class="form-group col-sm-5">
+								<input type="text" class="form-control" placeholder="OR No:"
+									name="issuance_dtl_or_no" >
+							</div>
+						</div>
+						<div class="col-sm-12">
+							<label for="input-tel" class="col-sm-3 control-label">METER No:</label>
+							<div class="form-group col-sm-5">
+								<input type="text" class="form-control" placeholder="METER No:"
+									name="issuance_dtl_meter_no" >
 							</div>
 						</div>
 					</div>
@@ -370,6 +386,14 @@
 			},
 			{ "mData": function(data){
 				return (data.issuance_dtl_item_charging)?data.issuance_dtl_item_charging:null;
+				}
+			},
+			{ "mData": function(data){
+				return (data.issuance_dtl_or_no)?data.issuance_dtl_or_no:null;
+				}
+			},
+			{ "mData": function(data){
+				return (data.issuance_dtl_meter_no)?data.issuance_dtl_meter_no:null;
 				}
 			},
 			{'mData': function(data) {
