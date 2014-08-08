@@ -53,7 +53,7 @@ class Staff extends Abstract_Model {
 
 	public function getAll() {
 		return $this->_getAll('*')
-			->sortByStaffCreated('ASC')
+			->sortByStaffName('ASC')
 			->getRows();
 	}
 	
