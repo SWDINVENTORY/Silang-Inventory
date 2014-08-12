@@ -81,7 +81,7 @@ class ReturnedMaterialSlip extends Formsheet{
 		$this->centerText(0,$y,'RETURNED ITEMS',22,'b');
 		$this->centerText(22,$y++,'RECEIVED',8,'b');
 		$this->GRID['font_size']=9;	
-		$this->centerText(0,$y,'Acct. No',3,'');
+		$this->centerText(0,$y,'Charging',3,'');
 		$this->centerText(3,$y,'Stock No',3,'');
 		$this->centerText(6,$y,'Unit',2,'');
 		$this->centerText(7,$y,'Description',12,'');
@@ -115,11 +115,11 @@ class ReturnedMaterialSlip extends Formsheet{
 		$this->section($metrics);
 		$this->GRID['font_size']=8;
 		$y=1.8;		
-		$this->leftText(0.2,$y,'PURPOSE:','','b');
-		$this->leftText(15,$y++,'CHARGING:','','b');
-		$this->centerText(5,$y,'Returned by:',12,'b');
-		$this->centerText(17,$y,'Approved by:',7,'b');
-		$this->centerText(24,$y++,'Received by:',6,'b');
+		$this->leftText(0.2,$y-1,'PURPOSE:','','b');
+		$this->leftText(15,$y++,'','','b');
+		$this->centerText(3,$y,'Returned by:',12,'b');
+		$this->centerText(14,$y,'Approved by:',7,'b');
+		$this->centerText(23,$y++,'Received by:',6,'b');
 		$this->leftText(0.2,$y++,'Signature','','');
 		$this->leftText(0.2,$y++,'Printed Name','','');
 		$this->leftText(0.2,$y++,'Designation','','');
@@ -128,8 +128,8 @@ class ReturnedMaterialSlip extends Formsheet{
 		$this->drawBox(0,0,30,7);
 		$this->drawMultipleLines(2,6,1,'h');
 		$this->drawLine(5,'v',array(2,5));
-		$this->drawLine(17,'v',array(2,5));
-		$this->drawLine(24,'v',array(2,5));
+		$this->drawLine(13,'v',array(2,5));
+		$this->drawLine(21,'v',array(2,5));
 		
 	}
 	
