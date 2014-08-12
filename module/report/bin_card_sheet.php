@@ -33,14 +33,19 @@ class BinCard extends Formsheet{
 		$this->centerText(0,$y++,'Agency',25,'');
 		
 		$y++;
-		$this->drawLine($y+0.2,'h',array(6,13));
+		$this->drawLine($y-0.5,'h',array(6,13));
 		$y++;
 		$this->GRID['font_size']=9;	
-		$this->centerText(0,$y++,'Description',25,'b');
+		$this->centerText(0,$y-0.7,'Description',25,'b');
+		$y++;
+		$y+0.7;
 		$this->leftText(0,$y,'Acct. Code:','','b');
+		$this->drawLine($y,'h',array(3.5,3));
 		$this->leftText(8,$y,'Stock No.:','','b');
+		$this->drawLine($y,'h',array(11.1,3));
 		//$this->drawLine($y+0.2,'h',array(3.5,7));
 		$this->leftText(16,$y,'Re-Order Point:','','b');
+		$this->drawLine($y,'h',array(20.7,3));
 		//$this->drawLine($y+0.2,'h',array(18,7));
 	}
 	
