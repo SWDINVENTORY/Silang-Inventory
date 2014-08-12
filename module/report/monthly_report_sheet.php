@@ -62,9 +62,8 @@ class MonthlyReport extends Formsheet{
 		$this->centerText(0,2,'Item #',3,'b');
 		$this->centerText(3,2,'Article',10,'b');
 		$this->centerText(13,2,'Description',15,'b');
-		$this->centerText(27,1,'Unit',3,'b');
-		$this->centerText(27,1.9,'of',3,'b');
-		$this->centerText(27,2.8,'Measure',3,'b');
+		$this->centerText(27,1.3,'Stock',3,'b');
+		$this->centerText(27,2.3,'No.',3,'b');
 		$this->centerText(30,1,'Beginning',4,'b');
 		$this->centerText(30,1.9,'Balance',4,'b');
 		$this->centerText(30,2.8,'Qty.',4,'b');
