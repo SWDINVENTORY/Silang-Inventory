@@ -92,10 +92,19 @@ class Front_Page_Report extends Front_Page {
 	
     protected function report_BIN_CARD()
     {
+        
+		$limit_ng_linya_na_kasya_sa_papel = 46;
+		$data_chunk = array_chunk($bin_card_data, $limit_ng_linya_na_kasya_sa_papel,true);
+		$total_page = count($data_chunk);
         $rc= new BinCard();
-        $rc->hdr();
-        $rc->table();
-        $rc->output();
+		
+		foreach($data_chunk as $key => $data){
+			$rc->hdr($data);
+			$rc->table($data);
+		}
+		
+		$rc->output();
+		
     }
     
     protected function report_IA()
