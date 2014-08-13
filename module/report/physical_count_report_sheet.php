@@ -37,11 +37,18 @@ class PCREPORT extends Formsheet{
 		$this->centerText(0,$y++,'As of <DATE>',60,'b');
 		$y ++;
 		$this->leftText(1,$y,'For which ',60,'');
+		$this->GRID['font_size']=10;
+		$this->leftText(6,$y,'Ariel L. Madlangsakay',60,'b');
 		$this->drawline($y+0.1,'h',array(4,9));
 		$this->leftText(13.1,$y,',',60,'');
+		$this->GRID['font_size']=10;
+		$this->leftText(15.5,$y,'Supply Officer C',60,'b');
 		$this->drawline($y+0.1,'h',array(13.6,9));
 		$this->leftText(22.8,$y,',',60,'');
+		$this->GRID['font_size']=10;
+		$this->leftText(24,$y,'SWD',60,'b');
 		$this->drawline($y+0.1,'h',array(23.2,4));
+		$this->GRID['font_size']=9;
 		$this->leftText(27.5,$y,', is accountable, having assumed such accountability on',60,'');
 		$this->drawline($y+0.1,'h',array(42.5,7));
 		$y++;
@@ -66,17 +73,17 @@ class PCREPORT extends Formsheet{
 		);	
 		$this->section($metrics);
 		$this->GRID['font_size']=9;	
-		$this->drawBox(0,0,60,47);
-		$this->drawLine(2,'v',array(0,47));
-		$this->drawLine(12,'v',array(0,47));
-		$this->drawLine(28,'v',array(0,47));
-		$this->drawLine(32,'v',array(0,47));
-		$this->drawLine(35,'v',array(0,47));
-		$this->drawLine(39,'v',array(0,47));
-		$this->drawLine(42,'v',array(0,47));
-		$this->drawLine(45,'v',array(0,47));
-		$this->drawLine(48,'v',array(0,47));
-		$this->drawLine(51,'v',array(0,47));
+		$this->drawBox(0,0,60,32);
+		$this->drawLine(2,'v',array(0,32));
+		$this->drawLine(12,'v',array(0,32));
+		$this->drawLine(28,'v',array(0,32));
+		$this->drawLine(32,'v',array(0,32));
+		$this->drawLine(35,'v',array(0,32));
+		$this->drawLine(39,'v',array(0,32));
+		$this->drawLine(42,'v',array(0,32));
+		$this->drawLine(45,'v',array(0,32));
+		$this->drawLine(48,'v',array(0,32));
+		$this->drawLine(51,'v',array(0,32));
 		$this->drawLine(3,'h');
 		
 		$this->centerText(0,2,'Item #',2,'b');
@@ -112,6 +119,23 @@ class PCREPORT extends Formsheet{
 		);	
 		$this->section($metrics);
 		$this->GRID['font_size']=9;	
+		
+		$y = 34;
+		$this->leftText(0,$y,'Submitted by: ',60,'');
+		$this->leftText(0,$y+4,'NOMER M. LEGASPI/MARIA R. MACALINDONG/KEVIN T. AGUILAR/ARIEL L MADLANGSAKAY ',60,'b');
+		$this->leftText(0,$y+5,'Member - Inventory Committee',60,'');
+		
+		$this->leftText(0,$y+8,'Noted by: ',60,'');
+		$this->leftText(0,$y+12,'MARY GRACE E BAYBAY',60,'b');
+		$this->leftText(0,$y+13,'DIVISION MANAGER C - GSD',60,'');
+		
+		$this->leftText(40,$y,'Verified by: ',60,'');
+		$this->leftText(40,$y+4,'EMILIO F. RACELA, JR.',60,'b');
+		$this->leftText(40,$y+5,'Chairman - Inventory Committee',60,'');
+		
+		$this->leftText(40,$y+8,'Approved by: ',60,'');
+		$this->leftText(40,$y+12,'BONIFACIO B. DELA CRUZ',60,'b');
+		$this->leftText(40,$y+13,'General Manager',60,'');
 		return $this;
 		
 	}
