@@ -48,15 +48,15 @@ class MonthlyReport extends Formsheet{
 		);	
 		$this->section($metrics);
 		$this->GRID['font_size']=9;	
-		$this->drawBox(0,0,50,47);
-		$this->drawLine(3,'v',array(0,47));
-		$this->drawLine(13,'v',array(0,47));
-		$this->drawLine(27,'v',array(0,47));
-		$this->drawLine(30,'v',array(0,47));
-		$this->drawLine(34,'v',array(0,47));
-		$this->drawLine(38,'v',array(0,47));
-		$this->drawLine(42,'v',array(0,47));
-		$this->drawLine(46,'v',array(0,47));
+		$this->drawBox(0,0,50,40);
+		$this->drawLine(3,'v',array(0,40));
+		$this->drawLine(13,'v',array(0,40));
+		$this->drawLine(27,'v',array(0,40));
+		$this->drawLine(30,'v',array(0,40));
+		$this->drawLine(34,'v',array(0,40));
+		$this->drawLine(38,'v',array(0,40));
+		$this->drawLine(42,'v',array(0,40));
+		$this->drawLine(46,'v',array(0,40));
 		$this->drawLine(3,'h');
 		
 		$this->centerText(0,2,'Item #',3,'b');
@@ -93,7 +93,31 @@ class MonthlyReport extends Formsheet{
 			'rows'=> 6,	
 		);	
 		$this->section($metrics);
-		$this->GRID['font_size']=9;	
+		
+		$y = 42;
+		$this->GRID['font_size']=9;
+		$this->leftText(3,$y,'Prepared by:',3,'');
+		$this->GRID['font_size']=8;
+		$this->leftText(3,$y+3,'NOMER M. LEGASPI',3,'');
+		$this->leftText(3,$y+4,'Admin. Service Aide',3,'');
+		
+		$this->GRID['font_size']=9;
+		$this->leftText(15,$y,'Checked by:',3,'');
+		$this->GRID['font_size']=8;
+		$this->leftText(15,$y+3,'Ariel Madlangsakay',3,'');
+		$this->leftText(15,$y+4,'Acting Supply Officer - A',3,'');
+		
+		$this->GRID['font_size']=9;
+		$this->leftText(27,$y,'Verified by:',3,'');
+		$this->GRID['font_size']=8;
+		$this->leftText(27,$y+3,'Mary Grace E. Baybay',3,'');
+		$this->leftText(27,$y+4,'Division Manager C - GSD',3,'');
+		
+		$this->GRID['font_size']=9;
+		$this->leftText(41,$y,'Noted by:',3,'');
+		$this->GRID['font_size']=8;
+		$this->leftText(41,$y+3,'Bonifacio Dela Cruz',3,'');
+		$this->leftText(41,$y+4,'General Manager',3,'');
 		return $this;
 		
 	}
