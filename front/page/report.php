@@ -8,6 +8,7 @@ foreach($files as $files){
 use Report\BinCard as BinCard;
 use Report\IAReport as IAReport;
 use Report\IssueOutReport as IssueOutReport;
+use Report\IssueOutReceipt as IssueOutReceipt;
 use Report\MonthlyReport as MonthlyReport;
 use Report\OldReusableStock as OldReusableStock;
 use Report\PCREPORT as PCREPORT;
@@ -47,6 +48,9 @@ class Front_Page_Report extends Front_Page {
                 break;
             case 'issue-out':
                     return $this->report_ISSUE_OUT();
+                break;
+            case 'issue-out-receipt':
+                    return $this->report_ISSUE_OUT_RECEIPT();
                 break;
             case 'monthly-report':
                     return $this->report_MONTHLY();
@@ -108,8 +112,14 @@ class Front_Page_Report extends Front_Page {
         $rc = new IssueOutReport();
         $rc->hdr()->details()->data_box()->output();
     }
-    
-    protected function report_MONTHLY()
+	
+    protected function report_ISSUE_OUT_RECEIPT()
+    {
+       // $rc = new IssueOutReceipt();
+       // $rc->hdr()->details()->data_box()->output();
+    }
+   
+   protected function report_MONTHLY()
     {
         $reportType = "SUPPLIES INVENTORY";
         $rc = new MonthlyReport();
