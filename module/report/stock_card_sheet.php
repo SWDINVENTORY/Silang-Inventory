@@ -65,7 +65,7 @@ class StockCard extends Formsheet{
 		$this->drawLine(3,'h');
 		$this->drawLine(4,'h',array(11,36));
 		$this->drawLine(5,'h');
-		$this->leftText(0.2,2,'Item:',3,'b');
+		$this->leftText(0.2,2,'Item: ',3,'b');
 		$this->leftText(11.2,2,'Description:',3,'b');
 		$this->leftText(35.2,1.1,'Stock No.:',3,'b');
 		$this->leftText(35.2,2.8,'Re-Order Point:',3,'b');
@@ -74,9 +74,9 @@ class StockCard extends Formsheet{
 		$x_ntrvl3 = 8;
 		$x = 3;
 		$this->centerText(0,4.3,'Date',3,'b');
-		
 		$this->centerText($x,3.8,'Reference',$x_ntrvl,'b');
 		$this->centerText($x+=$x_ntrvl,3.8,'Reference',$x_ntrvl,'b');
+		
 		
 		$this->centerText(11,3.8,'Receipts',12,'b');
 		$this->centerText(23,3.8,'Issuance',12,'b');
@@ -105,14 +105,43 @@ class StockCard extends Formsheet{
 	function details(){
 		$metrics = array(
 			'base_x'=> 0.2,
-			'base_y'=> 1.7,
+			'base_y'=> 1.8,
 			'width'=> 10.6,
 			'height'=> 0.9,
-			'cols'=> 50,
+			'cols'=> 47,
 			'rows'=> 6,	
 		);	
 		$this->section($metrics);
 		$this->GRID['font_size']=9;	
+
+		
+		
+		$y = 1;
+		//foreach($data as $key => $d ){
+		for($i=1;$i<42;$i++){
+			$x_ntrvl = 4;
+			$x_ntrvl3 = 8;
+			$x = 3;
+			
+			$this->centerText(0,$y,$i,3,'');
+			$this->centerText($x,$y,'IAR Reference',$x_ntrvl,'');
+			$this->centerText($x+=$x_ntrvl,$y,'RIS Reference',$x_ntrvl,'');
+			
+			
+			$this->centerText($x+=$x_ntrvl,$y,'Qty',$x_ntrvl,'');
+			$this->centerText($x+=$x_ntrvl,$y,'Unit Cost',$x_ntrvl,'');
+			$this->centerText($x+=$x_ntrvl,$y,'Amount',$x_ntrvl,'');
+			$this->centerText($x+=$x_ntrvl,$y,'Qty',$x_ntrvl,'');
+			$this->centerText($x+=$x_ntrvl,$y,'Unit Cost',$x_ntrvl,'');
+			$this->centerText($x+=$x_ntrvl,$y,'Amount',$x_ntrvl,'');
+			$this->centerText($x+=$x_ntrvl,$y,'Qty',$x_ntrvl,'');
+			$this->centerText($x+=$x_ntrvl,$y,'Unit Cost',$x_ntrvl,'');
+			$this->centerText($x+=$x_ntrvl,$y,'Amount',$x_ntrvl,'');
+			$y++;
+		}
+
+	
+		
 		return $this;
 		
 	}
