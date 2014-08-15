@@ -327,17 +327,23 @@ class Front_Page_Ia extends Front_Page {
 		//if exist
 		$itemfound = $this->Ia()->checkItem($po_dtl); 
 		
+		$item_qty = 0;
+		
 		//if there's a match on item list
 		if(!empty($itemfound)) {
+			
+			$item_qty = $itemfound['item_qty'] + intval($item['ia_dtl_item_qty']);
+			
 			$filter = array(
 				array('item_id=%s', $itemfound['item_id']));
 			
 			//update qty on items,
 			front() -> database() -> updateRows('item', array(
-					'item_qty' => $itemfound['item_qty'] + intval($item['ia_dtl_item_qty']),
+					'item_qty' => $item_qty,
 					'item_updated' => date('Y-m-d H:i:s')
 				), $filter);						
-				
+			
+			
 			// save new record on item_costs;	
 			$cost = array(
 				'item_cost_item_id' => $itemfound['item_id'],
@@ -346,11 +352,15 @@ class Front_Page_Ia extends Front_Page {
 				'item_cost_updated' => date('Y-m-d H:i:s')
 			);
 			
-			front()->database()->insertRow('item_cost', $cost); 
+			
+			front()->database()->insertRow('item_cost', $cost);
 		}
 		
 		//If theres no match on item list
 		if(empty($itemfound)) {
+			
+			$item_qty = $po_dtl['po_dtl_item_qty'];
+			
 			//add new item if no match found
 			$item_id = front()->database()->insertRow('item', array(
 				'item_desc' => $po_dtl['po_dtl_item_desc'],
@@ -371,6 +381,14 @@ class Front_Page_Ia extends Front_Page {
 				));
 			}
 		}
+		
+		//Update Stock Level
+			front()->database()->insertRow(
+				'item_stock_level_item_id' => $itemfound['item_id'],
+				'item_stock_level_qty' => $item_qty,
+				'item_stock_level_date' => date('Y-m-d H:i:s')
+			);
+		
 		return $this;
 	}
 

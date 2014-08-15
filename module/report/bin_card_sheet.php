@@ -15,7 +15,11 @@ class BinCard extends Formsheet{
 		$this->createSheet();
 	}
 	
-	function hdr(){
+	function hdr($data) {
+		//echo '<pre>';
+        // echo 'from head'.'<br/>';
+        //print_r($data);
+        //exit;
 		$metrics = array(
 			'base_x'=> 0.25,
 			'base_y'=> 0.25,
@@ -35,12 +39,16 @@ class BinCard extends Formsheet{
 		$y++;
 		$this->drawLine($y-0.5,'h',array(6,13));
 		$y++;
-		$this->GRID['font_size']=9;	
+		$this->GRID['font_size']=9;
+        $test = $data['description'];
+		$this->centerText(0, 4.35, $data['description'], 25,'');
 		$this->centerText(0,$y-0.7,'Description',25,'b');
 		$y++;
 		$y+0.7;
 		$this->leftText(0,$y,'Acct. Code:','','b');
+		$this->leftText(3.6,$y-.2,$data['account_no'],25,'');
 		$this->drawLine($y,'h',array(3.5,3));
+		$this->leftText(11.4,$y-.2,$data['stock_no'],'','');
 		$this->leftText(8,$y,'Stock No.:','','b');
 		$this->drawLine($y,'h',array(11.1,3));
 		//$this->drawLine($y+0.2,'h',array(3.5,7));
@@ -49,7 +57,7 @@ class BinCard extends Formsheet{
 		//$this->drawLine($y+0.2,'h',array(18,7));
 	}
 	
-	function table(){
+	function table($data) {
 		$metrics = array(
 			'base_x'=> 0.25,
 			'base_y'=> 1.8,
@@ -77,8 +85,18 @@ class BinCard extends Formsheet{
 		$this->centerText(15,1.7,'Qty',5,'b');
 		$this->centerText(20,0.9,'Balance',5,'b');
 		$this->centerText(20,1.7,'Qty',5,'b');
-		$this->leftText(0,32,'For Property and Supply Unit Use','','b');
-	}
+        //---------------------------
+        $y=1.7;
+        $y++;
+        foreach($data as $datum) {
+            $this->centerText(0,$y, $datum['date'],5,'');
+            $this->centerText(5,$y, $datum['ref'],5,'');
+            $this->centerText(10, $y, $datum['received_qty'],5,'');
+            $this->centerText(15, $y, $datum['issued_qty'],5,'');
+            $this->centerText(20, $y, $datum['bal_qty'],5,'');    
+            $y++;
+        }
+    }
 }
 ?>
 	

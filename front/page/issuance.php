@@ -285,14 +285,25 @@ class Front_Page_Issuance extends Front_Page {
 		
 		$match=$match[0];
 		
+		$item_qty = $match['item_qty'] - $item['issuance_dtl_item_issued'];
+		
 		$settings = array(
-			'item_qty' => $match['item_qty'] - $item['issuance_dtl_item_issued']
+			'item_qty' => $item_qty
 		);
 		
 		$filter[] = array('item_id=%s', $match['item_id']);
 		
 		front()->database()
 			->updateRows('item',$settings, $filter);
+			
+		//Update Stock Level
+		front()->database()
+			->insertRow(array(
+				'item_stock_level_item_id' => $match['item_id'],
+				'item_stock_level_qty' => $item_qty,
+				'item_stock_level_date' => date('Y-m-d H:i:s')
+			));
+		
 		return true;
 		
 	}

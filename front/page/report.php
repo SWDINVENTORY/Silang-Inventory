@@ -92,19 +92,74 @@ class Front_Page_Report extends Front_Page {
 	
     protected function report_BIN_CARD()
     {
+        $bin_card_data = array(
+            0 => array(
+                'header' => array(
+                    'account_no' => '123456',
+                    'stock_no' => 'stock_no',
+                    'reorder_point' => 'reorder_point',
+                    'description' => "headdescription"
+                ),
+                'detail' => array(
+                    0 => array(
+                        'date' => 'Aug 12',
+                        'ref' => 'ref-123',
+                        'received_qty' => '12',
+                        'issued_qty' => '12',
+                        'bal_qty' => '24'
+                    ),
+                    1 => array(
+                        'date' => 'Aug 12',
+                        'ref' => 'ref-123',
+                        'received_qty' => '12',
+                        'issued_qty' => '12',
+                        'bal_qty' => '24'
+                    ),
+                    2 => array(
+                        'date' => 'Aug 12',
+                        'ref' => 'ref-123',
+                        'received_qty' => '12',
+                        'issued_qty' => '12',
+                        'bal_qty' => '24'
+                    ),
+                    3 => array(
+                        'date' => 'Aug 12',
+                        'ref' => 'ref-123',
+                        'received_qty' => '12',
+                        'issued_qty' => '12',
+                        'bal_qty' => '24'
+                    ),
+                )
+            ),
+            1 => array(
+                'header' => array(
+                    'account_no' => 'account_no',
+                    'stock_no' => 'stock_no',
+                    'reorder_point' => 'reorder_point',
+                    'description' => 'description',
+                ),
+                'detail' => array(
+                    0 => array(
+                    'detail_foo' => 'detail-bar'
+                    )
+                )
+            )
+        );
         
-		$limit_ng_linya_na_kasya_sa_papel = 46;
+		$limit_ng_linya_na_kasya_sa_papel = 1;
 		$data_chunk = array_chunk($bin_card_data, $limit_ng_linya_na_kasya_sa_papel,true);
 		$total_page = count($data_chunk);
-        $rc= new BinCard();
+        
 		
 		foreach($data_chunk as $key => $data){
-			$rc->hdr($data);
-			$rc->table($data);
+		    $rc= new BinCard();
+		    $rc->hdr($data[$key]['header']);
+			$rc->table($data[$key]['detail']);
+            $rc->output();
 		}
 		
-		$rc->output();
 		
+        
     }
     
     protected function report_IA()
