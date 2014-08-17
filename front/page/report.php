@@ -16,6 +16,7 @@ use Report\RequisitionAndIssueSlip as RequisitionAndIssueSlip;
 use Report\ReturnedMaterialSlip as ReturnedMaterialSlip;
 use Report\SWDReport as SWDReport;
 use Report\StockCard as StockCard;
+use Carbon\Carbon as Carbon;
 
 class Front_Page_Report extends Front_Page {
 	/* Constants
@@ -37,6 +38,7 @@ class Front_Page_Report extends Front_Page {
 	-------------------------------*/
 	public function render() {
 	    $this->request = front()->registry()->get('request', 'variables','0');
+        $this->get = front()->registry()->get('get');
         
         switch ($this->request) {
             case 'inventory-physical-count':
@@ -92,6 +94,76 @@ class Front_Page_Report extends Front_Page {
 	
     protected function report_BIN_CARD()
     {
+       
+	   //echo '<pre>';
+	   /*
+	   print_r($this->get);
+	   exit;*/
+	   
+	   $query = sprintf("( SELECT
+				issuance_dtl.issuance_dtl_item_created AS date,
+				issuance_dtl.issuance_dtl_item_issued AS qty,
+				issuance.issuance_no AS ref_no,
+				'issuance' AS type_is
+			FROM
+				issuance_dtl
+			INNER JOIN ris_dtl ON ris_dtl.ris_dtl_id = issuance_dtl.issuance_dtl_ris_dtl_id
+			INNER JOIN item ON item.item_stock_no = ris_dtl.ris_dtl_item_stock_no
+			INNER JOIN issuance ON issuance.issuance_id = issuance_dtl.issuance_dtl_issuance_id
+			WHERE
+				item.item_stock_no = '%s'
+			AND (
+				issuance_dtl.issuance_dtl_item_created >= '%s'
+				AND issuance_dtl.issuance_dtl_item_created < '%s'
+				)
+			)
+			UNION
+				(
+					SELECT
+						ia_dtl.ia_dtl_item_created AS date,
+						ia_dtl.ia_dtl_item_qty AS qty,
+						ia.ia_no AS ref_no,
+						'received' AS type_is
+					FROM
+						item
+					INNER JOIN po_dtl ON item.item_stock_no = po_dtl.po_dtl_stock_no
+					INNER JOIN ia_dtl ON po_dtl.po_dtl_id = ia_dtl.ia_dtl_po_dtl_id
+					INNER JOIN ia ON ia_dtl.ia_dtl_ia_id = ia.ia_id
+					WHERE
+						item.item_stock_no = '%s'
+					AND (
+						ia_dtl.ia_dtl_item_created >= '%s'
+						AND ia_dtl.ia_dtl_item_created < '%s'
+					)
+				)
+			ORDER BY
+				date",
+			$this->get['stock_no'],
+			date('Y-m-d H:i:s', strtotime($this->get['from_date'])),
+			date('Y-m-d H:i:s', strtotime($this->get['to_date'])),
+			$this->get['stock_no'],
+			date('Y-m-d H:i:s', strtotime($this->get['from_date'])),
+			date('Y-m-d H:i:s', strtotime($this->get['to_date']))
+		);
+
+	   /*$bin_card_data =front()->database()
+			->query($query);
+	   print_r($bin_card_data);*/
+	   
+	   /*
+	   print_r($bin_card_data);
+							  $temp = array();
+							  foreach($bin_card_data as $log) {
+				  array_push($temp, array(
+					 'date' => date('M d', strtotime($log['date'])),
+					 'qty' => $log['qty'],
+					 'ref_no' => $log['ref_no'],
+					 'type_is' => $log['type_is']
+				  ));
+								  }
+			  print_r($temp); exit;*/
+	   
+	  
         $bin_card_data = array(
             0 => array(
                 'header' => array(

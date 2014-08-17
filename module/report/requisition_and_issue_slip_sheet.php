@@ -82,10 +82,10 @@ class RequisitionAndIssueSlip extends Formsheet{
 			
 			$y = 46;
 			$this->GRID['font_size']=8.5;
-			$this->centerText(7.2,$y,$data['ris_request_pos'],'','');
-			$this->centerText(14.2,$y,$data['ris_approval_pos'],'','');
-			$this->centerText(20.2,$y,$data['ris_issued_pos'],'','');
-			$this->centerText(27.2,$y,$data['ris_received_pos'],'','');
+			//$this->centerText(7.2,$y,$data['ris_request_pos'],'','');
+			//$this->centerText(14.2,$y,$data['ris_approval_pos'],'','');
+			//$this->centerText(20.2,$y,$data['ris_issued_pos'],'','');
+			//$this->centerText(27.2,$y,$data['ris_received_pos'],'','');
 									
 			$y = 40;
 			$this->leftText(4.2,$y,$data['ris_purpose'],'','b');
@@ -134,15 +134,12 @@ class RequisitionAndIssueSlip extends Formsheet{
 		$this->drawLine(24,'v',array(1,24));
 		$this->drawLine(26.5,'v',array(1,24));
 		
-		//echo '<pre>';
-		//print_r($data);
-		//exit;
-	
+			
 		if(isset($data['ris_dtl'])){
 			$y++;
 			foreach($data['ris_dtl'] as $ris_dtl){
 				$this->centerText(0,$y,'',3,'');
-				$this->centerText(0.1,$y,$ris_dtl['issuance_dtl_item_charging'],3,'');
+				$this->centerText(0.1,$y,$data['issuance_charging'],3,'');
 				$this->centerText(3,$y,$ris_dtl['ris_dtl_item_stock_no'],3,'');
 				$this->centerText(6,$y,$ris_dtl['ris_dtl_item_unit'],2,'');
 				$this->centerText(7,$y,$ris_dtl['ris_dtl_item_desc'],12,'');

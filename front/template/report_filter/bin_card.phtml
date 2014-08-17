@@ -3,20 +3,34 @@
 		<strong>BIN CARD</strong> 
 	</div>
 	<br>
-	
-	<label for="stock_no">Stock No</label>	
-	<input type="input" placeholder="Enter Stock No." id="stock_no">
-	
-	<label for="from_date">From Date</label>	
-	<input type="date" id="from_date">
-	
-	<label for="to_date">To Date</label>
-	<input type="date" id="to_date">	
-						
-	<button id="go_button" class="btn btn-primary">Go</button>
+	<form>
+    	<label for="stock_no">Stock No</label>	
+    	<input type="input" placeholder="Enter Stock No." id="stock_no" required="required">
+    	
+    	<label for="from_date">From Date</label>	
+    	<input type="date" id="from_date" required="required">
+    	
+    	<label for="to_date">To Date</label>
+    	<input type="date" id="to_date" required="required">	
+    						
+    	<button id="go_button" class="btn btn-primary" >Go</button>
+    </form>
 </div>
 
 <iframe src="/report/bin-card" width="100%" height="100%">IFrame Not Supported!</iframe>
 
 <link rel="stylesheet" type="text/css" href="/assets/css/reports.css">
 <script type="text/javascript" src="/assets/js/reports.js"></script>
+<script type="text/javascript">
+    $('document').ready(function() {
+        $('form').on('submit', function(e) {
+            e.preventDefault();
+            var stock_no = ($('#stock_no').val())?$('#stock_no').val():false;
+            var from_date = ($('#from_date').val())?$('#from_date').val():false;
+            var to_date = ($('#to_date').val())?$('#to_date').val():false;
+            if(stock_no && from_date && to_date) {
+                return $('iframe')[0].src+='/?stock_no='+stock_no+'&from_date='+from_date+'&to_date='+to_date;
+            }
+        });
+    });
+</script>>

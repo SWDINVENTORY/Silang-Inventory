@@ -383,11 +383,12 @@ class Front_Page_Ia extends Front_Page {
 		}
 		
 		//Update Stock Level
-			front()->database()->insertRow(
-				'item_stock_level_item_id' => $itemfound['item_id'],
-				'item_stock_level_qty' => $item_qty,
-				'item_stock_level_date' => date('Y-m-d H:i:s')
-			);
+		front()->database()->insertRow('item_stock_level',
+			array(
+			'item_stock_level_item_id' => $itemfound['item_id'],
+			'item_stock_level_qty' => $item_qty,
+			'item_stock_level_date' => date('Y-m-d H:i:s')
+		));
 		
 		return $this;
 	}

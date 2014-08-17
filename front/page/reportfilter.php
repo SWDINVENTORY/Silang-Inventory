@@ -42,13 +42,16 @@ class Front_Page_ReportFilter extends Front_Page {
 			case 'physical-count':
 				$this->_template = '\report_filter\physical_count_report_filter.phtml';
 			break;
-			case 'bin-card': 
+			case 'bin-card':
+                $this->_title.='Bin Card Report';
 				$this->_template = '\report_filter\bin_card.phtml';
 			break;
 			case 'issue-out': 
+				$this->_title.='Issue Out Report';
 				$this->_template = '\report_filter\issue_out_report.phtml';
 			break;
-			case 'monthly-report': 
+			case 'monthly-report':
+                $this->_title.='Monthly Report'; 
 				$this->_template = '\report_filter\monthly_report.phtml';
 			break;
 			case 'ris': 

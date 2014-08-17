@@ -234,9 +234,8 @@ class Front_Page_Issuance extends Front_Page {
 						->addFilter('issuance_dtl_issuance_id = %s', $issuance_id)
 						->innerJoinOn('ris_dtl', 'issuance_dtl_ris_dtl_id = ris_dtl_id')
 						->getRows();
-				}
-			//echo '<pre>';
-			//print_r($issuance);exit;
+				
+			}
 				
 			$report= new RequisitionAndIssueSlip($issuance);
 			$report->hdr($issuance);
@@ -298,7 +297,7 @@ class Front_Page_Issuance extends Front_Page {
 			
 		//Update Stock Level
 		front()->database()
-			->insertRow(array(
+			->insertRow( 'item_stock_level' ,array(
 				'item_stock_level_item_id' => $match['item_id'],
 				'item_stock_level_qty' => $item_qty,
 				'item_stock_level_date' => date('Y-m-d H:i:s')
