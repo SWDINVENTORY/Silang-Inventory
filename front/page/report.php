@@ -96,15 +96,23 @@ class Front_Page_Report extends Front_Page {
     {
        
 	   //echo '<pre>';
-	   /*
-	   print_r($this->get);
-	   exit;*/
+       $head = $this->Item()->getByStockNo($this->get['stock_no']);
+       
+
+       $bin_card_data = array();
+       $bin_card_data['header'] = array(
+            'account_no' => $head['item_acct_no'],
+            'stock_no' => $head['item_stock_no'],
+            'reorder_point' => '',
+            'description' => $head['item_desc'].' '.$head['item_size']
+       );
 	   
 	   $query = sprintf("( SELECT
-				issuance_dtl.issuance_dtl_item_created AS date,
-				issuance_dtl.issuance_dtl_item_issued AS qty,
-				issuance.issuance_no AS ref_no,
-				'issuance' AS type_is
+			issuance_dtl.issuance_dtl_item_created AS date,
+			issuance.issuance_no AS ref, 
+			'' AS received_qty,
+			issuance_dtl.issuance_dtl_item_issued AS issued_qty,
+			'' AS bal_qty
 			FROM
 				issuance_dtl
 			INNER JOIN ris_dtl ON ris_dtl.ris_dtl_id = issuance_dtl.issuance_dtl_ris_dtl_id
@@ -121,9 +129,10 @@ class Front_Page_Report extends Front_Page {
 				(
 					SELECT
 						ia_dtl.ia_dtl_item_created AS date,
-						ia_dtl.ia_dtl_item_qty AS qty,
-						ia.ia_no AS ref_no,
-						'received' AS type_is
+						ia.ia_no AS ref,
+						ia_dtl.ia_dtl_item_qty AS received_qty,
+						'' AS issued_qty,
+						'' AS bal_qty
 					FROM
 						item
 					INNER JOIN po_dtl ON item.item_stock_no = po_dtl.po_dtl_stock_no
@@ -146,87 +155,19 @@ class Front_Page_Report extends Front_Page {
 			date('Y-m-d H:i:s', strtotime($this->get['to_date']))
 		);
 
-	   /*$bin_card_data =front()->database()
+	   $bin_card_data['detail'] =front()->database()
 			->query($query);
-	   print_r($bin_card_data);*/
-	   
-	   /*
-	   print_r($bin_card_data);
-							  $temp = array();
-							  foreach($bin_card_data as $log) {
-				  array_push($temp, array(
-					 'date' => date('M d', strtotime($log['date'])),
-					 'qty' => $log['qty'],
-					 'ref_no' => $log['ref_no'],
-					 'type_is' => $log['type_is']
-				  ));
-								  }
-			  print_r($temp); exit;*/
-	   
-	  
-        $bin_card_data = array(
-            0 => array(
-                'header' => array(
-                    'account_no' => '123456',
-                    'stock_no' => 'stock_no',
-                    'reorder_point' => 'reorder_point',
-                    'description' => "headdescription"
-                ),
-                'detail' => array(
-                    0 => array(
-                        'date' => 'Aug 12',
-                        'ref' => 'ref-123',
-                        'received_qty' => '12',
-                        'issued_qty' => '12',
-                        'bal_qty' => '24'
-                    ),
-                    1 => array(
-                        'date' => 'Aug 12',
-                        'ref' => 'ref-123',
-                        'received_qty' => '12',
-                        'issued_qty' => '12',
-                        'bal_qty' => '24'
-                    ),
-                    2 => array(
-                        'date' => 'Aug 12',
-                        'ref' => 'ref-123',
-                        'received_qty' => '12',
-                        'issued_qty' => '12',
-                        'bal_qty' => '24'
-                    ),
-                    3 => array(
-                        'date' => 'Aug 12',
-                        'ref' => 'ref-123',
-                        'received_qty' => '12',
-                        'issued_qty' => '12',
-                        'bal_qty' => '24'
-                    ),
-                )
-            ),
-            1 => array(
-                'header' => array(
-                    'account_no' => 'account_no',
-                    'stock_no' => 'stock_no',
-                    'reorder_point' => 'reorder_point',
-                    'description' => 'description',
-                ),
-                'detail' => array(
-                    0 => array(
-                    'detail_foo' => 'detail-bar'
-                    )
-                )
-            )
-        );
         
-		$limit_ng_linya_na_kasya_sa_papel = 1;
-		$data_chunk = array_chunk($bin_card_data, $limit_ng_linya_na_kasya_sa_papel,true);
+		$limit_ng_linya_na_kasya_sa_papel = 57;
+		$data_chunk = array_chunk($bin_card_data['detail'], $limit_ng_linya_na_kasya_sa_papel,true);
 		$total_page = count($data_chunk);
         
-		
-		foreach($data_chunk as $key => $data){
+		//echo '<pre>';
+		foreach($data_chunk as $data) {
+		    //print_r($data);exit;
 		    $rc= new BinCard();
-		    $rc->hdr($data[$key]['header']);
-			$rc->table($data[$key]['detail']);
+		    $rc->hdr($bin_card_data['header']);
+			$rc->table($data);
             $rc->output();
 		}
 		

@@ -89,7 +89,7 @@ class BinCard extends Formsheet{
         $y=1.7;
         $y++;
         foreach($data as $datum) {
-            $this->centerText(0,$y, $datum['date'],5,'');
+            $this->centerText(0,$y, date('M d', strtotime($datum['date'])),5,'');
             $this->centerText(5,$y, $datum['ref'],5,'');
             $this->centerText(10, $y, $datum['received_qty'],5,'');
             $this->centerText(15, $y, $datum['issued_qty'],5,'');

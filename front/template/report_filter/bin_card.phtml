@@ -25,12 +25,14 @@
     $('document').ready(function() {
         $('form').on('submit', function(e) {
             e.preventDefault();
+            
             var stock_no = ($('#stock_no').val())?$('#stock_no').val():false;
             var from_date = ($('#from_date').val())?$('#from_date').val():false;
             var to_date = ($('#to_date').val())?$('#to_date').val():false;
+            var get = $('iframe')[0].src.split('?')[0]+'/?stock_no='+stock_no+'&from_date='+from_date+'&to_date='+to_date;
             if(stock_no && from_date && to_date) {
-                return $('iframe')[0].src+='/?stock_no='+stock_no+'&from_date='+from_date+'&to_date='+to_date;
+                return $('iframe')[0].src=get;
             }
         });
     });
-</script>>
+</script>
