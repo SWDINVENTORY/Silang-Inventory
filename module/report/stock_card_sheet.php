@@ -16,7 +16,7 @@ class StockCard extends Formsheet{
 		$this->createSheet();
 	}
 	
-	function hdr(){
+	function hdr($data){
 		$metrics = array(
 			'base_x'=> 0.2,
 			'base_y'=> 0.3,
@@ -31,12 +31,12 @@ class StockCard extends Formsheet{
 		$this->centerText(0,$y++,'STOCK CARD',50,'b');
 		$this->drawLine($y+0.2,'h',array(20,10));
 		$this->GRID['font_size']=10;	
-		$this->centerText(0,$y++,'SILANG WATER DISTRICT',50,'b');		
+		$this->centerText(0,$y++,($data['agency'])?$data['agency']:'SILANG WATER DISTRICT',50,'b');		
 		$this->centerText(0,$y++,'Agency',50,'');
 		return $this;
 	}
 	
-	function data_box(){
+	function data_box($data){
 		$metrics = array(
 			'base_x'=> 0.2,
 			'base_y'=> 1,
@@ -102,7 +102,7 @@ class StockCard extends Formsheet{
 	
 	}
 	
-	function details(){
+	function details($data){
 		$metrics = array(
 			'base_x'=> 0.2,
 			'base_y'=> 1.8,
@@ -115,28 +115,28 @@ class StockCard extends Formsheet{
 		$this->GRID['font_size']=9;	
 
 		
-		
+		//echo '<pre>';
+        //print_r($data);
+        //exit;
 		$y = 1;
-		//foreach($data as $key => $d ){
-		for($i=1;$i<42;$i++){
+		foreach($data as $data ) {
 			$x_ntrvl = 4;
 			$x_ntrvl3 = 8;
 			$x = 3;
 			
-			$this->centerText(0,$y,$i,3,'');
-			$this->centerText($x,$y,'IAR Reference',$x_ntrvl,'');
-			$this->centerText($x+=$x_ntrvl,$y,'RIS Reference',$x_ntrvl,'');
 			
-			
-			$this->centerText($x+=$x_ntrvl,$y,'Qty',$x_ntrvl,'');
-			$this->centerText($x+=$x_ntrvl,$y,'Unit Cost',$x_ntrvl,'');
-			$this->centerText($x+=$x_ntrvl,$y,'Amount',$x_ntrvl,'');
-			$this->centerText($x+=$x_ntrvl,$y,'Qty',$x_ntrvl,'');
-			$this->centerText($x+=$x_ntrvl,$y,'Unit Cost',$x_ntrvl,'');
-			$this->centerText($x+=$x_ntrvl,$y,'Amount',$x_ntrvl,'');
-			$this->centerText($x+=$x_ntrvl,$y,'Qty',$x_ntrvl,'');
-			$this->centerText($x+=$x_ntrvl,$y,'Unit Cost',$x_ntrvl,'');
-			$this->centerText($x+=$x_ntrvl,$y,'Amount',$x_ntrvl,'');
+			$this->centerText(0,$y, date('M d', strtotime($data['date'])),3,'');
+			$this->centerText($x,$y,$data['received_ref'],$x_ntrvl,'');
+			$this->centerText($x+=$x_ntrvl,$y,$data['issued_ref'],$x_ntrvl,'');
+			$this->centerText($x+=$x_ntrvl,$y,$data['received_qty'],$x_ntrvl,'');
+			$this->centerText($x+=$x_ntrvl,$y,$data['received_cost'],$x_ntrvl,'');
+		    $this->centerText($x+=$x_ntrvl,$y,'received_amt',$x_ntrvl,'');
+			$this->centerText($x+=$x_ntrvl,$y,$data['issued_qty'],$x_ntrvl,'');
+			$this->centerText($x+=$x_ntrvl,$y,$data['issued_cost'],$x_ntrvl,'');
+			$this->centerText($x+=$x_ntrvl,$y,'issued amt',$x_ntrvl,'');
+			$this->centerText($x+=$x_ntrvl,$y,$data['bal_qty'],$x_ntrvl,'');
+            $this->centerText($x+=$x_ntrvl,$y,$data['bal_cost'],$x_ntrvl,'');
+            $this->centerText($x+=$x_ntrvl,$y,'bal amt',$x_ntrvl,'');
 			$y++;
 		}
 

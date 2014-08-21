@@ -9,17 +9,13 @@ class BinCard extends Formsheet{
 	protected static $_available_line = 41;	
 	protected static $_allot_subjects = 15;
 	
-	function __construct(){
+	function __construct() {
 		$this->showLines = !true;
 		parent::__construct(BinCard::$_orient, BinCard::$_unit,array(BinCard::$_width,BinCard::$_height));
 		$this->createSheet();
 	}
 	
 	function hdr($data) {
-		//echo '<pre>';
-        // echo 'from head'.'<br/>';
-        //print_r($data);
-        //exit;
 		$metrics = array(
 			'base_x'=> 0.25,
 			'base_y'=> 0.25,
@@ -39,7 +35,7 @@ class BinCard extends Formsheet{
 		$y++;
 		$this->drawLine($y-0.5,'h',array(6,13));
 		$y++;
-		$this->GRID['font_size']=9;
+		$this->GRID['font_size']=9; 
         $test = $data['description'];
 		$this->centerText(0, 4.35, $data['description'], 25,'');
 		$this->centerText(0,$y-0.7,'Description',25,'b');
@@ -97,6 +93,6 @@ class BinCard extends Formsheet{
             $y++;
         }
     }
-}
+ }
 ?>
 	

@@ -157,7 +157,7 @@ class Front_Page_Report extends Front_Page {
 
 	   $bin_card_data['detail'] =front()->database()
 			->query($query);
-        
+		
 		$limit_ng_linya_na_kasya_sa_papel = 57;
 		$data_chunk = array_chunk($bin_card_data['detail'], $limit_ng_linya_na_kasya_sa_papel,true);
 		$total_page = count($data_chunk);
@@ -230,8 +230,76 @@ class Front_Page_Report extends Front_Page {
     
     protected function report_STOCK_CARD()
     {
+       $head = $this->Item()->getByStockNo($this->get['stock_no']);
+
+       $stock_card_data = array();
+       $stock_card_data['header'] = array(
+            'agency' => 'SILANG WATER DISTRICT',
+            'stock_no' => $head['item_stock_no'],
+            'desc' => $head['item_desc'].' '.$head['item_size']            
+       );
+       
+       $query = sprintf("( SELECT
+                issuance_dtl.issuance_dtl_item_created AS date,
+                '' AS received_ref,
+                '' AS received_cost,
+                '' AS received_qty,
+                issuance.issuance_no AS issued_ref,
+                '' AS issued_cost,
+                issuance_dtl.issuance_dtl_item_issued AS issued_qty,    
+                '' AS bal_qty,
+                '' AS bal_cost
+            FROM
+                issuance_dtl
+            INNER JOIN ris_dtl ON ris_dtl.ris_dtl_id = issuance_dtl.issuance_dtl_ris_dtl_id
+            INNER JOIN item ON item.item_stock_no = ris_dtl.ris_dtl_item_stock_no
+            INNER JOIN issuance ON issuance.issuance_id = issuance_dtl.issuance_dtl_issuance_id
+            WHERE
+                item.item_stock_no = '%s'
+            AND (
+                issuance_dtl.issuance_dtl_item_created >= '%s'
+                AND issuance_dtl.issuance_dtl_item_created < '%s'
+                )
+            )
+            UNION
+                (
+                    SELECT
+                        ia_dtl.ia_dtl_item_created AS date,
+                        ia.ia_no AS received_ref,
+                        po_dtl.po_dtl_item_cost AS received_cost,
+                        ia_dtl.ia_dtl_item_qty AS received_qty,
+                        '' AS issued_ref,
+                        '' AS issued_cost,
+                        '' AS issued_qty,
+                        '' AS bal_qty,
+                        '' AS bal_cost
+                    FROM
+                        item
+                    INNER JOIN po_dtl ON item.item_stock_no = po_dtl.po_dtl_stock_no
+                    INNER JOIN ia_dtl ON po_dtl.po_dtl_id = ia_dtl.ia_dtl_po_dtl_id
+                    INNER JOIN ia ON ia_dtl.ia_dtl_ia_id = ia.ia_id
+                    WHERE
+                        item.item_stock_no = '%s'
+                    AND (
+                        ia_dtl.ia_dtl_item_created >= '%s'
+                        AND ia_dtl.ia_dtl_item_created < '%s'
+                    )
+                )
+            ORDER BY
+                date",
+            $this->get['stock_no'],
+            date('Y-m-d H:i:s', strtotime($this->get['from_date'])),
+            date('Y-m-d H:i:s', strtotime($this->get['to_date'])),
+            $this->get['stock_no'],
+            date('Y-m-d H:i:s', strtotime($this->get['from_date'])),
+            date('Y-m-d H:i:s', strtotime($this->get['to_date']))
+        );
+
+       $stock_card_data['detail'] =front()->database()
+            ->query($query);
+            
         $rc = new StockCard();
-        $rc->hdr()->details()->data_box()->output();
+        $rc->hdr($stock_card_data['header'])->details($stock_card_data['detail'])->data_box($stock_card_data['header'])->output();
     }
     
 	/* Protected Methods
