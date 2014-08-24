@@ -54,6 +54,9 @@ class Front_Page_Items extends Front_Page {
 			case 'delete':
 					$this->_delete($this->post);
 				break;
+			case 'initialize_stocks_level':
+					$this->_init();
+				break;
 			default :
 				$this -> _item();
 				break;
@@ -142,6 +145,22 @@ class Front_Page_Items extends Front_Page {
 			}
 		}
 		
+		return $this;
+	}
+	
+	protected function _init() {
+		$items = $this->Item()->getAll();
+		if(count($items)) {
+			foreach($items as $item) {
+					front()->database()
+						->insertRow('item_stock_level', array(
+								'item_stock_level_item_id' => $item['item_id'],
+								'item_stock_level_qty' => $item['item_qty'],
+								'item_stock_level_date' => date('Y-m-d H:i:s'),
+								'item_stock_level_flag' => 0
+						));
+			}
+		}
 		return $this;
 	}
 	

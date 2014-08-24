@@ -84,7 +84,6 @@ class Front_Page_Requisition extends Front_Page {
 	protected function _add() {
 		$post = $this -> post;
 		
-		
 		//echo "<pre>";print_r($post);exit();
 		//If id for requisition
 		if (isset($post['ris_id']) && empty($post['ris_id'])) {
@@ -102,6 +101,9 @@ class Front_Page_Requisition extends Front_Page {
 						$dtl = $dtls;
 						$dtl['ris_dtl_ris_id'] = $ris_id;
 						$dtl['ris_dtl_item_created'] = date('Y-m-d H:i:s');
+						$item = $this->Item()->getByStockNo($dtls['ris_dtl_item_stock_no']);
+												
+						$dtl['ris_dtl_item_cost'] = $item['item_cost_unit_cost'];
 						$dtl_id = front()->database()
 							->insertRow('ris_dtl', $dtl);
 					}

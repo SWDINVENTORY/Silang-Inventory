@@ -70,12 +70,14 @@ class Front_Page_Issuance extends Front_Page {
 			if (isset($post['ris_dtl']) && is_array($post['ris_dtl']) &&
 				!empty($post['ris_dtl'])) {
 					$issuance_details =  $post['ris_dtl'];
+					
 					$issuance_id = $this->Issuance()->add(array(
 						'issuance_no' => $post['issuance_no'],
 						'issuance_ris_id' => $post['ris_id'],
 						'created' => date('Y-m-d h:i:s', time())
 					));
 					
+					$this->transaction_id = $issuance_id;
 					
 					foreach($issuance_details as $dtl) {
 						front()->database()
@@ -300,7 +302,9 @@ class Front_Page_Issuance extends Front_Page {
 			->insertRow( 'item_stock_level' ,array(
 				'item_stock_level_item_id' => $match['item_id'],
 				'item_stock_level_qty' => $item_qty,
-				'item_stock_level_date' => date('Y-m-d H:i:s')
+				'item_stock_level_date' => date('Y-m-d H:i:s'),
+				'item_stock_level_flag' => -1,
+				'item_stock_level_tid' => $this->transaction_id
 			));
 		
 		return true;

@@ -109,7 +109,9 @@ class Front_Page_Report extends Front_Page {
 	   
 	   $query = sprintf("( SELECT
 			issuance_dtl.issuance_dtl_item_created AS date,
-			issuance.issuance_no AS ref, 
+			issuance.issuance_no AS ref,
+			issuance.issuance_id AS tid,
+			-1 AS flag,
 			'' AS received_qty,
 			issuance_dtl.issuance_dtl_item_issued AS issued_qty,
 			'' AS bal_qty
@@ -130,6 +132,8 @@ class Front_Page_Report extends Front_Page {
 					SELECT
 						ia_dtl.ia_dtl_item_created AS date,
 						ia.ia_no AS ref,
+						ia.ia_id AS tid,
+						1 AS flag,
 						ia_dtl.ia_dtl_item_qty AS received_qty,
 						'' AS issued_qty,
 						'' AS bal_qty
@@ -158,13 +162,21 @@ class Front_Page_Report extends Front_Page {
 	   $bin_card_data['detail'] =front()->database()
 			->query($query);
 		
+		for($i = 0; $i < count($bin_card_data['detail']); $i++) {
+			$bal = front()->database()
+				->search('item_stock_level')
+				->filterByItemStockLevelTid($bin_card_data['detail'][$i]['tid'])
+				->addFilter('item_stock_level_flag = %s',$bin_card_data['detail'][$i]['flag'])
+				->getRow();
+			$bin_card_data['detail'][$i]['date'] = date('M d', strtotime($bin_card_data['detail'][$i]['date']));
+			$bin_card_data['detail'][$i]['bal_qty'] = $bal['item_stock_level_qty'];
+	   }
+		
 		$limit_ng_linya_na_kasya_sa_papel = 57;
 		$data_chunk = array_chunk($bin_card_data['detail'], $limit_ng_linya_na_kasya_sa_papel,true);
 		$total_page = count($data_chunk);
         
-		//echo '<pre>';
 		foreach($data_chunk as $data) {
-		    //print_r($data);exit;
 		    $rc= new BinCard();
 		    $rc->hdr($bin_card_data['header']);
 			$rc->table($data);
@@ -188,7 +200,26 @@ class Front_Page_Report extends Front_Page {
     
     protected function report_MONTHLY()
     {
-        $reportType = "SUPPLIES INVENTORY";
+        echo '<pre>';
+		print_r($this->get);
+		exit;
+		
+		$query_1 = "SELECT
+			article.article_name,
+			CONCAT(item.item_size, ' ', item.item_desc) as `desc`,
+			article.article_inventory_type,
+			item.item_qty,
+			item.item_stock_no
+			FROM
+			article
+			INNER JOIN item ON article.article_id = item.item_article_id
+			WHERE
+			item.item_stock_no = '%s' AND
+			article.article_inventory_type = '%s' ";
+		
+		
+		
+		$reportType = "SUPPLIES INVENTORY";
         $rc = new MonthlyReport();
         $rc->hdr($reportType)->details()->data_box()->output();
     }
@@ -231,7 +262,7 @@ class Front_Page_Report extends Front_Page {
     protected function report_STOCK_CARD()
     {
        $head = $this->Item()->getByStockNo($this->get['stock_no']);
-
+		
        $stock_card_data = array();
        $stock_card_data['header'] = array(
             'agency' => 'SILANG WATER DISTRICT',
@@ -241,14 +272,19 @@ class Front_Page_Report extends Front_Page {
        
        $query = sprintf("( SELECT
                 issuance_dtl.issuance_dtl_item_created AS date,
-                '' AS received_ref,
+                -1 AS flag,
+				issuance.issuance_id AS tid,
+				'' AS received_ref,
                 '' AS received_cost,
                 '' AS received_qty,
-                issuance.issuance_no AS issued_ref,
-                '' AS issued_cost,
-                issuance_dtl.issuance_dtl_item_issued AS issued_qty,    
+				'' AS received_amt,
+				issuance.issuance_no AS issued_ref,
+                ris_dtl.ris_dtl_item_cost AS issued_cost,
+                issuance_dtl.issuance_dtl_item_issued AS issued_qty,
+				ris_dtl.ris_dtl_item_cost * issuance_dtl.issuance_dtl_item_issued AS issued_amt,
                 '' AS bal_qty,
-                '' AS bal_cost
+                ris_dtl.ris_dtl_item_cost AS bal_cost,
+                '' AS bal_amt
             FROM
                 issuance_dtl
             INNER JOIN ris_dtl ON ris_dtl.ris_dtl_id = issuance_dtl.issuance_dtl_ris_dtl_id
@@ -265,14 +301,19 @@ class Front_Page_Report extends Front_Page {
                 (
                     SELECT
                         ia_dtl.ia_dtl_item_created AS date,
-                        ia.ia_no AS received_ref,
+                        1 AS flag,
+						ia.ia_id AS tid,
+						ia.ia_no AS received_ref,
                         po_dtl.po_dtl_item_cost AS received_cost,
                         ia_dtl.ia_dtl_item_qty AS received_qty,
-                        '' AS issued_ref,
+                        ia_dtl.ia_dtl_item_qty * po_dtl.po_dtl_item_cost AS received_amt,
+						'' AS issued_ref,
                         '' AS issued_cost,
                         '' AS issued_qty,
+                        '' AS issued_amt,
                         '' AS bal_qty,
-                        '' AS bal_cost
+                        po_dtl.po_dtl_item_cost AS bal_cost,
+                        '' AS bal_amt
                     FROM
                         item
                     INNER JOIN po_dtl ON item.item_stock_no = po_dtl.po_dtl_stock_no
@@ -297,9 +338,22 @@ class Front_Page_Report extends Front_Page {
 
        $stock_card_data['detail'] =front()->database()
             ->query($query);
-            
-        $rc = new StockCard();
-        $rc->hdr($stock_card_data['header'])->details($stock_card_data['detail'])->data_box($stock_card_data['header'])->output();
+		
+	   
+	   for($i = 0; $i < count($stock_card_data['detail']); $i++) {
+			$bal = front()->database()
+				->search('item_stock_level')
+				->filterByItemStockLevelTid($stock_card_data['detail'][$i]['tid'])
+				->addFilter('item_stock_level_flag = %s',$stock_card_data['detail'][$i]['flag'])
+				->getRow();
+			$stock_card_data['detail'][$i]['date'] = date('M d', strtotime($stock_card_data['detail'][$i]['date']));
+			$stock_card_data['detail'][$i]['bal_qty'] = $bal['item_stock_level_qty'];
+			$stock_card_data['detail'][$i]['bal_amt'] = number_format(
+				$bal['item_stock_level_qty'] * $stock_card_data['detail'][$i]['bal_cost'],2,'.',',');
+	   }
+	   
+       $rc = new StockCard();
+       $rc->hdr($stock_card_data['header'])->details($stock_card_data['detail'])->data_box($stock_card_data['header'])->output();
     }
     
 	/* Protected Methods

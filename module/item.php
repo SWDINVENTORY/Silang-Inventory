@@ -90,12 +90,26 @@ class Item extends Abstract_Model {
 	}
 	
 	public static function getByStockNo($stock_no=null) {
-		return front()->database()
+	
+	
+		$item = front()->database()
 			->search()
 			->setTable('item')
 			->setColumns('item_id', 'item_unit_measure', 'item_type', 'item_stock_no', 'item_desc', 'item_article_id', 'item_acct_no', 'item_size')
 			->filterByItemStockNo($stock_no)
 			->getRow();
+		
+		$average_cost = front()->database()
+			->search()
+			->setTable('item_cost')
+			->setColumns('round(sum(item_cost_qty * item_cost_unit_cost)/ sum(item_cost_qty), 2) as unit_average_cost')
+			->innerJoinOn('item', 'item_id = item_cost_item_id')
+			->filterByItemStockNo($stock_no)
+			->getRow();
+		
+		$item['item_cost_unit_cost'] = $average_cost['unit_average_cost'];
+		
+		return $item;
 	}
 	/* Protected Methods
 	-------------------------------*/

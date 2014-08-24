@@ -130,13 +130,13 @@ class StockCard extends Formsheet{
 			$this->centerText($x+=$x_ntrvl,$y,$data['issued_ref'],$x_ntrvl,'');
 			$this->centerText($x+=$x_ntrvl,$y,$data['received_qty'],$x_ntrvl,'');
 			$this->centerText($x+=$x_ntrvl,$y,$data['received_cost'],$x_ntrvl,'');
-		    $this->centerText($x+=$x_ntrvl,$y,'received_amt',$x_ntrvl,'');
+		    $this->centerText($x+=$x_ntrvl,$y,$data['received_amt'],$x_ntrvl,'');
 			$this->centerText($x+=$x_ntrvl,$y,$data['issued_qty'],$x_ntrvl,'');
 			$this->centerText($x+=$x_ntrvl,$y,$data['issued_cost'],$x_ntrvl,'');
-			$this->centerText($x+=$x_ntrvl,$y,'issued amt',$x_ntrvl,'');
+			$this->centerText($x+=$x_ntrvl,$y,$data['issued_amt'],$x_ntrvl,'');
 			$this->centerText($x+=$x_ntrvl,$y,$data['bal_qty'],$x_ntrvl,'');
             $this->centerText($x+=$x_ntrvl,$y,$data['bal_cost'],$x_ntrvl,'');
-            $this->centerText($x+=$x_ntrvl,$y,'bal amt',$x_ntrvl,'');
+            $this->centerText($x+=$x_ntrvl,$y,$data['bal_amt'],$x_ntrvl,'');
 			$y++;
 		}
 

@@ -105,6 +105,8 @@ class Front_Page_Ia extends Front_Page {
 					$post[Ia::IA_CREATED] = date('Y-m-d H:i:s');
 					$ia_id = $this->Ia()->add($post);
 					
+					$this->transaction_id = $ia_id;
+					
 					$ia_details = array();
 					
 					foreach ($ia_dtl as $dtls) {
@@ -324,6 +326,7 @@ class Front_Page_Ia extends Front_Page {
 		$po_dtl = front()->database()
 			->getRow('po_dtl', 'po_dtl_id', $item['ia_dtl_po_dtl_id']);
 		
+				
 		//if exist
 		$itemfound = $this->Ia()->checkItem($po_dtl); 
 		
@@ -387,8 +390,12 @@ class Front_Page_Ia extends Front_Page {
 			array(
 			'item_stock_level_item_id' => $itemfound['item_id'],
 			'item_stock_level_qty' => $item_qty,
-			'item_stock_level_date' => date('Y-m-d H:i:s')
+			'item_stock_level_date' => date('Y-m-d H:i:s'),
+			'item_stock_level_flag' => 1,
+			'item_stock_level_tid' => $this->transaction_id
 		));
+		
+		exit;
 		
 		return $this;
 	}
