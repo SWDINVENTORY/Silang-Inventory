@@ -38,8 +38,13 @@ class Front_Page_Report extends Front_Page {
 	-------------------------------*/
 	public function render() {
 	    $this->request = front()->registry()->get('request', 'variables','0');
-        $this->get = front()->registry()->get('get');
-        
+        $this->get = front()->registry()->get('get');		
+		
+		
+		if(empty($_GET)) {
+			exit;
+		}
+		
         switch ($this->request) {
             case 'inventory-physical-count':
                     return $this->report_PHYSICAL_COUNT();
@@ -200,23 +205,123 @@ class Front_Page_Report extends Front_Page {
     
     protected function report_MONTHLY()
     {
-        echo '<pre>';
-		print_r($this->get);
-		exit;
 		
-		$query_1 = "SELECT
+		/*$query_1 = sprintf("SELECT
 			article.article_name,
-			CONCAT(item.item_size, ' ', item.item_desc) as `desc`,
-			article.article_inventory_type,
-			item.item_qty,
-			item.item_stock_no
+			item.item_id,
+			UPPER (
+				CONCAT(
+					item.item_size,
+					' ',
+					item.item_desc
+				)
+			) AS `desc`,
+			item.item_stock_no,
+			article.article_inventory_type
 			FROM
-			article
+				article
 			INNER JOIN item ON article.article_id = item.item_article_id
 			WHERE
-			item.item_stock_no = '%s' AND
-			article.article_inventory_type = '%s' ";
+			article.article_inventory_type = '%s' AND
+			item.item_stock_no = 'OS130 001'", 
+				$this->get['article_type']
+			);		
 		
+		 */
+		 //echo '<pre>';
+		 //print_r($this->get);
+		 //exit;
+		
+		$query_1 = sprintf("( SELECT
+			issuance_dtl.issuance_dtl_item_created AS `date`,
+			issuance.issuance_no AS ref,
+			issuance.issuance_id AS tid,
+			item.item_id,
+			CONCAT(item.item_desc, '', item.item_size) as `desc`,
+			item.item_stock_no,
+			article.article_name,
+			-1 AS flag,
+			'' AS received_qty,
+			issuance_dtl.issuance_dtl_item_issued AS issued_qty,
+			'' AS bal_qty
+			FROM
+				issuance_dtl
+			INNER JOIN ris_dtl ON ris_dtl.ris_dtl_id = issuance_dtl.issuance_dtl_ris_dtl_id
+			INNER JOIN item ON item.item_stock_no = ris_dtl.ris_dtl_item_stock_no
+			INNER JOIN article ON article_id = item.item_article_id
+			INNER JOIN issuance ON issuance.issuance_id = issuance_dtl.issuance_dtl_issuance_id
+			WHERE
+				issuance_dtl.issuance_dtl_item_created >= '%s'
+				AND issuance_dtl.issuance_dtl_item_created < '%s'	
+			)
+			UNION
+				(
+					SELECT
+						ia_dtl.ia_dtl_item_created AS `date`,
+						ia.ia_no AS ref,
+						ia.ia_id AS tid,
+						item.item_id,
+						CONCAT(item.item_desc, '', item.item_size) as `desc`,
+						item.item_stock_no,
+						article.article_name,
+						1 AS flag,
+						ia_dtl.ia_dtl_item_qty AS received_qty,
+						'' AS issued_qty,
+						'' AS bal_qty
+					FROM
+						item
+					INNER JOIN po_dtl ON item.item_stock_no = po_dtl.po_dtl_stock_no
+					INNER JOIN article ON article_id = item.item_article_id
+					INNER JOIN ia_dtl ON po_dtl.po_dtl_id = ia_dtl.ia_dtl_po_dtl_id
+					INNER JOIN ia ON ia_dtl.ia_dtl_ia_id = ia.ia_id
+					WHERE
+						ia_dtl.ia_dtl_item_created >= '%s'
+						AND ia_dtl.ia_dtl_item_created < '%s'
+				)
+			ORDER BY
+				date ASC, item_id",
+			date('Y-m-d H:i:s', strtotime($this->get['from_month'])),
+			date('Y-m-d H:i:s', strtotime($this->get['to_month'])),
+			date('Y-m-d H:i:s', strtotime($this->get['from_month'])),
+			date('Y-m-d H:i:s', strtotime($this->get['to_month']))
+		);
+		
+		$month_data['detail'] =front()->database()
+			->query($query_1);
+		
+		$temp = array();
+		
+		for($i = 0; $i < count($month_data['detail']); $i++) {
+			$index = $month_data['detail'][$i]['item_id'].'|'.$month_data['detail'][$i]['article_name'];
+			if(isset($temp[$index])) {
+				$temp[$index]['received_qty']+=$month_data['detail'][$i]['received_qty'];
+				$temp[$index]['issued_qty']+=$month_data['detail'][$i]['issued_qty'];
+			}
+			
+			if(!isset($temp[$index])) {
+				$temp[$index] = array(
+					'date' => $month_data['detail'][$i]['date'],
+					'article' => $month_data['detail'][$i]['article_name'],
+					'desc' => $month_data['detail'][$i]['desc'],
+					'bal_start' => '',
+					'received_qty' => $month_data['detail'][$i]['received_qty'],
+					'issued_qty' => $month_data['detail'][$i]['issued_qty'],
+				);
+			}
+			/*$bal = front()->database()
+				->search('item')
+				->filterByItemId($month_data['detail'][$i]['item_id'])
+				->getRow();
+				
+			$month_data['detail'][$i]['bal_qty'] = $bal['item_qty'];*/
+	   }
+		
+		
+		echo '<pre>';
+		print_r($month_data);
+		print_r($temp);
+		exit;
+				
 		
 		
 		$reportType = "SUPPLIES INVENTORY";
@@ -262,6 +367,7 @@ class Front_Page_Report extends Front_Page {
     protected function report_STOCK_CARD()
     {
        $head = $this->Item()->getByStockNo($this->get['stock_no']);
+		
 		
        $stock_card_data = array();
        $stock_card_data['header'] = array(
