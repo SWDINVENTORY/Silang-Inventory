@@ -115,9 +115,6 @@ class StockCard extends Formsheet{
 		$this->GRID['font_size']=9;	
 
 		
-		//echo '<pre>';
-        //print_r($data);
-        //exit;
 		$y = 1;
 		foreach($data as $data ) {
 			$x_ntrvl = 4;

@@ -1,5 +1,6 @@
 <?php //-->
 $files = front('folder', realpath(__DIR__.'/../../module/report/'))->getFiles('/\_sheet/');
+ini_set('max_execution_time', 300);
 
 foreach($files as $files){
 	include($files);
@@ -176,6 +177,7 @@ class Front_Page_Report extends Front_Page {
 			$bin_card_data['detail'][$i]['date'] = date('M d', strtotime($bin_card_data['detail'][$i]['date']));
 			$bin_card_data['detail'][$i]['bal_qty'] = $bal['item_stock_level_qty'];
 	   }
+	   
 		
 		$limit_ng_linya_na_kasya_sa_papel = 57;
 		$data_chunk = array_chunk($bin_card_data['detail'], $limit_ng_linya_na_kasya_sa_papel,true);
@@ -204,34 +206,7 @@ class Front_Page_Report extends Front_Page {
     }
     
     protected function report_MONTHLY()
-    {
-		
-		/*$query_1 = sprintf("SELECT
-			article.article_name,
-			item.item_id,
-			UPPER (
-				CONCAT(
-					item.item_size,
-					' ',
-					item.item_desc
-				)
-			) AS `desc`,
-			item.item_stock_no,
-			article.article_inventory_type
-			FROM
-				article
-			INNER JOIN item ON article.article_id = item.item_article_id
-			WHERE
-			article.article_inventory_type = '%s' AND
-			item.item_stock_no = 'OS130 001'", 
-				$this->get['article_type']
-			);		
-		
-		 */
-		 //echo '<pre>';
-		 //print_r($this->get);
-		 //exit;
-		
+    {		
 		$query_1 = sprintf("( SELECT
 			issuance_dtl.issuance_dtl_item_created AS `date`,
 			issuance.issuance_no AS ref,
@@ -444,6 +419,7 @@ class Front_Page_Report extends Front_Page {
 
        $stock_card_data['detail'] =front()->database()
             ->query($query);
+	
 		
 	   
 	   for($i = 0; $i < count($stock_card_data['detail']); $i++) {
