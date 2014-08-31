@@ -1,5 +1,6 @@
 {
     "require": {
-        "itbz/fpdf": "dev-master"
+        "itbz/fpdf": "dev-master",
+        "nesbot/Carbon": "*"
     }
 }
