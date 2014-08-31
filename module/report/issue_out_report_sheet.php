@@ -40,7 +40,7 @@ for($x = 0;$x<30;$x++){
 }
 //echo "<pre>";print_r($datas);exit();
 
-$ROWS = 9;
+$ROWS = 10;
 $next_index = 0;
 $data_count=count($datas['details']);
 $total_page = ceil($data_count/$ROWS);
@@ -149,7 +149,7 @@ class IssueOutReport extends Formsheet{
 				$this->centerText(47,$y,$details[$index]['total_cost_percharge'],5,'');
 				$this->centerText(52,$y,$details[$index]['total_per_rc'],5,'');
 				$this->centerText(55,$y,$details[$index]['total_per_rc_as_percharge'],5,'');
-				if($ln>=$ROWS){
+				if($ln+1>=$ROWS){
 					return $index+1;
 				}
 		}
