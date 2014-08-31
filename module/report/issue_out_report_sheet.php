@@ -1,6 +1,58 @@
 <?php
 namespace Report;
+$datas = array(
+			'headers'=>array(
+						'date'=>'Aug 31, 2014'
+			),
+			'details'=>array(
+						array(
+							'date'=>'Aug 31, 2014',
+							'ris_no'=>123,
+							'rc_desc'=>'sample desc',
+							'inv_desc'=>'sample inv desc',
+							'issued_qty'=>10,
+							'unit_cost'=>100,
+							'total_cost'=>1000,
+							'charging'=>10,
+							'total_per_charge'=>100,
+							'total_cost_percharge'=>1000,
+							'total_per_rc'=>10,
+							'total_per_rc_as_percharge'=>10,
+						)
+			)
+	);
+	$detail = array(
+					'date'=>'Aug 31, 2014',
+					'ris_no'=>123,
+					'rc_desc'=>'sample desc',
+					'inv_desc'=>'sample inv desc',
+					'issued_qty'=>10,
+					'unit_cost'=>100,
+					'total_cost'=>1000,
+					'charging'=>10,
+					'total_per_charge'=>100,
+					'total_cost_percharge'=>1000,
+					'total_per_rc'=>10,
+					'total_per_rc_as_percharge'=>10,
+				);
+for($x = 0;$x<30;$x++){
+	array_push($datas['details'],$detail);
+}
+//echo "<pre>";print_r($datas);exit();
 
+$ROWS = 9;
+$next_index = 0;
+$data_count=count($datas['details']);
+$total_page = ceil($data_count/$ROWS);
+$rc = new IssueOutReport();
+for($x=1;$x<=$total_page;$x++){
+	$rc->hdr();
+	$next_index = $rc->data_box($next_index,$ROWS,$datas['details']);
+	if($x<$total_page){
+		$rc->createSheet();
+	}
+}
+$rc->output();
 class IssueOutReport extends Formsheet{
 	protected static $_width = 8.5;
 	protected static $_height = 13;
@@ -37,7 +89,7 @@ class IssueOutReport extends Formsheet{
 	}
 	
 	
-	function data_box(){
+	function data_box($start_index,$ROWS,$details){
 		$metrics = array(
 			'base_x'=> 0.2,
 			'base_y'=> 1.7,
@@ -83,10 +135,25 @@ class IssueOutReport extends Formsheet{
 		$this->GRID['font_size']=8;	
 		$this->centerText(55,1.5,'Total Cost Per RC',5,'b');
 		$this->centerText(55,2.5,'As Per Charging',5,'b');
-		
-		
-		return $this;
-	
+		$y=4;
+		for($ln=0,$index=$start_index;$index<count($details);$ln++,$index++,$y++){
+				$this->centerText(0,$y,$details[$index]['date'],3,'');
+				$this->centerText(3,$y,$details[$index]['ris_no'],3,'');
+				$this->centerText(6,$y,$details[$index]['rc_desc'],13,'');
+				$this->centerText(18.5,$y,$details[$index]['inv_desc'],13,'');
+				$this->centerText(31.5,$y,$details[$index]['issued_qty'],2.5,'');
+				$this->centerText(34,$y,$details[$index]['unit_cost'],2.5,'');
+				$this->centerText(37,$y,$details[$index]['total_cost'],3,'');
+				$this->centerText(40,$y,$details[$index]['charging'],3,'');
+				$this->centerText(43,$y,$details[$index]['total_per_charge'],4);
+				$this->centerText(47,$y,$details[$index]['total_cost_percharge'],5,'');
+				$this->centerText(52,$y,$details[$index]['total_per_rc'],5,'');
+				$this->centerText(55,$y,$details[$index]['total_per_rc_as_percharge'],5,'');
+				if($ln>=$ROWS){
+					return $index+1;
+				}
+		}
+		return $index+1;
 	}
 	
 	function details(){

@@ -8,7 +8,7 @@ foreach($files as $files){
 
 use Report\BinCard as BinCard;
 use Report\IAReport as IAReport;
-use Report\IssueOutReport as IssueOutReport;
+use Report\rc as IssueOutReport;
 use Report\MonthlyReport as MonthlyReport;
 use Report\OldReusableStock as OldReusableStock;
 use Report\PCREPORT as PCREPORT;
