@@ -16,7 +16,7 @@ class MonthlyReport extends Formsheet{
 		$this->createSheet();
 	}
 	
-	function hdr($reportType){
+	function hdr($reportType,$fromMonth,$toMonth){
 		$metrics = array(
 			'base_x'=> 0.2,
 			'base_y'=> 0.3,
@@ -32,12 +32,19 @@ class MonthlyReport extends Formsheet{
 		$this->centerText(0,$y++,'Silang, Cavite',50,'b');
 		$y++;
 		$this->centerText(0,$y++,$reportType,50,'b');
-		$this->centerText(0,$y++,'for the month <DATE>',50,'b');
+		
+		if(date('Y',strtotime($fromMonth)) == date('Y',strtotime($toMonth))){
+			$dt = date('F',strtotime($fromMonth)).' - '.date('F, Y',strtotime($toMonth));
+		}else{
+			$dt =date('F, Y',strtotime($fromMonth)).' - '.date('F, Y',strtotime($toMonth));
+		}
+		
+		$this->centerText(0,$y++,'for the month of '.$dt,50,'b');
 		return $this;
 	}
 	
 	
-	function data_box(){
+	function data_box($detail){
 		$metrics = array(
 			'base_x'=> 0.2,
 			'base_y'=> 1.7,
@@ -78,9 +85,21 @@ class MonthlyReport extends Formsheet{
 		$this->centerText(46,1.3,'Ending',4,'b');
 		$this->centerText(46,2.3,'Balance',4,'b');
 		
-		$this->centerText(12,2,'',15,'b');
+		$y=4;
+		$ctr=1;
+		foreach($detail as $d){
+			$this->centerText(0,$y,'Item '.$ctr++,3,'');
+			$this->centerText(3,$y,$d['article'],10,'');
+			$this->centerText(13,$y,$d['desc'],15,'');
+			$this->centerText(27,$y,$d['item_stock_no'],3,'');
+			$this->centerText(30,$y,$d['bal_start'],4,'');
+			$this->centerText(34,$y,$d['received_qty'],4,'');
+			$this->centerText(38,$y,$d['issued_qty'],4,'');
+			$this->centerText(42,$y,$d['returned_qty'],4,'');
+			$this->centerText(46,$y,$d['bal_qty'],4,'');
+			$y++;
+		}
 		return $this;
-	
 	}
 	
 	function details(){
