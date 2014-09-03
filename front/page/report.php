@@ -322,8 +322,11 @@ class Front_Page_Report extends Front_Page {
                     'article' => $month_data['detail'][$i]['article_name'],
                     'desc' => $month_data['detail'][$i]['desc'],
                     'bal_start' => '',
+					'returned_qty' => '',
                     'received_qty' => $month_data['detail'][$i]['received_qty'],
                     'issued_qty' => $month_data['detail'][$i]['issued_qty'],
+					'item_stock_no' => $month_data['detail'][$i]['item_stock_no'],
+					'bal_qty' => $month_data['detail'][$i]['bal_qty'],
                 );
             }
             /*$bal = front()->database()
@@ -333,16 +336,24 @@ class Front_Page_Report extends Front_Page {
 
              $month_data['detail'][$i]['bal_qty'] = $bal['item_qty'];*/
         }
+        // echo '<pre>';
+        // print_r($month_data);
+        // print_r($temp);
+        // exit ;
 
-        echo '<pre>';
-        print_r($month_data);
-        print_r($temp);
-        exit ;
+		$reportType = "SUPPLIES INVENTORY";  
+		$data_chunk = array_chunk($temp, 46,true);
+		$total_page = count($data_chunk);
 
-        $reportType = "SUPPLIES INVENTORY";
-        $rc = new MonthlyReport();
-        $rc->hdr($reportType)->details()->data_box()->output();
-
+		$rc = new MonthlyReport();
+		foreach($data_chunk as $key => $data){
+			$page_no = $key+1;
+			$rc->hdr($reportType,$this->get['from_month'],$this->get['to_month']);
+			$rc->details();
+			$rc->data_box($data);
+			if($total_page > $page_no ) $rc->createSheet();
+		}
+        $rc->output();
     }
 
     protected function report_PHYSICAL_COUNT() {
