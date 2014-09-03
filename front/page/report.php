@@ -307,22 +307,33 @@ class Front_Page_Report extends Front_Page {
         $temp = array();
 
         for ($i = 0; $i < count($month_data['detail']); $i++) {
-            $index = $month_data['detail'][$i]['item_id'].'|'.$month_data['detail'][$i]['article_name'];
+            $index = $month_data['detail'][$i]['item_id'].' - '.$month_data['detail'][$i]['article_name'];
+            
+            //echo $index.' received_qty -> '.$month_data['detail'][$i]['received_qty'];
+            //echo ' issued_qty -> '.$month_data['detail'][$i]['issued_qty'].' <br/>';
+            
             if (isset($temp[$index])) {
-                $temp[$index]['received_qty'] += $month_data['detail'][$i]['received_qty'];
-                $temp[$index]['issued_qty'] += $month_data['detail'][$i]['issued_qty'];
+                if(is_numeric($month_data['detail'][$i]['received_qty'])) {
+                     $temp[$index]['received_qty'] += $month_data['detail'][$i]['received_qty'];     
+                }
+                if(is_numeric($month_data['detail'][$i]['issued_qty'])) {
+                    $temp[$index]['issued_qty'] += $month_data['detail'][$i]['issued_qty'];
+                }                
             }
-
+            
             if (!isset($temp[$index])) {
                 $temp[$index] = array(
                     'date' => $month_data['detail'][$i]['date'],
                     'article' => $month_data['detail'][$i]['article_name'],
                     'desc' => $month_data['detail'][$i]['desc'],
+                    'item_id' => $month_data['detail'][$i]['item_id'],
+                    'stock_no' => $month_data['detail'][$i]['item_stock_no'],
                     'bal_start' => '',
                     'received_qty' => $month_data['detail'][$i]['received_qty'],
-                    'issued_qty' => $month_data['detail'][$i]['issued_qty'],
+                    'issued_qty' => $month_data['detail'][$i]['issued_qty']
                 );
             }
+        
             /*$bal = front()->database()
              ->search('item')
              ->filterByItemId($month_data['detail'][$i]['item_id'])
@@ -331,10 +342,10 @@ class Front_Page_Report extends Front_Page {
              $month_data['detail'][$i]['bal_qty'] = $bal['item_qty'];*/
         }
 
-        echo '<pre>';
-        print_r($month_data);
-        print_r($temp);
-        exit ;
+        //echo '<pre>';
+        //print_r($month_data['detail']);
+        //print_r($temp);
+        //exit ;
 
         $reportType = "SUPPLIES INVENTORY";
         $rc = new MonthlyReport();
