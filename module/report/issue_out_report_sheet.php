@@ -16,7 +16,7 @@ class IssueOutReport extends Formsheet {
         $this->createSheet();
     }
 
-    function hdr() {
+    function hdr($data) {
         $metrics = array('base_x' => 0.2, 'base_y' => 0.3, 'width' => 12.6, 'height' => 0.9, 'cols' => 60, 'rows' => 5, );
         $this->section($metrics);
         $this->GRID['font_size'] = 9;
@@ -25,7 +25,7 @@ class IssueOutReport extends Formsheet {
         $this->leftText(0, $y++, 'Silang, Cavite', 60, 'b');
         $y++;
         $this->leftText(0, $y++, 'Report of Materials and Supplies Issued', 60, 'b');
-        $this->leftText(0, $y++, 'for the month <DATE>', 60, 'b');
+        $this->leftText(0, $y++, 'for the month '.$data['date'], 60, 'b');
         return $this;
     }
 
@@ -75,14 +75,14 @@ class IssueOutReport extends Formsheet {
             $this->centerText(3, $y, $details[$index]['ris_no'], 3, '');
             $this->centerText(6, $y, $details[$index]['rc_desc'], 13, '');
             $this->centerText(18.5, $y, $details[$index]['inv_desc'], 13, '');
-            $this->centerText(31.5, $y, $details[$index]['issued_qty'], 2.5, '');
-            $this->centerText(34, $y, $details[$index]['unit_cost'], 2.5, '');
-            $this->centerText(37, $y, $details[$index]['total_cost'], 3, '');
+            $this->rightText(31, $y, $details[$index]['issued_qty'], 2.5, '');
+            $this->rightText(34, $y, $details[$index]['unit_cost'], 2.5, '');
+            $this->rightText(36.5, $y, $details[$index]['total_cost'], 3, '');
             $this->centerText(40, $y, $details[$index]['charging'], 3, '');
-            $this->centerText(43, $y, $details[$index]['total_per_charge'], 4);
-            $this->centerText(47, $y, $details[$index]['total_cost_percharge'], 5, '');
-            $this->centerText(52, $y, $details[$index]['total_per_rc'], 5, '');
-            $this->centerText(55, $y, $details[$index]['total_per_rc_as_percharge'], 5, '');
+            $this->rightText(42.5, $y, $details[$index]['total_per_charge'], 4);
+            $this->rightText(46.5, $y, $details[$index]['total_cost_percharge'], 5, '');
+            $this->rightText(49.5, $y, $details[$index]['total_per_rc'], 5, '');
+            $this->rightText(54.5, $y, $details[$index]['total_per_rc_as_percharge'], 5, '');
             if ($ln + 1 >= $ROWS) {
                 return $index + 1;
             }
