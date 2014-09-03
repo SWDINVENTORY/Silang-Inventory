@@ -34,7 +34,7 @@
             var from_month = ($('#from_month').val())?$('#from_month').val():false;
             var to_month = ($('#to_month').val())?$('#to_month').val():false;
             var get = $('iframe')[0].src.split('/?')[0]+'/?article_type='+article_type+'&from_month='+from_month+'&to_month='+to_month;
-			alert(get);
+			//alert(get);
 			if(article_type && from_month && to_month) {
                 return $('iframe')[0].src=get;
             }
