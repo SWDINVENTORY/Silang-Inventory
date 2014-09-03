@@ -299,71 +299,14 @@ class Front_Page_Report extends Front_Page {
 						ia_dtl.ia_dtl_item_created >= '%s'
 						AND ia_dtl.ia_dtl_item_created < '%s'
 				)
-			ORDER BY
-<<<<<<< HEAD
-				date ASC, item_id",
-			date('Y-m-d H:i:s', strtotime($this->get['from_month'])),
-			date('Y-m-d H:i:s', strtotime($this->get['to_month'])),
-			date('Y-m-d H:i:s', strtotime($this->get['from_month'])),
-			date('Y-m-d H:i:s', strtotime($this->get['to_month']))
+			ORDER BY 
+					date ASC, item_id", 
+					date('Y-m-d H:i:s', strtotime($this->get['from_month'])),
+					date('Y-m-d H:i:s', strtotime($this->get['to_month'])),
+					date('Y-m-d H:i:s', strtotime($this->get['from_month'])), date('Y-m-d H:i:s', strtotime($this->get['to_month']))
 		);
-		
-		$month_data['detail'] =front()->database()
-			->query($query_1);
-		
-		$temp = array();
-		
-		for($i = 0; $i < count($month_data['detail']); $i++) {
-			$index = $month_data['detail'][$i]['item_id'].'|'.$month_data['detail'][$i]['article_name'];
-			if(isset($temp[$index])) {
-				$temp[$index]['received_qty']+=$month_data['detail'][$i]['received_qty'];
-				$temp[$index]['issued_qty']+=$month_data['detail'][$i]['issued_qty'];
-			}
-			
-			if(!isset($temp[$index])) {
-				$temp[$index] = array(
-					'date' => $month_data['detail'][$i]['date'],
-					'article' => $month_data['detail'][$i]['article_name'],
-					'desc' => $month_data['detail'][$i]['desc'],
-					'bal_start' => '',
-					'returned_qty' => '',
-					'received_qty' => $month_data['detail'][$i]['received_qty'],
-					'issued_qty' => $month_data['detail'][$i]['issued_qty'],
-					'item_stock_no' => $month_data['detail'][$i]['item_stock_no'],
-					'bal_qty' => $month_data['detail'][$i]['bal_qty'],
-				);
-			}
-			/*$bal = front()->database()
-				->search('item')
-				->filterByItemId($month_data['detail'][$i]['item_id'])
-				->getRow();
-				
-			$month_data['detail'][$i]['bal_qty'] = $bal['item_qty'];*/
-	   }
-		
-		//echo '<pre>';
-		//print_r($month_data);
-		//print_r($temp);
-		//exit;
-				
-		$reportType = "SUPPLIES INVENTORY";  
-		$data_chunk = array_chunk($temp, 46,true);
-		$total_page = count($data_chunk);
-
-		$rc = new MonthlyReport();
-		foreach($data_chunk as $key => $data){
-			$page_no = $key+1;
-			$rc->hdr($reportType,$this->get['from_month'],$this->get['to_month']);
-			$rc->details();
-			$rc->data_box($data);
-			if($total_page > $page_no ) $rc->createSheet();
-		}
-        $rc->output();
-=======
-				date ASC, item_id", date('Y-m-d H:i:s', strtotime($this->get['from_month'])), date('Y-m-d H:i:s', strtotime($this->get['to_month'])), date('Y-m-d H:i:s', strtotime($this->get['from_month'])), date('Y-m-d H:i:s', strtotime($this->get['to_month'])));
 
         $month_data['detail'] = front()->database()->query($query_1);
-
         $temp = array();
 
         for ($i = 0; $i < count($month_data['detail']); $i++) {
@@ -399,7 +342,7 @@ class Front_Page_Report extends Front_Page {
         $reportType = "SUPPLIES INVENTORY";
         $rc = new MonthlyReport();
         $rc->hdr($reportType)->details()->data_box()->output();
->>>>>>> origin/master
+
     }
 
     protected function report_PHYSICAL_COUNT() {
