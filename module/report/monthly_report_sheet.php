@@ -91,7 +91,7 @@ class MonthlyReport extends Formsheet{
 			$this->centerText(0,$y,'Item '.$ctr++,3,'');
 			$this->centerText(3,$y,$d['article'],10,'');
 			$this->centerText(13,$y,$d['desc'],15,'');
-			$this->centerText(27,$y,$d['item_stock_no'],3,'');
+			$this->centerText(27,$y,$d['stock_no'],3,'');
 			$this->centerText(30,$y,$d['bal_start'],4,'');
 			$this->centerText(34,$y,$d['received_qty'],4,'');
 			$this->centerText(38,$y,$d['issued_qty'],4,'');
