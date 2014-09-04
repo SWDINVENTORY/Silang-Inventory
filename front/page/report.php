@@ -334,7 +334,7 @@ class Front_Page_Report extends Front_Page {
                     'bal_start' => '',
 					'returned_qty' => '',
                     'received_qty' => $month_data['detail'][$i]['received_qty'],
-                    'issued_qty' => $month_data['detail'][$i]['issued_qty']
+                    'issued_qty' => $month_data['detail'][$i]['issued_qty'],
 					'item_stock_no' => $month_data['detail'][$i]['item_stock_no'],
 					'bal_qty' => $month_data['detail'][$i]['bal_qty'],
                 );
@@ -347,14 +347,18 @@ class Front_Page_Report extends Front_Page {
 
              $month_data['detail'][$i]['bal_qty'] = $bal['item_qty'];*/
         }
-        // echo '<pre>';
-        // print_r($month_data);
-        // print_r($temp);
-        // exit ;
-
-        exit ;
+			// echo '<pre>';
+         //print_r($month_data);
+         //print_r($temp);
+        //exit ;
+			
+        //exit ;
+		$key = 0;
+		$reportType = 'SUPPLIES';
 		$rc = new MonthlyReport();
-		foreach($data_chunk as $key => $data){
+		foreach($temp as $data) {
+			//echo '<pre>';
+			//print_r($data);exit;
 			$page_no = $key+1;
 			$rc->hdr($reportType,$this->get['from_month'],$this->get['to_month']);
 			$rc->details();
