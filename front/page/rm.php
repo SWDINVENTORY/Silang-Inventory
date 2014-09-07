@@ -254,16 +254,22 @@ class Front_Page_Rm extends Front_Page {
 				->getRows();
 		}
 		
-		if (isset($post['ris_no'])) {
+		if (isset($post['issuance_no'])) {
 			
-			$rm = front()->database()->getRow('ris','ris_no',$post['ris_no']);
-			$rm['ris_dtl']=$this -> Requisition() -> getDetail($rm['ris_id']);
-		}
-		
-		if (isset($post['rm_no'])) {
-			
-			$rm = front()->database()->getRow('rm','rm_no',$post['rm_no']);
-			$rm = $this -> Rm() -> getDetail($rm['rm_id']);
+			$rm = front()->database()
+				->search()
+				->setTable('issuance')
+				->innerJoinOn('ris', 'ris_id=issuance_ris_id')
+				->filterByIssuanceNo($post['issuance_no'])
+				->getRow();
+				
+			$rm['rm_dtl'] = front()->database()
+				->search()
+				->setTable('issuance')
+				->innerJoinOn('issuance_dtl', 'issuance_id=issuance_dtl_id')
+				->innerJoinOn('ris_dtl', 'issuance_dtl_ris_dtl_id=ris_dtl_id')
+				->filterByIssuanceNo($post['issuance_no'])
+				->getRows();
 		}
 		
 		if (IS_AJAX) {

@@ -118,10 +118,10 @@
 							<div class="form-horizontal row-fluid">
 								<div class="col-sm-4">
 									<div class="form-group">
-										<label class="col-sm-4 control-label">RIS No.</label>
+										<label class="col-sm-4 control-label">Issuance No.</label>
 										<div class="col-sm-6">
-											<input type="text" class="form-control" id="ris_no" placeholder="Type RIS No."/>
-											<input type="hidden" name="ris_id"/>
+											<input type="text" class="form-control" id="issuance_no" placeholder="Type Issuance No."/>
+											<input type="hidden" name="issuance_id"/>
 										</div>
 									</div>
 									<div class="form-group">
@@ -139,19 +139,19 @@
 									<div class="form-group">
 										<label class="col-sm-4 control-label">Returned:</label>
 										<div class="col-sm-6">
-											<input type="input" class="form-control" placeholder="Returned" name="rm_returned"/>
+											<input type="input" class="form-control" placeholder="Returned" name="ris_returned"/>
 										</div>
 									</div>
 									<div class="form-group">
 										<label class="col-sm-4 control-label">Approved:</label>
 										<div class="col-sm-6">
-											<input type="input" class="form-control" placeholder="Approval" name="rm_approved"/>
+											<input type="input" class="form-control" placeholder="Approval" name="ris_approved"/>
 										</div>
 									</div>
 									<div class="form-group">
 										<label class="col-sm-4 control-label">Received:</label>
 										<div class="col-sm-6">
-											<input type="input" class="form-control" placeholder="Receiver" name="rm_received"/>
+											<input type="input" class="form-control" placeholder="Receiver" name="ris_received"/>
 										</div>
 									</div>
 								</div>
@@ -159,7 +159,7 @@
 									<div class="form-group">
 										<label class="col-sm-6 control-label">RM No.</label>
 										<div class="col-sm-5">
-											<input type="text" class="form-control" name="issuance_no" placeholder="Issuance No."/>
+											<input type="text" class="form-control" name="issuance_no" placeholder="RM No."/>
 										</div>
 									</div>
 									<div class="form-group">
@@ -200,7 +200,7 @@
 												<th>Size</th>
 												<th>Qty</th>
 												<th>Issued Qty</th>
-												<th>Charging</th>
+												<th>Returned Qty</th>
 												<th>Remarks</th>
 												<th>Action</th>
 											</tr>
@@ -263,17 +263,17 @@
 							</div>
 						</div>
 						<div class="col-sm-12">
-							<label for="input-name" class="col-sm-3 control-label">Charging</label>
-							<div class="form-group col-sm-5">	
-								<input type="text" class="form-control" placeholder="Charging"
-									name="issuance_dtl_item_charging" >
-							</div>
-						</div>
-						<div class="col-sm-12">
 							<label for="input-tel" class="col-sm-3 control-label">Issued Qty</label>
 							<div class="form-group col-sm-2">
 								<input type="text" class="form-control" placeholder="QTY"
 									name="issuance_dtl_item_issued" required="required">
+							</div>
+						</div>
+						<div class="col-sm-12">
+							<label for="input-name" class="col-sm-3 control-label">Returned Qty</label>
+							<div class="form-group col-sm-5">	
+								<input type="text" class="form-control" placeholder="QTY"
+									name="issuance_dtl_item_issued" >
 							</div>
 						</div>
 						<div class="col-sm-12">
@@ -367,7 +367,7 @@
 			{ "mData": "ris_dtl_item_size" },
 			{ "mData": "ris_dtl_item_qty" },
 			{ "mData": function(data){
-				return (data.rm_dtl_item_returned)?data.rm_dtl_item_returned:null;
+				return (data.issuance_dtl_item_issued)?data.issuance_dtl_item_issued:null;
 				}
 			},
 			{ "mData": function(data){
@@ -418,9 +418,9 @@
 					"dataType": 'json',
 					"type": "POST",
 					"url": sSource,
-					"data": {issuance:'all'},
+					"data": {returned:'all'},
 					"success": fnCallback
-				  } );
+				  });
 				}
 			});
 			
@@ -433,19 +433,19 @@
 			});
 			
 			//RIS POPULATION
-			$('#ris_no').on('blur', function(){
+			$('#issuance_no').on('blur', function(){
 				var input = $(this);
-				var ris_number = input.val();
+				var issuance_number = input.val();
 				
 				clear_form('ris', function(){
 					$('input[name="ris_created"]').val(moment().format('M/D/YYYY'));
 				});
 				
-				$.post('/rm/', {ris_no : ris_number}, function(data){
+				$.post ('/rm/', {issuance_no : issuance_number}, function(data){
 					
 					ris = (data.data)?data.data:false;
-					if(!ris.ris_dtl.length) {
-						alert('Requisition Number '+ris_number+' not existing!');
+					if(!ris.rm_dtl.length) {
+						alert('Issuance Number '+issuance_no+' not existing!');
 						input.empty().focus();
 					}
 					
@@ -471,20 +471,10 @@
 											'sPaginationType' : "two_button",
 											"iDisplayLength" : 10,
 											"sDom" : '<"pad-it"<"pull-right"f>l>t<"pull-right"i>p>',
-											'sAjaxSource': '/issuance/',
-											'sAjaxDataProp': 'data.ris_dtl',
 											"aoColumns": ris_dtl_columns,
+											"aaData" : ris.rm_dtl,
 											"bDestroy" : true,
-											"bAutoWidth": false,
-											"fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {
-											  oSettings.jqXHR = $.ajax( {
-												"dataType": 'json',
-												"type": "POST",
-												"url": sSource,
-												"data": {ris_no:ris.ris_no},
-												"success": fnCallback
-											  } );
-											}
+											"bAutoWidth": false
 									});
 							
 							});
