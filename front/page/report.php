@@ -182,7 +182,7 @@ class Front_Page_Report extends Front_Page {
                 'ris_division',
                 'ris_dtl_item_desc',                
                 'ris_dtl_item_size',
-                'issuance_charging',
+                'issuance_dtl_item_charging',
                 'issuance_dtl_item_issued',
                 'ris_dtl_item_cost',
                 '(issuance_dtl.issuance_dtl_item_issued*ris_dtl.ris_dtl_item_cost) AS total_cost',
@@ -195,7 +195,6 @@ class Front_Page_Report extends Front_Page {
             ->addFilter('issuance_dtl.issuance_dtl_item_created >= %s', date('Y-m-d h:i:s', strtotime($this->get['from_date'])))
             ->addFilter('issuance_dtl.issuance_dtl_item_created < %s', date('Y-m-d h:i:s', strtotime($this->get['to_date'])))
             ->getRows();
-        
         
         
         $datas = array(
@@ -218,7 +217,7 @@ class Front_Page_Report extends Front_Page {
                     'issued_qty' => $issued[$i]['issuance_dtl_item_issued'],
                     'unit_cost' => $issued[$i]['ris_dtl_item_cost'],
                     'total_cost' => $issued[$i]['total_cost'],
-                    'charging' => $issued[$i]['issuance_charging'],
+                    'charging' => $issued[$i]['issuance_dtl_item_charging'],
                     'total_per_charge' => 'NONE',
                     'total_cost_percharge' => 'NONE',
                     'total_per_rc' => 'NONE',
@@ -235,7 +234,8 @@ class Front_Page_Report extends Front_Page {
         foreach ($issued_item as $item) {
             array_push($datas['details'], $item);
         }
-
+		
+		
         $ROWS = 50;
         $next_index = 0;
         $data_count = count($datas['details']);
@@ -338,28 +338,25 @@ class Front_Page_Report extends Front_Page {
 					'bal_qty' => $month_data['detail'][$i]['bal_qty'],
                 );
             }
-        
-            /*$bal = front()->database()
+        }
+		
+		 /*$bal = front()->database()
              ->search('item')
              ->filterByItemId($month_data['detail'][$i]['item_id'])
              ->getRow();
 
-             $month_data['detail'][$i]['bal_qty'] = $bal['item_qty'];*/
-        }
-        // echo '<pre>';
-        // print_r($month_data);
-        // print_r($temp);
-        // exit ;
+             $month_data['detail'][$i]['bal_qty'] = $bal['item_qty'];*/	
 		
 		$reportType = "SUPPLIES INVENTORY";  
 		$data_chunk = array_chunk($temp, 46,true);
 		$total_page = count($data_chunk);
 		
-		$rc = new MonthlyReport();
-		foreach($temp as $data) {
-			//echo '<pre>';
-			//print_r($data);exit;
-			$page_no = $key+1;
+		$key = 0;
+		$page_no = 0;
+		
+		foreach($data_chunk as $data) {
+			$rc = new MonthlyReport();
+			$page_no += 1;
 			$rc->hdr($reportType,$this->get['from_month'],$this->get['to_month']);
 			$rc->details();
 			$rc->data_box($data);
