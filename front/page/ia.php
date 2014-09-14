@@ -102,7 +102,7 @@ class Front_Page_Ia extends Front_Page {
 						unset($post['ia_partial_qty']);
 					}
 					$post = array_filter($post);
-					$post[Ia::IA_CREATED] = date('Y-m-d H:i:s');
+					//$post[Ia::IA_CREATED] = date('Y-m-d H:i:s');
 					$ia_id = $this->Ia()->add($post);
 					
 					$this->transaction_id = $ia_id;
