@@ -19,10 +19,18 @@
 		width: 5%;
 	}
 
-	#po-table td:nth-child(2), #po-table td:nth-child(3), #po-table td:nth-child(4), #po-table td:nth-child(5), #po-table td:nth-child(7), #po-table td:nth-child(8), #po-table td:nth-child(9) {
+	#po-table td:nth-child(2), #po-table td:nth-child(4), #po-table td:nth-child(8), #po-table td:nth-child(9) {
 		text-align: center;
 	}
 
+	#po-table td:nth-child(3), #po-table td:nth-child(7) {
+		text-align: left;
+	}
+	
+	#po-table td:nth-child(5) {
+		text-align: right;
+	}
+	
 	#po-dtl-table td:nth-child(1) {
 		text-align: center;
 	}
@@ -170,8 +178,8 @@
 									<div class="form-group">
 										<label class="col-sm-4 control-label">Date</label>
 										<div class="col-sm-6">
-											<div class='input-group date po-created'>
-												<input type='text' name="po_created" class="form-control" required="required"/>
+											<div class='input-group date po-date'>
+												<input type='text' name="po_date" class="form-control" required="required"/>
 												<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
 												</span>
 											</div>
@@ -462,7 +470,7 @@
 		var po_columns = [  { "mData": "supplier_name" },
 			            { "mData": "po_no" },
 			            { "mData": function(data) {
-			            	return moment(data.po_created).format('ddd, MMM Do YYYY');
+			            	return moment(data.po_date).format('MMM d, YYYY');
 			       		}},
 			            { "mData": "po_proc_mod" },
 			            { "mData": function(data){
@@ -470,7 +478,7 @@
 			            }},
 			            { "mData": "po_deliv_place" },
 			            { "mData": function(data) {
-			            	return moment(data.po_deliv_date).format('ddd, MMM Do YYYY');
+			            	return moment(data.po_deliv_date).format('MMM d YYYY');
 			            	}},
 			            { "mData": "po_deliv_term" },
 			            { "mData": "po_pay_term" },
@@ -545,9 +553,8 @@
 			}];
 		
 		var po_mapping = function(v, o) {
-			if(v == 'po_created') {
-				var dateIs = new Date(o[v].split(' ')[0]).toDateString();
-				return dateIs;
+			if(v == 'po_date') {
+				return (new Date(o[v]).toLocaleDateString());
 			}
 			if(v == 'po_deliv_date') {
 				return (new Date(o[v]).toLocaleDateString());
@@ -559,7 +566,7 @@
 		};
 		
 		$('document').ready(function() {
-			$('.po-created').datetimepicker();
+			$('.po-date').datetimepicker();
 			
 			$('.deliv-date').datetimepicker({
 				pickTime: false
