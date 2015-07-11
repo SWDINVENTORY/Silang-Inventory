@@ -861,9 +861,9 @@
 			var hidden_aggregation = $('#hidden_data');
 			$.each(data, function(index, o){
 				Object.keys(o).forEach(function(v,i,a){
-					hidden_aggregation.append(
-						'<input type="hidden" name="ia_dtl['+index+']['+v+']" value="'+o[v]+'"/>');
-					});
+					hidden_aggregation.append('<input type="hidden" name="ia_dtl['+index+']['+v+']"');//" value="'+o[v]+'"/>');
+					$('input[name="ia_dtl['+index+']['+v+']"]').val(o[v]);
+				});
 			});
 			
 			//inspectator
