@@ -463,7 +463,7 @@
 		var current_po = 'new';
 		var current_po_dtl = null;
 		var current_po_dtl_row = null;
-		po_detail_table = {};
+		var po_detail_table = {};
 		var po_table = {};
 		var action_template = $('#action_tpl').text().trim();
 		var po_dtl_view_mode = 0;
@@ -632,7 +632,6 @@
 					if(!suggestion.data.supplier_tin){
 						$('#supplier_tin').text('No TIN');
 					}
-					console.log(suggestion.data);
 				},
 				transformResult : function(response) {
 					response = JSON.parse(response);
@@ -837,12 +836,11 @@
 			$('#hidden_data').html('');
 			var data = po_detail_table.fnGetData();
 			var hidden_aggregation = $('#hidden_data');
-			var lagayan = {};
 			$.each(data, function(index, o){
 				Object.keys(o).forEach(function(v,i,a){
 					var value = o[v];
 					hidden_aggregation.append(
-						'<input type="hidden" name="po_dtl['+index+']['+v+']" />');//value="'+value+'"
+						'<input type="hidden" name="po_dtl['+index+']['+v+']" />');
 					$('input[name="po_dtl['+index+']['+v+']"]').val(value);
 					});	
 					
