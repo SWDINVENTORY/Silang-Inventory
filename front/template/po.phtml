@@ -463,7 +463,7 @@
 		var current_po = 'new';
 		var current_po_dtl = null;
 		var current_po_dtl_row = null;
-		var po_detail_table = {};
+		po_detail_table = {};
 		var po_table = {};
 		var action_template = $('#action_tpl').text().trim();
 		var po_dtl_view_mode = 0;
@@ -519,7 +519,11 @@
 		var po_dtl_columns = [{ "mData": "po_dtl_stock_no" },
 			{ "mData": "po_dtl_item_unit" },
 			{ "mData": "po_dtl_item_qty" },
-			{ "mData": "po_dtl_item_desc" },
+			{ "mData": "po_dtl_item_desc" 
+					/*function(data){
+						return data.po_dtl_item_desc.toString().replace(/"/g,'\\\"');
+					}*/
+			},
 			{ "mData": function(data){
 				var article_name = $('select[name="po_dtl_article_id"]')
 					.find('option[value="'+data.po_dtl_article_id+'"]').text().trim();
@@ -830,15 +834,18 @@
 		
 		//HEADER SUBMIT HANDLER
 		$('#po-modal-form').submit(function(e){
-			//e.preventDefault();
 			$('#hidden_data').html('');
 			var data = po_detail_table.fnGetData();
 			var hidden_aggregation = $('#hidden_data');
+			var lagayan = {};
 			$.each(data, function(index, o){
 				Object.keys(o).forEach(function(v,i,a){
+					var value = o[v];
 					hidden_aggregation.append(
-						'<input type="hidden" name="po_dtl['+index+']['+v+']" value="'+o[v]+'"/>');
-					});
+						'<input type="hidden" name="po_dtl['+index+']['+v+']" />');//value="'+value+'"
+					$('input[name="po_dtl['+index+']['+v+']"]').val(value);
+					});	
+					
 			});
 		});
 				

@@ -91,8 +91,9 @@ class Front_Page_Po extends Front_Page {
 				
 				$post['po_total'] = $total_amount;
 				$post = array_filter($post);
-				//$post[Po::PO_CREATED] = date('Y-m-d H:i:s');
-				$post[Po::PO_DATE] = date('Y-m-d', strtotime(str_replace('-', '/', $post[Po::PO_DATE])));
+				$post[Po::PO_CREATED] = date('Y-m-d H:i:s');
+				$post[Po::PO_CREATED] = date('Y-m-d', strtotime(str_replace('-', '/', $post[Po::PO_CREATED])));
+			
 				$post[Po::PO_DELIV_DATE] = date('Y-m-d', strtotime(str_replace('-', '/', $post[Po::PO_DELIV_DATE])));
 				$po_id = $this->Po()->add($post);
 				$po_details = array();
