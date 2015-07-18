@@ -59,7 +59,7 @@ use fpdf\FPDF as FPDF;
 			}
 			$this->Text($this->GRID['base_x']+($this->GRID['cell_width']*$x),$this->GRID['base_y']+($this->GRID['cell_height']*$y),$txt);
 		}
-		public function fitParagraph($x,$y,$txt,$w,$align='l',$lnbrk=1){
+		public function fitParagraph($x,$y,$txt,$w,$align='l',$lnbrk=1,$style=''){
 			$words = explode(" ", $txt);	
 			$paragraph = array();
 			$width = $w;
@@ -73,27 +73,30 @@ use fpdf\FPDF as FPDF;
 			$line='';
 			$len = 0;
 			$ctr = 1;
+			$lenlen = 0;
 			foreach($paragraph as $p){
 					$len = $len+$p['len'];
 					$line = $line.$p['word'].' ';
 				if($len>$width||$ctr == count($paragraph)){
 					switch($align){
 						case 'l':
-							$this->leftText($x,$y,$line,$width,'');
+							$this->leftText($x,$y,$line,$width,$style);
 							break;
 						case 'r':
-							$this->rightText($x,$y,$line,$width,'');
+							$this->rightText($x,$y,$line,$width,$style);
 							break;
 						case 'c':
-							$this->centerText($x,$y,$line,$width,'');
+							$this->centerText($x,$y,$line,$width,$style);
 							break;
 					}
 					$line='';
 					$len=0;
 					$y+=$lnbrk;
+					$lenlen++;
 				}
 				$ctr++;
 			}
+			return $lenlen;
 		}
 		
 		public function wrapText($x,$y,$txt,$w,$align='l',$lnbrk=1){
