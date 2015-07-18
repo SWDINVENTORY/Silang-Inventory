@@ -477,7 +477,7 @@
 		var po_columns = [  { "mData": "supplier_name" },
 			            { "mData": "po_no" },
 			            { "mData": function(data) {
-			            	return moment(data.po_date).format('MMM d, YYYY');
+			            	return moment(data.po_date).format('MMM D, YYYY');
 			       		}},
 			            { "mData": "po_proc_mod" },
 			            { "mData": function(data){
@@ -485,7 +485,7 @@
 			            }},
 			            { "mData": "po_deliv_place" },
 			            { "mData": function(data) {
-			            	return moment(data.po_deliv_date).format('MMM d YYYY');
+			            	return moment(data.po_deliv_date).format('MMM D, YYYY');
 			            	}},
 			            { "mData": "po_deliv_term" },
 			            { "mData": "po_pay_term" },
