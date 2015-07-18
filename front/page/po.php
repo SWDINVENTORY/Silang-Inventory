@@ -100,7 +100,7 @@ class Front_Page_Po extends Front_Page {
 				foreach ($po_dtl as $dtls) {
 					$dtl = $dtls;
 					$dtl[Po::PO_DTL_PO_ID] = $po_id;
-					$dtl[Po::PO_DTL_ITEM_DESC] = ucwords(strtolower($dtl[Po::PO_DTL_ITEM_DESC]));
+					//$dtl[Po::PO_DTL_ITEM_DESC] = ucwords(strtolower($dtl[Po::PO_DTL_ITEM_DESC]));
 					$dtl[Po::PO_DTL_ITEM_CREATED] = date('Y-m-d H:i:s'); 
 					$dtl_id = front()->database()
 						->insertRow(Po::PO_DTL_TABLE, $dtl);

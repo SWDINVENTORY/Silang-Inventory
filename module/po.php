@@ -16,6 +16,7 @@ class Po extends Abstract_Model {
 	const PO_PROC_MOD = 'po_proc_mod';
 	const PO_DELIV_PLACE = 'po_deliv_place';
 	const PO_DELIV_DATE = 'po_deliv_date';
+	const PO_DATE = 'po_date';
 	const PO_DELIV_TERM = 'po_deliv_term';
 	const PO_PAY_TERM = 'po_pay_term';
 	const PO_TOTAL = 'po_total';
@@ -38,6 +39,7 @@ class Po extends Abstract_Model {
 	const PO_DTL_ITEM_UNIT = 'po_dtl_item_unit';
 	const PO_DTL_ITEM_QTY= 'po_dtl_item_qty';
 	const PO_DTL_ITEM_DESC= 'po_dtl_item_desc';
+	const PO_DTL_ITEM_SUBDESC= 'po_dtl_item_subdesc';
 	const PO_DTL_ITEM_SIZE= 'po_dtl_item_size';
 	const PO_DTL_ITEM_COST= 'po_dtl_item_cost';
 	const PO_DTL_ITEM_CREATED = 'po_dtl_item_created';
@@ -91,8 +93,9 @@ class Po extends Abstract_Model {
 	
 	public function getAll() {
 		return $this->_getAll('*')
-			->innerJoinOn(Po::SUPPLIER_TABLE, 'po_supplier_id=supplier_id')
 			->sortByPoNo('ASC')
+			->innerJoinOn(Po::SUPPLIER_TABLE, 'po_supplier_id=supplier_id')
+			//->sortByPoNo('ASC')
 			->getRows();
 	}
 	
@@ -121,6 +124,7 @@ class Po extends Abstract_Model {
 				Po::PO_DTL_ITEM_UNIT,
 				Po::PO_DTL_ITEM_QTY,
 				Po::PO_DTL_ITEM_DESC,
+				Po::PO_DTL_ITEM_SUBDESC,
 				Po::PO_DTL_ITEM_COST,
 				Po::PO_DTL_ITEM_CREATED,
 				'po_auth_off',
@@ -141,7 +145,7 @@ class Po extends Abstract_Model {
 			->search()
 			->setTable(Po::PO_DTL_TABLE)
 			->setColumns(array(Po::PO_DTL_ITEM_DESC))
-			->addFilter('(po_dtl_item_desc LIKE %s )', '%'.$name.'%')
+			//->addFilter('(po_dtl_item_desc LIKE %s )', '%'.$name.'%')
 			->getRows();
 	}
 	/* Protected Methods

@@ -103,16 +103,16 @@
 			<table class="table table-hover table-bordered tablesorter" id="po-table">
 				<thead>
 					<tr>
-						<th>Supplier</th>
-						<th>PO No.</th>
-						<th>Date</th>
-						<th>Procurement Mode</th>
-						<th>Total Cost</th>
-						<th>Delivery Place</th>
-						<th>Delivery Date</th>
-						<th>Delivery Term</th>
-						<th>Payment Term</th>
-						<th>Action</th>
+						<th bgcolor="#87CEEB" style="text-align:center">Supplier</th>
+						<th bgcolor="#87CEEB" style="text-align:center">PO No.</th>
+						<th bgcolor="#87CEEB" style="text-align:center">Date</th>
+						<th bgcolor="#87CEEB" style="text-align:center">Procurement Mode</th>
+						<th bgcolor="#87CEEB" style="text-align:center">Total Cost</th>
+						<th bgcolor="#87CEEB" style="text-align:center">Delivery Place</th>
+						<th bgcolor="#87CEEB" style="text-align:center">Delivery Date</th>
+						<th bgcolor="#87CEEB" style="text-align:center">Delivery Term</th>
+						<th bgcolor="#87CEEB" style="text-align:center">Payment Term</th>
+						<th bgcolor="#87CEEB" style="text-align:center">Action</th>
 					</tr>
 				</thead>
 				<tbody></tbody>
@@ -387,6 +387,13 @@
 										</div>
 									</div>
 									<div class="col-sm-12">
+										<label for="input-name" class="col-sm-3 control-label">Sub-Desc</label>
+										<div class="form-group col-sm-9">	
+											<input type="text" class="form-control" placeholder="Sub-Desc"
+												name="po_dtl_item_subdesc">
+										</div>
+									</div>
+									<div class="col-sm-12">
 										<label for="input-name" class="col-sm-3 control-label">Size</label>
 										<div class="form-group col-sm-3">	
 											<input type="text" class="form-control" placeholder="Size"
@@ -465,7 +472,7 @@
 		var current_po_dtl_row = null;
 		var po_detail_table = {};
 		var po_table = {};
-		var action_template = $('#action_tpl').text().trim();
+		var action_template = $('#action_tpl').text();
 		var po_dtl_view_mode = 0;
 		var po_columns = [  { "mData": "supplier_name" },
 			            { "mData": "po_no" },
@@ -526,7 +533,7 @@
 			},
 			{ "mData": function(data){
 				var article_name = $('select[name="po_dtl_article_id"]')
-					.find('option[value="'+data.po_dtl_article_id+'"]').text().trim();
+					.find('option[value="'+data.po_dtl_article_id+'"]').text();
 				return article_name;
 			}},
 			{ "mData": function(data){ 
