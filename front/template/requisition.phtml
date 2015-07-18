@@ -20,14 +20,14 @@
 	}
 
 	#ris-table td:nth-child(4), #ris-table td:nth-child(5) {
-		text-align: right;
+		text-align: left;
 	}
 
-	#ris-dtl-table td:nth-child(1) {
+	#ris-dtl-table td:nth-child(1), #ris-dtl-table td:nth-child(2), #ris-dtl-table td:nth-child(3) {
 		text-align: center;
 	}
-	#ris-dtl-table td:nth-child(2), #ris-dtl-table td:nth-child(3), #ris-dtl-table td:nth-child(5), #ris-dtl-table td:nth-child(6) {
-		text-align: right;
+	#ris-dtl-table td:nth-child(5), #ris-dtl-table td:nth-child(6) {
+		text-align: left;
 	}
 
 	#ris_dtl-modal .modal-content {
@@ -134,8 +134,8 @@
 												<option value="Water System Maintenance">Water System Maintenance</option>
 												<option value="Production">Production</option>
 												<option value="Planning and Design">Planning and Design</option>
-												<option value="Costumer Account">Costumer Account</option>
-												<option value="Costumer Service">Costumer Service</option>
+												<option value="Customer Account">Customer Account</option>
+												<option value="Customer Service">Customer Service</option>
 											  </select>
 										</div>
 									</div>
@@ -274,7 +274,11 @@
 									<div class="form-group">
 										<label class="col-sm-6 control-label">RIS Date</label>
 										<div class="col-sm-5">
-											<input type="text" class="form-control" name="ris_created" placeholder="RIS Date" required="required">
+											<div class='input-group date request-date'>
+												<input type='text' name="request_date" class="form-control" required="required"/>
+												<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+												</span>
+											</div>
 										</div>
 									</div>
 									<div class="form-group">
@@ -417,7 +421,7 @@
 			            { "mData": 'ris_rcc' },
 			            { "mData": "ris_no" },
 			            { "mData": function(data) {
-			            	return moment(data.ris_created).format('ddd, MMM Do YYYY');
+			            	return moment(data.request_date).format('ddd, MMM Do YYYY');
 			            }},
 			            { "mData": "ris_purpose" },
 			            {
@@ -488,7 +492,9 @@
 		];
 		
 		$('document').ready(function() {
-			$('.ris-created').datetimepicker({});
+			$('.request-date').datetimepicker({
+				pickTime: false
+			});
 			
 			$('.deliv-date').datetimepicker({
 				pickTime: false

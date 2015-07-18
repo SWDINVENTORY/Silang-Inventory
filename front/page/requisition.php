@@ -89,6 +89,7 @@ class Front_Page_Requisition extends Front_Page {
 		if (isset($post['ris_id']) && empty($post['ris_id'])) {
 			if (isset($post['ris_dtl']) && is_array($post['ris_dtl']) &&
 				!empty($post['ris_dtl'])) {
+					$post['request_date'] = date('Y-m-d', strtotime(str_replace('-', '/', $post['request_date'])));
 					$post['ris_created']=date('Y-m-d H:i:s');
 					$ris_dtl = $post['ris_dtl'];
 					unset($post['ris_id']);
