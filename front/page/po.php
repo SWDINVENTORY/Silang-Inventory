@@ -239,11 +239,21 @@ class Front_Page_Po extends Front_Page {
 			$po_id = $this->variables[1];
 			$po = $this->Po()->getPo($po_id);
 			$po['detail'] = $this->Po()->getDetail($po_id);
-            
+			
+            $ROWS = 36;
+			$next_index = 0;
+			$item_count = count($po['detail']);
+			$total_page = ceil($item_count/$ROWS);
+			$return = array('next_index'=>$next_index,'total_amount'=>0,'total_amount'=>0);
             $po_rpt= new POReport();
-            $po_rpt->hdr($po);
-            $total_amount = $po_rpt->table($po);
-            $po_rpt->ftr($po,$total_amount);
+			for($x=0;$x<$total_page;$x++){
+				$po_rpt->hdr($po);
+				$return = $po_rpt->table($po,$return['next_index'],$ROWS,$return['total_amount']); 
+				$po_rpt->ftr($po,$return['total_amount'],$x,$total_page);
+				if($total_page-1 != $x){
+					$po_rpt->createSheet();
+				}
+			}
             $po_rpt->output();
 			exit;
 		}

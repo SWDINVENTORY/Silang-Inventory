@@ -201,7 +201,7 @@ class POReport extends Formsheet{
 
 		return $string;
 	}
-	function table($datas){
+	function table($datas,$start_index=0,$ROWS=0,$total_amount=0){
 		$metrics = array(
 			'base_x'=> 0.25,
 			'base_y'=> 2.275,
@@ -227,19 +227,7 @@ class POReport extends Formsheet{
 		$this->centerText(12,1.3,'Description',18,'b');
 		$this->centerText(31,1.3,'Unit Cost',4,'b');
 		$this->centerText(35,1.3,'Amount',5,'b');
-		$y=3;
-		$total_amount=0;
-		//echo "<pre>";print_r($datas['detail']);exit();
-		foreach($datas['detail'] as $detail){
-			$this->centerText(1,$y,$detail['po_dtl_item_no'],1,'');
-			$this->centerText(3,$y,$detail['po_dtl_item_unit'],5,'');
-			$this->centerText(7.5,$y,$detail['po_dtl_item_qty'],5,'');
-			$this->leftText(12.5,$y,$detail['po_dtl_item_desc'],18,'');
-			$this->rightText(30.5,$y,number_format($detail['po_dtl_item_cost'], 2, '.', ','),4,'');
-			$this->rightText(34.5,$y,number_format($detail['po_dtl_item_qty']*$detail['po_dtl_item_cost'], 2, '.', ','),5,'');
-			$total_amount +=($detail['po_dtl_item_qty']*$detail['po_dtl_item_cost']);
-			$y++;
-		}
+		
 		$this->leftText(13,40.5,$datas['po_purpose'],'','b');
 		//$this->leftText(14,41,$datas['ia_is_partial']?'PARTIAL DELIVERY':'FULL DELIVERY','','b');
 		$this->GRID['font_size']=12;
@@ -254,16 +242,42 @@ class POReport extends Formsheet{
 		
 		$this->GRID['font_size']=8;
 		$this->drawLine(43.5,'h');
-		$amount_in_words = $this->convert_number_to_words($total_amount);
-		$this->leftText(0.2,44.5,'(Total Amount in Words) '.strtoupper($amount_in_words).' PESOS','','');
-		$this->leftText(33,44.5,'Total:  P '.number_format($total_amount,2,'.',','),'','');
 		
 		
+		$y=3;
+		$line_ctr=0;
 		
-		return $total_amount;
+		for($ln=0,$index=$start_index;$index<count($datas['detail']);$index++,$ln++){
+			$this->centerText(1,$y,$datas['detail'][$index]['po_dtl_item_no'],1,'');
+			$this->centerText(3,$y,$datas['detail'][$index]['po_dtl_item_unit'],5,'');
+			$this->centerText(7.5,$y,$datas['detail'][$index]['po_dtl_item_qty'],5,'');
+			$line_break = $this->fitParagraph(12.5,$y,$datas['detail'][$index]['po_dtl_item_desc'],14,$align='l',$lnbrk=1);
+			$this->rightText(30.5,$y,number_format($datas['detail'][$index]['po_dtl_item_cost'], 2, '.', ','),4,'');
+			$this->rightText(34.5,$y,number_format($datas['detail'][$index]['po_dtl_item_qty']*$datas['detail'][$index]['po_dtl_item_cost'], 2, '.', ','),5,'');
+			$total_amount +=($datas['detail'][$index]['po_dtl_item_qty']*$datas['detail'][$index]['po_dtl_item_cost']);
+			$y++;
+			$y=$y+($line_break-1);
+			$line_ctr++;
+			if($line_ctr>=$ROWS){
+				$return = array('next_index'=>$index+1,'total_amount'=>$total_amount);
+				$amount_in_words = $this->convert_number_to_words($total_amount);
+				$this->leftText(0.2,44.5,'(Total Amount in Words) '.strtoupper($amount_in_words).' PESOS','','');
+				$this->leftText(33,44.5,'Total:  P '.number_format($total_amount,2,'.',','),'','');
+				break;
+			}else{
+				if(count($datas['detail'])==$index+1){
+					$amount_in_words = $this->convert_number_to_words($total_amount);
+					$this->leftText(0.2,44.5,'(Total Amount in Words) '.strtoupper($amount_in_words).' PESOS','','');
+					$this->leftText(33,44.5,'Total:  P '.number_format($total_amount,2,'.',','),'','');
+				}
+			}
+		}
+		
+		$return = array('next_index'=>$index+1,'total_amount'=>$total_amount);
+		return $return;
 	}
 	
-	function ftr($datas,$total_amount){
+	function ftr($datas,$total_amount,$page,$total_page){
 		$metrics = array(
 			'base_x'=> 0.25,
 			'base_y'=> 8.3,
@@ -315,7 +329,9 @@ class POReport extends Formsheet{
 		$this->centerText(13,$y++,$datas['po_funds_off'],13,'b');
 		$this->centerText(0,$y,'(Authorized Official)',13,'');
 		$this->centerText(13,$y,'Chief Accountant',13,'');
-		$this->leftText(26.2,$y,'ALOBS No.: '.$datas['po_alobs_no'],'','');
+		$this->leftText(26.2,$y++,'ALOBS No.: '.$datas['po_alobs_no'],'','');
+		$this->GRID['font_size']=8;
+		$this->rightText(39.5,$y,'page: '.($page+1).' of '.$total_page,'','');
 	}
 }
 ?>
