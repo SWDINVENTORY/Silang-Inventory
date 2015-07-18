@@ -240,23 +240,23 @@ class POReport extends Formsheet{
 			$total_amount +=($detail['po_dtl_item_qty']*$detail['po_dtl_item_cost']);
 			$y++;
 		}
-		$this->leftText(14,40.5,$datas['po_purpose'],'','b');
+		$this->leftText(13,40.5,$datas['po_purpose'],'','b');
 		//$this->leftText(14,41,$datas['ia_is_partial']?'PARTIAL DELIVERY':'FULL DELIVERY','','b');
 		$this->GRID['font_size']=12;
 		$this->SetTextColor(250,0,0);
-		$this->leftText(14,42,isset($datas['detail'][0]['po_dtl_item_type'])?$datas['detail'][0]['po_dtl_item_type']:'','','b');
+		$this->leftText(13,42,isset($datas['detail'][0]['po_dtl_item_type'])?$datas['detail'][0]['po_dtl_item_type']:'','','b');
 		$this->GRID['font_size']=9;
 		$this->SetTextColor(0,0,0);
 		
 		$this->GRID['font_size']=10;
-		$this->leftText(14,43,('Account No.:'),'','b');
+		$this->leftText(13,43,('Account No.:'),'','b');
 		$this->leftText(18.5,43,$datas['po_account_no'],'','b');
 		
-		$this->GRID['font_size']=9;
+		$this->GRID['font_size']=8;
 		$this->drawLine(43.5,'h');
 		$amount_in_words = $this->convert_number_to_words($total_amount);
-		$this->leftText(0.2,44.5,'(Total Amount in Words)             '.strtoupper($amount_in_words).' PESOS','','');
-		$this->leftText(33,44.5,'Total:  P '.number_format($total_amount,2,'.',''),'','');
+		$this->leftText(0.2,44.5,'(Total Amount in Words) '.strtoupper($amount_in_words).' PESOS','','');
+		$this->leftText(33,44.5,'Total:  P '.number_format($total_amount,2,'.',','),'','');
 		
 		
 		

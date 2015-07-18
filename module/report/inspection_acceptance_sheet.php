@@ -48,7 +48,7 @@ class IAReport extends Formsheet{
 		$this->centerText(7,10.9,$hdr['po_no'],'','i');
 		$this->drawLine(11.10,'h',array(5,4));
 		$this->leftText(10,11,'Date:','','i');
-		$this->centerText(14.5,10.9,date('M d, Y',strtotime($hdr['po_deliv_date'])),'','i');
+		$this->centerText(14.5,10.9,date('M d, Y',strtotime($hdr['po_date'])),'','i');
 		$this->drawLine(11.10,'h',array(12,5));
 		$this->leftText(18,11,'Inv. No.:','','i');
 		$this->leftText(21.5,10.9,$hdr['ia_inv_no'],'','i');
@@ -57,7 +57,7 @@ class IAReport extends Formsheet{
 		$this->leftText(29.5,10.9,$hdr['ia_dr_no'],'','i');
 		$this->drawLine(11.10,'h',array(29,4));
 		$this->leftText(34,11,'Date:','','i');
-		$this->leftText(36.3,10.9,date('M d, Y',strtotime($hdr['ia_created'])),'','i');
+		$this->leftText(36.3,10.9,date('M d, Y',strtotime($hdr['ia_date'])),'','i');
 		$this->drawLine(11.10,'h',array(36,5));
 		$this->leftText(2,14,'Requisitioning Office/Dept.:','','i');
 		$this->leftText(12,14,$hdr['dept_name'],'','i');
