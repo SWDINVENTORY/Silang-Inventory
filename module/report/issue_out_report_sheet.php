@@ -68,7 +68,7 @@ class IssueOutReport extends Formsheet {
         $this->GRID['font_size'] = 8;
         $this->centerText(55, 1.5, 'Total Cost Per RC', 5, 'b');
         $this->centerText(55, 2.5, 'As Per Charging', 5, 'b');
-        $y = 4;
+        $y = 4.3;
 
         for ($ln = 0, $index = $start_index; $index < count($details); $ln++, $index++, $y++) {
             $this->centerText(0, $y, $details[$index]['date'], 3, '');

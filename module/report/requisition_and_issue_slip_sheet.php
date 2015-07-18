@@ -139,16 +139,17 @@ class RequisitionAndIssueSlip extends Formsheet{
 			$y++;
 			foreach($data['ris_dtl'] as $ris_dtl){
 				$this->centerText(0,$y,'',3,'');
-				$this->centerText(-0.65,$y,$ris_dtl['issuance_dtl_item_charging'],3,'');
+				//$this->centerText(-0.65,$y,$ris_dtl['issuance_dtl_item_charging'],3,'');
 				$this->centerText(1.75,$y,$ris_dtl['ris_dtl_item_stock_no'],3,'');
 				$this->centerText(4.75,$y,$ris_dtl['ris_dtl_item_unit'],2,'');
 				$this->leftText(7,$y,$ris_dtl['ris_dtl_item_desc'],12,'');
-				$this->leftText(18.1,$y,$ris_dtl['ris_dtl_item_size'],12,'');
+				//$this->leftText(18.1,$y,$ris_dtl['ris_dtl_item_size'],12,'');
+				$this->fitText(18.1,$y,$ris_dtl['ris_dtl_item_size'],.6,'');
 				$this->centerText(20,$y,$ris_dtl['ris_dtl_item_qty'],2,'');
-				$this->centerText(22,$y,$ris_dtl['issuance_dtl_item_issued'],2,'');
+				//$this->centerText(22,$y,$ris_dtl['issuance_dtl_item_issued'],2,'');
 				$this->GRID['font_size']=8;
-				$this->centerText(24.2,$y,$ris_dtl['issuance_dtl_or_no'],2,'');
-				$this->centerText(27.2,$y,$ris_dtl['issuance_dtl_meter_no'],2,'');
+				//$this->centerText(24.2,$y,$ris_dtl['issuance_dtl_or_no'],2,'');
+				//$this->centerText(27.2,$y,$ris_dtl['issuance_dtl_meter_no'],2,'');
 				$y++;
 			}
 		}

@@ -119,6 +119,7 @@ class Requisition extends Abstract_Model {
 				'ris_dtl_item_qty',
 				'ris_dtl_item_issued',
 				'ris_dtl_item_remarks',
+				'ris_dtl_item_charging',
 
 			))
 			->addFilter('ris_id = %s', $id)
