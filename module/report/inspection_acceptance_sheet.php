@@ -66,7 +66,7 @@ class IAReport extends Formsheet{
 		return $this;
 	}
 	
-	function data($detail){
+	function data($detail,$start_index=0,$ROWS=0,$total_amount=0){
 		$metrics = array(
 			'base_x'=> 0.25,
 			'base_y'=>2.5,
@@ -104,35 +104,52 @@ class IAReport extends Formsheet{
 		$this->GRID['font_size']=9;
 		$y = 1.5;
 		$total_per_item=0;
-		$total=0;
+		$total=$total_amount;
+		$line_ctr=0;
 		//echo "<pre>";print_r($detail['detail']);exit();
-		foreach($detail['detail'] as $dtl){
-			$total+=$total_per_item = $dtl['po_dtl_item_cost']*$dtl['ia_dtl_item_qty'];
-			 $this->centerText(1,$y, isset($dtl['po_dtl_stock_no'])?$dtl['po_dtl_stock_no']:'',3,'');
-			 $this->centerText(5.5,$y, $dtl['po_dtl_item_unit'],3,'');
-			 $this->centerText(9.5,$y, $dtl['ia_dtl_item_qty'],3,'');
-			 $this->leftText(14,$y,$dtl['po_dtl_item_desc'],'','');
-			 $this->rightText(32.5,$y,number_format($dtl['po_dtl_item_cost'], 2, '.', ','),3,'');
-			 $this->rightText(38,$y,number_format($total_per_item, 2, '.', ','),3,'');
-			 $y++;
+		for($ln=0,$index=$start_index;$index<count($detail['detail']);$index++,$ln++){
+			$total+=$total_per_item = $detail['detail'][$index]['po_dtl_item_cost']*$detail['detail'][$index]['ia_dtl_item_qty'];
+			$this->centerText(1,$y, isset($detail['detail'][$index]['po_dtl_stock_no'])?$detail['detail'][$index]['po_dtl_stock_no']:'',3,'');
+			$this->centerText(5.5,$y, $detail['detail'][$index]['po_dtl_item_unit'],3,'');
+			$this->centerText(9.5,$y, $detail['detail'][$index]['ia_dtl_item_qty'],3,'');
+			//$this->leftText(14,$y,$detail['detail'][$index]['po_dtl_item_desc'],'','');
+			$line_break = $this->fitParagraph(14,$y,$detail['detail'][$index]['po_dtl_item_desc'],14,$align='l',$lnbrk=1);
+			$this->rightText(32.5,$y,number_format($detail['detail'][$index]['po_dtl_item_cost'], 2, '.', ','),3,'');
+			$this->rightText(38,$y,number_format($total_per_item, 2, '.', ','),3,'');
+			$y++;
+			$y=$y+($line_break-1);
+			$line_ctr++;
+			if($line_ctr>=$ROWS){
+				$return = array('next_index'=>$index+1,'total_amount'=>$total);
+				$this->rightText(38,35.60,number_format($total, 2, '.', ','),3,'');
+				break;
+			}else{
+				if(count($detail['detail'])==$index+1){
+					$this->rightText(38,35.60,number_format($total, 2, '.', ','),3,'');
+				}
+			}
 		}
-		$y+=25;
+		$y = 27;
 		//echo "<pre>";print_r($detail);exit();
-		$this->leftText(14,$y+=2,$detail['po_purpose'],'','b');
+		$this->fitParagraph(14,$y+=2,$detail['po_purpose'],14,$align='l',$lnbrk=1,'b');
+		//$this->leftText(14,$y+=2,$detail['po_purpose'],'','b');
 		$this->leftText(14,$y+=2.5,$detail['ia_is_partial']?'PARTIAL DELIVERY':'FULL DELIVERY','','b');
 		$this->GRID['font_size']=12;
 		$this->SetTextColor(250,0,0);
 		$this->leftText(14,$y+1,isset($detail['detail'][0]['po_dtl_item_type'])?$detail['detail'][0]['po_dtl_item_type']:'','','b');
 		$this->GRID['font_size']=9;
 		$this->SetTextColor(0,0,0);
-		$this->rightText(38,35.60,number_format($total, 2, '.', ','),3,'');
+		//$this->rightText(38,35.60,number_format($total, 2, '.', ','),3,'');
 		$this->GRID['font_size']=10;
 		$this->leftText(14,34,('Account No.:'),'','b');
 		$this->leftText(19,34,$detail['po_account_no'],'','b');
-		return $this;
+		$return = array('next_index'=>$index+1,'total_amount'=>$total);
+		return $return;
 	}
 	
-	function ftr($detail){
+	function ftr($detail,$page,$total_page){
+		
+		//$this->showLines = true;
 		$metrics = array(
 			'base_x'=> 0.25,
 			'base_y'=>8.15,
@@ -161,87 +178,54 @@ class IAReport extends Formsheet{
 		$this->fitParagraph(26,3.90,'Complete',10);
 		$this->fitParagraph(26,4.90,'Partial (pls. specify quantity) '.$detail['ia_partial_qty'].($detail['ia_partial_qty']>1?' items':' item'),10);
 		//inspectors
-		$this->GRID['font_size']=10;
-		$this->drawLine(7.50,'h',array(1,7.60));
-		$this->drawLine(11.30,'h',array(1,7.60));
-		$this->drawLine(15,'h',array(1,7.60));
+		$this->GRID['font_size']=8;
 		$y = 7.25;
 		$x=1;
 		$ay=9;
 		$ax=23;
 
 		
-		/*		foreach($detail['signatories'] as $sig){
-			if($sig['type']=='inspectors'){
-				$this->centerText($x,$y,$sig['name'],6,'');
-				$y+=3.8;
-				if($y>16){
-					$y = 8.20;
-					$x = 12;
-				}
-			}
-			if($sig['type']=='acceptee'){
-				$this->centerText($ax,$ay,$sig['name'],6,'');
-				$this->centerText($ax,$ay+1,$sig['position'],6,'');
-				$ax+=10;
-				//echo $ax;
-				if($ax>=43){
-					$ay += 4;
-					$ax = 23;
-				}
-			}
-		} */
-		//echo "<pre>";print_r($detail);exit();
-		$this->centerText(4.7,7.3,$detail['ia_insp1'],'','');
-		//$this->leftText(1,8.20,'EDGARDO F. AMBULO','','');
-		$this->centerText(4.7,11.1,$detail['ia_insp3'],'','');
-		//$this->leftText(1,12,'ANASTACIO CALDERON','','');
-		$this->centerText(4.7,14.9,$detail['ia_insp5'],'','');
-		//$this->leftText(1,15.20,'MA. ANGELES SUMAGUI','','');
+		$this->leftText(0.5,8.2,'EDGARDO AMBULO','','');
+		$this->centerText(0,8.2,'PILIPINO DIMAS',21,'');
+		$this->rightText(20.5,8.2,'ANASTACIO CALDERON','','');
 		
-		$this->centerText(15,7.2,$detail['ia_insp2'],'','');
-		//$this->leftText(12,8.20,'MARIO ATIENZA','','');
-		$this->leftText(11.2,11.1,$detail['ia_insp4'],'','');
-		//$this->leftText(12,12,'DENNIS B. ANARNA','','');
-		$this->centerText(15,14.9,$detail['ia_insp6'],'','');
-		$this->centerText(15,15.8,'END-USER','','');
-		//$this->leftText(11.70,15.20,'REQUESTING DIVISION','','');
-		$this->drawLine(7.50,'h',array(11,7.60));
-		$this->drawLine(11.30,'h',array(11,7.60));
-		$this->drawLine(15,'h',array(11,7.60));
+		
+		$this->leftText(0.5,11,'DENNIS ANARNA','','');
+		$this->centerText(0,11,'RENAN CALABANO',21,'');
+		$this->rightText(20.5,11,'ROBIN BELANDRES','','');
+		
+		$this->leftText(0.5,14,'KEVIN AGUILAR','','');
+		$this->centerText(0,14,'LILIBETH COROTAN',21,'');
+		$this->rightText(20.5,14,'REQUESTING DIVISION','','');
+		
+		$this->drawLine(7,'h',array(0,21));
+		$this->drawLine(10,'h',array(0,21));
+		$this->drawLine(13,'h',array(0,21));
 		
 		//ACCEPTANCE
-		$this->drawLine(8.30,'h',array(22,7.60));
-		$this->drawLine(14,'h',array(22,8.10));
-		$this->GRID['font_size']=10;
-		$this->centerText(26,8.1,$detail['ia_accp1'],'','b');
-		$this->GRID['font_size']=8;
-		$this->centerText(26,9.2,$detail['ia_accp1_pos'],'','');
+		$this->drawLine(8.30,'h',array(22,8));
+		$this->drawLine(8.30,'h',array(33,8));
+		$this->leftText(21.5,7,'Accepted by:','','');
+		$this->centerText(22,9,'NOMER LEGASPI',8,'');
+		$this->centerText(33,9,'VICTORINA ZAMORA, JR.',8,'');
 		
-		$this->GRID['font_size']=10;
-		$this->centerText(36.5,8.1,$detail['ia_accp2'],'','b');
-		$this->GRID['font_size']=8;
-		$this->centerText(36.5,9.2,$detail['ia_accp2_pos'],'','');
-		//$this->leftText(23,9,'NOMER LEGASPI','','');
-		$this->leftText(22,12,'Checked by:','','');
-		$this->leftText(32,12,'Noted by:','','');
-		//$this->leftText(23,13,'ARIEL MADLANGSAKAY','','');
-		//$this->leftText(23.10,14,'Acting Supply Officer - A','','');
 		
-		$this->drawLine(14,'h',array(32.50,8.20));
-		$this->centerText(36.5,13.7,$detail['ia_noted'],'','b');
-		$this->GRID['font_size']=8;
-		$this->centerText(36.5,14.9,$detail['ia_noted_pos'],'','');
+		$this->leftText(21.5,11,'Checked by:','','');
+		$this->leftText(32,11,'Noted by:','','');
 		
-		$this->GRID['font_size']=10;
-		$this->centerText(26,13.7,$detail['ia_checked'],'','b');
+		
+		
+		$this->drawLine(13,'h',array(22,8));
+		$this->centerText(22,14,'ARIEL MADLANGSAKAY',8,'');
+		$this->centerText(22,15,'Acting Supply Officer - A',8,'');
+		$this->centerText(22,16,'Chairman - Inspectorate Committee ',8,'');
+		
+		$this->drawLine(13,'h',array(33,8));
+		$this->centerText(33,14,'MARY GRACE E. BAYBAY',8,'');
+		$this->centerText(33,14.7,'Division Manager C - GSD',8,'');
+		
 		$this->GRID['font_size']=8;
-		$this->centerText(26,14.9,$detail['ia_checked_pos'],'','');
-		//$this->leftText(33,13,'MARY GRACE E. BAYBAY','','');
-		//$this->leftText(33.10,14,'Division Manager C - GSD','','');
-		$this->GRID['font_size']=10;
-		$this->drawLine(8.30,'h',array(32.5,8.10));
-		//$this->leftText(33,9,'VICTORINA ZAMORA, JR.','','');
+		$this->rightText(41,18.5,'page: '.($page+1).' of '.$total_page,'','');
 		return $this;
 	}
 	

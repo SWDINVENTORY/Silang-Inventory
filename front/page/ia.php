@@ -75,7 +75,7 @@ class Front_Page_Ia extends Front_Page {
 
 	protected function _add() {
 		$post = $this -> post;
-		
+		file_put_contents('debug.txt', json_encode($post), FILE_APPEND);
 		$date = strtotime($post['ia_date_inspected']);
 		$post['ia_date_inspected'] = date('Y-m-d H:i:s', $date);
 		$date = strtotime($post['ia_date']);
@@ -275,10 +275,20 @@ class Front_Page_Ia extends Front_Page {
 			$ia = $this->Ia()->getIa($ia_id);
 			$ia['detail'] = $this->Ia()->getDetail($ia_id);
             
+			$ROWS = 27;
+			$next_index = 0;
+			$item_count = count($ia['detail']);
+			$total_page = ceil($item_count/$ROWS);
+			$return = array('next_index'=>$next_index,'total_amount'=>0);
             $report = new IAReport();
-            $report->hdr($ia);
-            $report->data($ia);
-            $report->ftr($ia);
+			for($x=0;$x<$total_page;$x++){
+				$report->hdr($ia);
+				$return = $report->data($ia,$return['next_index'],$ROWS,$return['total_amount']);
+				$report->ftr($ia,$x,$total_page);
+				if($total_page-1 != $x){
+					$report->createSheet();
+				}
+			}
             $report->output();
 			exit;
 		}
@@ -342,13 +352,14 @@ class Front_Page_Ia extends Front_Page {
 			$filter = array(
 				array('item_id=%s', $itemfound['item_id']));
 			
-			//update qty on items,
-			front() -> database() -> updateRows('item', array(
+			//update qty on items if stock,
+			if($po_dtl['po_dtl_item_type'] == 'STOCK') {
+				front() -> database() -> updateRows('item', array(
 					'item_qty' => $item_qty,
 					'item_updated' => date('Y-m-d H:i:s')
-				), $filter);						
-			
-			
+				), $filter);
+			}						
+						
 			// save new record on item_costs;	
 			$cost = array(
 				'item_cost_item_id' => $itemfound['item_id'],
@@ -396,8 +407,6 @@ class Front_Page_Ia extends Front_Page {
 			'item_stock_level_flag' => 1,
 			'item_stock_level_tid' => $this->transaction_id
 		));
-		
-		exit;
 		
 		return $this;
 	}
