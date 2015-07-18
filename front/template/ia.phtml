@@ -14,17 +14,16 @@
 		width: 5%;
 	}
 	
-	.ia #ia-table td:nth-child(1){
+	.ia #ia-table td:nth-child(1), 
+	.ia #ia-table td:nth-child(8)
+	{
 		width: 15%;
 	}
-	.ia #ia-table td:nth-child(7){
+	.ia #ia-table td:nth-child(7)
+	{
 		width: 10%;
 	}
 	.ia #ia-table td:nth-child(9),
-	.ia #ia-table td:nth-child(2),
-	.ia #ia-table td:nth-child(4),
-	.ia #ia-table td:nth-child(5),
-	.ia #ia-table td:nth-child(6),
 	.ia #ia-dtl-table td:nth-child(3),
 	.ia #ia-dtl-table td:nth-child(5),
 	.ia #ia-dtl-table td:nth-child(6),
@@ -47,8 +46,7 @@
 		color: #555555;
 		vertical-align: middle;
 		background-color: #ffffff;
-		background-image: none;
-		border: 1px solid #cccccc;
+ 		border: 1px solid #cccccc;
 		border-radius: 4px;
 	}
 	.modal-body{
@@ -94,7 +92,7 @@
 						<th>Inv. No.</th>
 						<th>DR. No.</th>
 						<th>IAR Date</th>
-						<th>Requisitiong Office/Dept</th>
+						<th>Requisitioning Office/Dept</th>
 						<th>Total Amount</th>
 						<th>Action</th>
 					</tr>
@@ -130,7 +128,7 @@
 						<div class="col-md-3">
 							<label class="control-label col-md-3">PO Date:</label>
 							<div class="col-md-9">
-								<input type="input" class="form-control" placeholder="Date" id="po_created" disabled="disabled">
+								<input type="input" class="form-control" placeholder="Date" id="po_date" disabled="disabled">
 							</div>
 						</div>
 						<div class="col-md-6">
@@ -168,8 +166,8 @@
 						<div class="col-md-3">
 							<label class=" control-label col-sm-4">IAR Date:</label>
 							<div class="col-md-8">
-								<div class='input-group date ia-inspection'>
-									<input type="input" class="form-control" placeholder="Date" name="ia_created"/>
+								<div class='input-group date ia-date'>
+									<input type='text' name="ia_date" class="form-control" required="required"/>
 									<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
 									</span>
 								</div>
@@ -541,18 +539,19 @@
 		current_ia_dtl = {} ;
 		action_template = $('#action_tpl').text().trim();
 		$('.ia-inspection').datetimepicker();
+		$('.ia-date').datetimepicker();
 		
 		var ia_columns = [
 			            { "mData": "supplier_name" },
 			            { "mData": "po_no" },
 			            { "mData": function(data) {
-			            	return moment(data.po_created).format('ddd, MMM Do YYYY');
+			            	return moment(data.po_date).format('MMM D, YYYY');
 			            }},
 			            { 'mData': 'ia_no' },
 			            { 'mData': 'ia_inv_no'},
 			            { 'mData': 'ia_dr_no' },
 			            { 'mData': function(data){
-								return moment(data.ia_created).format('ddd, MMM Do YYYY');
+								return moment(data.ia_date).format('MMM D, YYYY');
 						}},
 			            { 'mData': 'dept_name' },
 			            { 'mData': function(data){
@@ -627,9 +626,9 @@
 					return moment(obj[value]).format('M/D/YYYY');
 				case 'ia_date_received':
 					return moment(obj[value]).format('ddd, MMM Do YYYY');
-				case 'ia_created':
+				case 'ia_date':
 					return moment(obj[value]).format('M/D/YYYY');
-				case 'po_created':
+				case 'po_date':
 					return moment(obj[value]).format('M/D/YYYY');
 				case 'ia_total_amount':
 					return parseFloat(obj[value]).moneyFormat();
@@ -640,7 +639,7 @@
 		
 		ia_table = $('#ia-table').dataTable({
 				'sPaginationType' : "two_button",
-				"iDisplayLength" : 10,
+				"iDisplayLength" : 100,
 				"sDom" : '<"pad-it"<"pull-right"f>l>t<"pull-right"i>p>',
 				'sAjaxSource': '/ia/',
 				'sAjaxDataProp': 'data',
@@ -947,7 +946,7 @@
 						}, function(){
 								ia_dtl_table = $('#ia-dtl-table').dataTable({
 										'sPaginationType' : "two_button",
-										"iDisplayLength" : 10,
+										"iDisplayLength" : 100,
 										"sDom" : '<"pad-it"<"pull-right"f>l>t<"pull-right"i>p>',
 										'sAjaxSource': '/po/',
 										'sAjaxDataProp': 'data.po_dtl',
