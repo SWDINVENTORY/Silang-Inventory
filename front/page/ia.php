@@ -78,6 +78,8 @@ class Front_Page_Ia extends Front_Page {
 		
 		$date = strtotime($post['ia_date_inspected']);
 		$post['ia_date_inspected'] = date('Y-m-d H:i:s', $date);
+		$date = strtotime($post['ia_date']);
+		$post['ia_date'] = date('Y-m-d H:i:s', $date);
 		//echo "<pre>";print_r($post);exit();
 		if (isset($post['ia_id']) && empty($post['ia_id'])) {
 			if (isset($post['ia_dtl']) && is_array($post['ia_dtl']) && !empty($post['ia_dtl'])) {
