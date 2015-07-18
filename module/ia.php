@@ -19,6 +19,7 @@ class Ia extends Abstract_Model {
 	const IA_TOTAL_AMOUNT = 'ia_total_amount';
 	const IA_ARTICLE_ID = 'ia_article_id';
 	const IA_STATUS = 'ia_status';
+	const IA_DATE = 'ia_date';
 	const IA_DATE_INSPECTED = 'ia_date_inspected';
 	const IA_DATE_IS_VERIFIED = 'ia_date_is_verified';
 	const IA_DATE_RECEIVED = 'ia_date_received';
