@@ -3,25 +3,41 @@
 		<strong>Physical Count On Inventory</strong> 
 	</div>
 	<br>
-
-	<label for="article_type">Article Type</label>	
-	<select id="article_type">
-		<option>Select</option>
-		<option value="Supplies">Supplies</option>
-		<option value="Material">Materials</option>
-		<option value="EPM">Engineering & Production Materials</option>
-	</select>
-	
-	<label for="from_date">From Date</label>	
-	<input type="date" id="from_date">
-	
-	<label for="to_date">To Date</label>
-	<input type="date" id="to_date">
-								
-	<button id="go_button" class="btn btn-primary">Go</button>
+	<form>
+		<label for="article_type">Article Type</label>	
+		<select id="article_type" required="required">
+			<option>Select</option>
+			<option value="SUPPLIES">Supplies</option>
+			<option value="MATERIAL">Materials</option>
+			<option value="EPM">Engineering & Production Materials</option>
+		</select>
+		
+		<label for="from_month">From Date</label>	
+		<input type="month" id="from_month" required="required">
+		
+		<label for="to_month">To Date</label>
+		<input type="month" id="to_month" required="required">	
+							
+		<button id="go_button" class="btn btn-primary">Go</button>
+	</form>
 </div>
 
 <iframe src="/report/inventory-physical-count" width="100%" height="100%">IFrame Not Supported!</iframe>
 
 <link rel="stylesheet" type="text/css" href="/assets/css/reports.css">
 <script type="text/javascript" src="/assets/js/reports.js"></script>
+<script type="text/javascript">
+    $('document').ready(function() {
+        $('form').on('submit', function(e) {
+            e.preventDefault();			
+            var article_type = ($('#article_type').val())?$('#article_type').val():false;
+            var from_month = ($('#from_month').val())?$('#from_month').val():false;
+            var to_month = ($('#to_month').val())?$('#to_month').val():false;
+            var get = $('iframe')[0].src.split('/?')[0]+'/?article_type='+article_type+'&from_month='+from_month+'&to_month='+to_month;
+			
+			if(article_type && from_month && to_month) {
+                return $('iframe')[0].src=get;
+            }
+        });
+    });
+</script>

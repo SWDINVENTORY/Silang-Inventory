@@ -320,13 +320,14 @@ class Front_Page_Report extends Front_Page {
 			ORDER BY 
 					date ASC, item_id", 
 					date('Y-m-d H:i:s', strtotime($this->get['from_month'])),
-					date('Y-m-d H:i:s', strtotime($this->get['to_month'])),
-					date('Y-m-d H:i:s', strtotime($this->get['from_month'])), date('Y-m-d H:i:s', strtotime($this->get['to_month']))
+					date('Y-m-d 23:59:59', strtotime($this->get['to_month'])),
+					date('Y-m-d H:i:s', strtotime($this->get['from_month'])),
+					date('Y-m-d 23:59:59', strtotime($this->get['to_month']))
 		);
 
         $month_data['detail'] = front()->database()->query($query_1);
         $temp = array();
-
+		
         for ($i = 0; $i < count($month_data['detail']); $i++) {
             $index = $month_data['detail'][$i]['item_id'].' - '.$month_data['detail'][$i]['article_name'];
             
@@ -366,26 +367,101 @@ class Front_Page_Report extends Front_Page {
              $month_data['detail'][$i]['bal_qty'] = $bal['item_qty'];*/	
 		
 		$reportType = "SUPPLIES INVENTORY";  
-		$data_chunk = array_chunk($temp, 46,true);
-		$total_page = count($data_chunk);
+		//$data_chunk = array_chunk($temp, 46,true);
+		//$total_page = count($data_chunk);
 		
 		$key = 0;
 		$page_no = 0;
 		
-		foreach($data_chunk as $data) {
+		//foreach($data_chunk as $data) {
 			$rc = new MonthlyReport();
 			$page_no += 1;
 			$rc->hdr($reportType,$this->get['from_month'],$this->get['to_month']);
 			$rc->details();
-			$rc->data_box($data);
-			if($total_page > $page_no ) $rc->createSheet();
-		}
+			$rc->data_box($temp);
+			//if($total_page > $page_no ) $rc->createSheet();
+		//}
         $rc->output();
     }
 
     protected function report_PHYSICAL_COUNT() {
+		$from  = date('Y-m-d 0:0:0', strtotime($this->get['from_month']));
+		$to  = date('Y-m-d 13:59:59', strtotime($this->get['to_month']));
+		$material = $this->get['article_type'];
+		$query = sprintf('
+			(SELECT 
+			  `article`.`article_name`,
+			  `item`.`item_desc`,
+			  `item`.`item_unit_measure`,
+			  `item`.`item_stock_no`,
+			  (SELECT 
+				`item_cost`.`item_cost_unit_cost` 
+			  FROM
+				`item_cost` 
+			  WHERE `item_cost`.`item_cost_id` = `item`.`item_id` 
+			  AND `item_cost`.`item_cost_updated` <"'.$to.'"
+			  HAVING (MAX(`item_cost`.`item_cost_id`))) AS unit_value,
+			  (SELECT
+					`item_stock_level_qty`
+				FROM
+					`item_stock_level`
+				WHERE (
+					`item_stock_level_date` <"'.$to.'"
+					AND `item_stock_level_item_id` =`item`.`item_id` )
+				HAVING (MAX(`item_stock_level_id`))) AS balance_per_card,
+			  0 AS over,
+			  0 AS xunder
+			FROM
+			  `article` 
+			  INNER JOIN `item` 
+				ON (
+				  `article`.`article_id` = `item`.`item_article_id`
+				) 
+			WHERE 
+			  `article`.`article_inventory_type` = "'.$material.'" ) UNION ALL 
+			 (SELECT 
+				`article`.`article_name` AS article_name,
+			  `item`.`item_desc` AS item_desc,
+			  `item`.`item_unit_measure` AS item_unit_measure,
+			  `item`.`item_stock_no` AS item_stock_no,
+			  `item_cost`.`item_cost_unit_cost` AS unit_value,
+			  `item`.`item_qty` AS balance_per_card,
+			  0 AS over,
+			  0 AS xunder
+			   
+			FROM
+			   `item` 
+				  INNER JOIN `item_cost` 
+					ON (
+					  `item`.`item_id` = `item_cost`.`item_cost_item_id`
+					)
+				INNER JOIN `swdinventory_debug`.`article` 
+				ON (`item`.`item_article_id` = `article`.`article_id`)
+			WHERE item_id NOT IN 
+			  (SELECT 
+				item_stock_level_item_id 
+			  FROM
+				`item` 
+				INNER JOIN `item_stock_level` 
+					ON (`item`.`item_id` = `item_stock_level`.`item_stock_level_id`)
+			  WHERE `item_stock_level_date` < "'.$to.'")) ');
+		//echo $query;exit;
+		$data['details'] = front()->database()->query($query);
+		
+		$ROWS = 28;
+        $next_index = 0;
+        $data_count = count($data['details']);
+        $total_page = ceil($data_count / $ROWS);
+		
         $rc = new PCREPORT();
-        $rc->hdr('Supplies')->details()->data_box()->output();
+        for ($x = 1; $x <= $total_page; $x++) {
+            $rc->hdr($material);
+            $next_index = $rc->data_box($next_index, $ROWS, $data['details']);
+            if ($x < $total_page) {
+                $rc->createSheet();
+            }
+        }
+        $rc->output();
     }
 
     protected function report_RIS($data) {
