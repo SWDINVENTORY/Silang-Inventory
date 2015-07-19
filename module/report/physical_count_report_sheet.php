@@ -2,7 +2,7 @@
 namespace Report;
 class PCREPORT extends Formsheet{
 	protected static $_width = 8.5;
-	protected static $_height = 13;
+	protected static $_height = 14;
 	protected static $_unit = 'in';
 	protected static $_orient = 'L';	
 	protected static $_available_line = 37;	
@@ -62,12 +62,12 @@ class PCREPORT extends Formsheet{
 	}
 	
 	
-	function data_box(){
+	function data_box($start_index, $ROWS, $details){
 		$metrics = array(
 			'base_x'=> 0.2,
 			'base_y'=> 1.7,
-			'width'=> 12.6,
-			'height'=> 0.8,
+			'width'=> 13.5,
+			'height'=> 1.2,
 			'cols'=> 60,
 			'rows'=> 6,	
 		);	
@@ -104,7 +104,26 @@ class PCREPORT extends Formsheet{
 		$this->centerText(45,2,'Short',3,'b');
 		$this->centerText(48,2,'Over',3,'b');
 		$this->centerText(51,2,'Remarks',9,'b');
-		return $this;
+		//echo "<pre>";print_r($details);exit();
+		$y =4;
+		for ($ln = 0, $index = $start_index; $index < count($details); $ln++, $index++, $y++){
+			$numbering = $index+1;
+            $this->centerText(0,$y,$numbering,2,'');
+           // $this->fitText(2,$y,$details[$index]['article_name'],10,'b');
+            $this->fitText(2.1,$y,$details[$index]['article_name'],3.6,'b');
+			$this->centerText(12,$y,$details[$index]['item_desc'],16,'b');
+			$this->centerText(28,$y,$details[$index]['item_stock_no'],4,'b');
+			$this->centerText(32,$y,$details[$index]['item_unit_measure'],3,'b'); 
+			$this->centerText(35,$y,$details[$index]['unit_value'],4,'b');
+			$this->centerText(39,$y,$details[$index]['balance_per_card'],3,'b');
+			$this->centerText(42,$y,$details[$index]['balance_per_card'],3,'b');
+			$this->centerText(45,$y,$details[$index]['over'],3,'b');
+			$this->centerText(48,$y,$details[$index]['xunder'],3,'b');
+            if ($ln + 1 >= $ROWS) {
+                return $index + 1;
+            }
+        }
+        return $index + 1;
 	
 	}
 	

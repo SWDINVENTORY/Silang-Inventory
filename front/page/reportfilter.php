@@ -54,6 +54,10 @@ class Front_Page_ReportFilter extends Front_Page {
                 $this->_title.='Monthly Report'; 
 				$this->_template = '\report_filter\monthly_report.phtml';
 			break;
+			case 'monthly-recieving':
+                $this->_title.='Monthly Recieving Report'; 
+				$this->_template = '\report_filter\monthly_receiving.phtml';
+			break;
 			case 'ris': 
 				$this->_template = '\report_filter\ris.phtml';
 			break;
@@ -111,11 +115,7 @@ class Front_Page_ReportFilter extends Front_Page {
     }
     
     protected function report_RIS()
-    {
-		echo '<pre>';
-		print_r($this->get_RIS(12345));
-		exit;
-	
+    {	
         $rc= new RequisitionAndIssueSlip();
         $rc->hdr();
         $rc->table();

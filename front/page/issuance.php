@@ -285,7 +285,7 @@ class Front_Page_Issuance extends Front_Page {
 			->getMatchBy('item_stock_no', $item['ris_dtl_item_stock_no']);
 		
 		$match=$match[0];
-		
+		$current_item_qty = $match['item_qty'];
 		$item_qty = $match['item_qty'] - $item['issuance_dtl_item_issued'];
 		
 		$settings = array(
@@ -302,6 +302,7 @@ class Front_Page_Issuance extends Front_Page {
 			->insertRow( 'item_stock_level' ,array(
 				'item_stock_level_item_id' => $match['item_id'],
 				'item_stock_level_qty' => $item_qty,
+				'item_stock_current_qty' => $current_item_qty,
 				'item_stock_level_date' => date('Y-m-d H:i:s'),
 				'item_stock_level_flag' => -1,
 				'item_stock_level_tid' => $this->transaction_id

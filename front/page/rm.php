@@ -246,6 +246,7 @@ class Front_Page_Rm extends Front_Page {
 
 	protected function _rm() {
 		$post = $this -> post;
+		$rm = [];
 		
 		if (isset($post['rm'])) {
 			$rm = front()->database()

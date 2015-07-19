@@ -403,6 +403,7 @@ class Front_Page_Ia extends Front_Page {
 			array(
 			'item_stock_level_item_id' => $itemfound['item_id'],
 			'item_stock_level_qty' => $item_qty,
+			'item_stock_current_qty' => $itemfound['item_qty'],
 			'item_stock_level_date' => date('Y-m-d H:i:s'),
 			'item_stock_level_flag' => 1,
 			'item_stock_level_tid' => $this->transaction_id
