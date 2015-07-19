@@ -75,7 +75,8 @@ class Front_Page_Ia extends Front_Page {
 
 	protected function _add() {
 		$post = $this -> post;
-		file_put_contents('debug.txt', json_encode($post), FILE_APPEND);
+		//file_put_contents('debug.txt', json_encode($post), FILE_APPEND);
+		
 		$date = strtotime($post['ia_date_inspected']);
 		$post['ia_date_inspected'] = date('Y-m-d H:i:s', $date);
 		$date = strtotime($post['ia_date']);
@@ -88,13 +89,7 @@ class Front_Page_Ia extends Front_Page {
 				
 				if(!$po['po_is_cancelled'] && !$po['po_is_furnished']) {
 					$ia_dtl = $post['ia_dtl'];
-					$ia_signatories = $post['ia_signatories'];
-					$ia_signatories_acceptee = $post['ia_signatories_acceptee'];
-					
-					unset($post['ia_signatories']);
-					unset($post['ia_signatories_acceptee']);
 					unset($post['ia_dtl']);
-					
 					$this->_computeTotalAmount();
 					$post['ia_is_partial'] = $this->is_partial;
 					$post['ia_partial_qty'] = $this->partial_count;
@@ -127,23 +122,7 @@ class Front_Page_Ia extends Front_Page {
 						array_push($ia_details, $dtl);
 					}
 					$this->_updatePo($post['ia_po_id']);
-					
-					//inspectors
-					for($x=0;$x<count($ia_signatories);$x++){
-						$ia_signatories[$x]['transaction_type']='IA';
-						$ia_signatories[$x]['type']='inspectors';
-						$ia_signatories[$x]['transaction_id']=$ia_id;
-						front() -> database() -> insertRow('signatories',$ia_signatories[$x])->getLastInsertedId();
-					}
-					
-					//acceptee
-					for($x=0;$x<count($ia_signatories_acceptee);$x++){
-						$ia_signatories_acceptee[$x]['transaction_type']='IA';
-						$ia_signatories_acceptee[$x]['type']='acceptee';
-						$ia_signatories_acceptee[$x]['transaction_id']=$ia_id;
-						front() -> database() -> insertRow('signatories',$ia_signatories_acceptee[$x])->getLastInsertedId();
-					}
-					
+										
 					$status = array();
 					$status['status'] = 1;
 					$status['msg'] = 'Successfully Inspected and Accepted Order '; //. $post[Ia:] . '!';
@@ -403,7 +382,7 @@ class Front_Page_Ia extends Front_Page {
 			array(
 			'item_stock_level_item_id' => $itemfound['item_id'],
 			'item_stock_level_qty' => $item_qty,
-			'item_stock_current_qty' => $itemfound['item_qty'],
+			'item_stock_level_current_qty' => $itemfound['item_qty'],
 			'item_stock_level_date' => date('Y-m-d H:i:s'),
 			'item_stock_level_flag' => 1,
 			'item_stock_level_tid' => $this->transaction_id

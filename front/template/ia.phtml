@@ -452,17 +452,7 @@
 								console.log(current_ia.signatories);
 								var ictr = 1;
 								var actr = 1;
-								$.each(current_ia.signatories,function(a,b){
-									if(b.type == 'inspectors'){
-										$('input[vname="inspectors_name"][order="'+ictr+'"]').val(b.name);
-										ictr++;
-									}
-									if(b.type == 'acceptee'){
-										$('input[vname="acceptee_name"][order="'+actr+'"]').val(b.name);
-										$('input[vname="acceptee_position"][order="'+actr+'"]').val(b.position);
-										actr++;
-									}
-								});
+								
 								$.each(Object.keys(current_ia), function(i, v){
 									$('#ia-modal-form').find('input[name="'+v+'"]')
 										.attr('disabled', 'disabled');
@@ -623,22 +613,6 @@
 					'<input type="hidden" name="ia_dtl['+index+']['+v+']" />');
 					$('input[name="ia_dtl['+index+']['+v+']"]').val(o[v]);
 				});
-			});
-			
-			//inspectator
-			$.each($('.inspectors .row'),function(i,e){
-				var name = $(e).find('input[vname="inspectors_name"]').val();
-				var position = $(e).find('input[vname="inspectors_position"]').val();
-				hidden_aggregation.append('<input type="hidden" name="ia_signatories['+i+'][name]" value="'+name+'"/>');
-				hidden_aggregation.append('<input type="hidden" name="ia_signatories['+i+'][position]" value="'+position+'"/>');
-			});
-			
-			//inspectator
-			$.each($('.acceptee .row'),function(i,e){
-				var name = $(e).find('input[vname="acceptee_name"]').val();
-				var position = $(e).find('input[vname="acceptee_position"]').val();
-				hidden_aggregation.append('<input type="hidden" name="ia_signatories_acceptee['+i+'][name]" value="'+name+'"/>');
-				hidden_aggregation.append('<input type="hidden" name="ia_signatories_acceptee['+i+'][position]" value="'+position+'"/>');
 			});
 			
 		});
