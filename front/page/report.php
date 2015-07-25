@@ -367,20 +367,23 @@ class Front_Page_Report extends Front_Page {
              $month_data['detail'][$i]['bal_qty'] = $bal['item_qty'];*/	
 		
 		$reportType = "SUPPLIES INVENTORY";  
-		//$data_chunk = array_chunk($temp, 46,true);
-		//$total_page = count($data_chunk);
+		$data_chunk = array_chunk($temp, 36,true);
+		$total_page = count($data_chunk);
+		//echo '<pre>'.print_r($data_chunk); exit;
 		
 		$key = 0;
 		$page_no = 0;
 		
-		//foreach($data_chunk as $data) {
-			$rc = new MonthlyReport();
+		$rc = new MonthlyReport();
+		foreach($data_chunk as $data) {
 			$page_no += 1;
 			$rc->hdr($reportType,$this->get['from_month'],$this->get['to_month']);
 			$rc->details();
-			$rc->data_box($temp);
-			//if($total_page > $page_no ) $rc->createSheet();
-		//}
+			$rc->data_box($data,$page_no);
+			if($total_page > $page_no ){
+				$rc->createSheet();
+			}
+		}
         $rc->output();
     }
 
