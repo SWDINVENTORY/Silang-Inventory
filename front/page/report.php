@@ -10,6 +10,7 @@ use Report\BinCard as BinCard;
 use Report\IAReport as IAReport;
 use Report\IssueOutReport as IssueOutReport;
 use Report\MonthlyReport as MonthlyReport;
+use Report\MonthlyReceivingReport as MonthlyReceivingReport;
 use Report\OldReusableStock as OldReusableStock;
 use Report\PCREPORT as PCREPORT;
 use Report\POReport as POReport;
@@ -41,10 +42,9 @@ class Front_Page_Report extends Front_Page {
     public function render() {
         $this->request = front()->registry()->get('request', 'variables', '0');
         $this->get = front()->registry()->get('get');
-		
-		
+				
 		//echo $this->request;
-		
+
         switch ($this->request) {
             case 'inventory-physical-count' :
                 return $this->report_PHYSICAL_COUNT();
@@ -57,6 +57,9 @@ class Front_Page_Report extends Front_Page {
                 break;
             case 'monthly-report' :
                 return $this->report_MONTHLY();
+                break;
+            case 'monthly-receiving-report' :
+                return $this->report_MONTHLY_RECEIVING();
                 break;
             case 'ris' :
                 if (isset($_GET['ris_no'])) {
@@ -369,7 +372,6 @@ class Front_Page_Report extends Front_Page {
 		$reportType = "SUPPLIES INVENTORY";  
 		$data_chunk = array_chunk($temp, 36,true);
 		$total_page = count($data_chunk);
-		//echo '<pre>'.print_r($data_chunk); exit;
 		
 		$key = 0;
 		$page_no = 0;
@@ -385,6 +387,26 @@ class Front_Page_Report extends Front_Page {
 			}
 		}
         $rc->output();
+    }
+	
+    protected function report_MONTHLY_RECEIVING() {
+		$reportType = "SUPPLIES INVENTORY";  
+		
+		//print_r($this->get);exit;
+		if($this->get['month']){
+			$rc = new MonthlyReceivingReport();
+			$rc->hdr($reportType,$this->get['month']);
+			$rc->data_box(2);
+			$rc->createSheet();
+			$rc->hdr($reportType,$this->get['month']);
+			$rc->data_box(0);
+			$rc->ftr();
+			$rc->output();
+		}else{
+			$rc = new NoData();
+			$rc->hdr();
+			$rc->output();	
+		}
     }
 
     protected function report_PHYSICAL_COUNT() {
