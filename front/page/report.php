@@ -58,7 +58,11 @@ class Front_Page_Report extends Front_Page {
             case 'monthly-report' :
                 return $this->report_MONTHLY();
                 break;
+<<<<<<< HEAD
             case 'monthly-receiving-report' :
+=======
+			case 'monthly-receiving-report' :
+>>>>>>> origin/master
                 return $this->report_MONTHLY_RECEIVING();
                 break;
             case 'ris' :
@@ -201,6 +205,7 @@ class Front_Page_Report extends Front_Page {
             ->setColumns(array('issuance.created',
                 'ris_no',
                 'ris_division',
+                'ris_purpose',
                 'ris_dtl_item_desc',                
                 'ris_dtl_item_size',
                 'issuance_dtl_item_charging',
@@ -233,7 +238,7 @@ class Front_Page_Report extends Front_Page {
                 $issued_item[$index] = array(
                     'date' => date('m/d/Y', strtotime($issued[$i]['created'])),
                     'ris_no' => $issued[$i]['ris_no'],
-                    'rc_desc' => $issued[$i]['ris_division'],
+                    'rc_desc' => $issued[$i]['ris_purpose'],
                     'inv_desc' => $issued[$i]['ris_dtl_item_desc'],
                     'issued_qty' => $issued[$i]['issuance_dtl_item_issued'],
                     'unit_cost' => $issued[$i]['ris_dtl_item_cost'],
@@ -409,6 +414,11 @@ class Front_Page_Report extends Front_Page {
 		}
     }
 
+	protected function report_MONTHLY_RECEIVING(){
+		echo "DITO GARRY :)!";
+		exit;
+	}
+	
     protected function report_PHYSICAL_COUNT() {
 		$from  = date('Y-m-d 0:0:0', strtotime($this->get['from_month']));
 		$to  = date('Y-m-d 13:59:59', strtotime($this->get['to_month']));

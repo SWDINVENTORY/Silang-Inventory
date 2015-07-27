@@ -24,7 +24,7 @@ class IssueOutReport extends Formsheet {
         $this->leftText(0, $y++, 'SILANG WATER DISTRICT', 60, 'b');
         $this->leftText(0, $y++, 'Silang, Cavite', 60, 'b');
         $y++;
-        $this->leftText(0, $y++, 'Report of Materials and Supplies Issued', 60, 'b');
+        $this->leftText(0, $y++, 'Report on Materials and Supplies Issued', 60, 'b');
         $this->leftText(0, $y++, 'for the month '.$data['date'], 60, 'b');
         return $this;
     }
