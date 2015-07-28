@@ -424,7 +424,7 @@ class Front_Page_Report extends Front_Page {
 			  `article`.`article_name` AS article_name, 
 			  `item`.`item_desc` AS item_desc,
 			  `item`.`item_unit_measure`,
-			  `item`.`item_stock_no`,
+			  `item`.`item_stock_no` AS item_stock_no,
 			  (SELECT 
 				`item_cost`.`item_cost_unit_cost` 
 			  FROM
@@ -484,7 +484,7 @@ class Front_Page_Report extends Front_Page {
 					item_stock_level_item_id 
 				  FROM
 				   `item_stock_level`  
-					 )) ORDER BY article_name'); 
+					 )) ORDER BY article_name,item_stock_no '); 
 		//echo $query;exit;
 		$data['details'] = front()->database()->query($query);
 		
