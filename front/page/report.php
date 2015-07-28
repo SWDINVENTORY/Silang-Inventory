@@ -429,17 +429,26 @@ class Front_Page_Report extends Front_Page {
 				`item_cost`.`item_cost_unit_cost` 
 			  FROM
 				`item_cost` 
-			  WHERE `item_cost`.`item_cost_id` = `item`.`item_id` 
-			  AND `item_cost`.`item_cost_updated` <="'.$to.'"
-			  HAVING (MAX(`item_cost`.`item_cost_id`))) AS unit_value,
+			  WHERE `item_cost`.`item_cost_updated` <= "'.$to.'" 
+				  AND `item_cost`.`item_cost_id` = 
+				  (SELECT 
+					MAX(`item_cost`.`item_cost_id`) 
+				  FROM
+					`item_cost` 
+				  WHERE `item_cost`.`item_cost_item_id` = `item`.`item_id`)) AS unit_value,
 			  (SELECT
-					`item_stock_level_qty`
+					`item_stock_level_current_qty`
 				FROM
 					`item_stock_level`
 				WHERE (
 					`item_stock_level_date` <="'.$to.'"
 					AND `item_stock_level_item_id` =`item`.`item_id` )
-				HAVING (MAX(`item_stock_level_id`))) AS balance_per_card,
+				AND 
+				  `item_stock_level`.`item_stock_level_id` = (SELECT 
+					MAX(`item_stock_level`.`item_stock_level_id`) 
+				  FROM
+					`item_stock_level` 
+				  WHERE `item_stock_level`.`item_stock_level_item_id` = `item`.`item_id`) ) AS balance_per_card,
 			  0 AS over,
 			  0 AS xunder
 			FROM
@@ -470,12 +479,12 @@ class Front_Page_Report extends Front_Page {
 					ON (
 					  `item`.`item_article_id` = `article`.`article_id`
 					) 
-				WHERE `article`.`article_inventory_type` = "'.$material.'" AND item_id NOT IN  
+				WHERE `item_cost`.`item_cost_id` = (SELECT MAX(item_cost_id) FROM `item_cost` WHERE item_cost_item_id = `item`.`item_id` ) AND `article`.`article_inventory_type` = "'.$material.'" AND item_id NOT IN  
 				  (SELECT 
 					item_stock_level_item_id 
 				  FROM
-				   `item_stock_level` 
-					 ) HAVING MAX(`item_cost`.`item_cost_id`) ) ORDER BY item_desc');
+				   `item_stock_level`  
+					 )) ORDER BY item_desc');
 		//echo $query;exit;
 		$data['details'] = front()->database()->query($query);
 		
