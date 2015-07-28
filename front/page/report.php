@@ -470,12 +470,12 @@ class Front_Page_Report extends Front_Page {
 					ON (
 					  `item`.`item_article_id` = `article`.`article_id`
 					) 
-				WHERE item_id NOT IN  
+				WHERE `article`.`article_inventory_type` = "'.$material.'" AND item_id NOT IN  
 				  (SELECT 
 					item_stock_level_item_id 
 				  FROM
 				   `item_stock_level` 
-					 ) HAVING MAX(`item_cost`.`item_cost_id`)) AND `article`.`article_inventory_type` = "'.$material.'"  ORDER BY item_desc');
+					 ) HAVING MAX(`item_cost`.`item_cost_id`) ) ORDER BY item_desc');
 		//echo $query;exit;
 		$data['details'] = front()->database()->query($query);
 		
