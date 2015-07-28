@@ -75,12 +75,11 @@ class Front_Page_Items extends Front_Page {
 				unset($item['item_cost_unit_cost']);
 			}
 			$item_id = $this->Item()->add($item);
-			
 			if($item_unit_cost) {
 				front()->database()
 					->insertRow('item_cost', array(
 						'item_cost_item_id' =>$item_id,
-						'item_cost_qty' => $item['item_qty'],
+						'item_cost_qty' => isset($item['item_qty'])?$item['item_qty']:0,
 						'item_cost_unit_cost' => $item_unit_cost,
 						'item_cost_updated' => $item[Item::ITEM_UPDATED]
 					));
@@ -88,7 +87,6 @@ class Front_Page_Items extends Front_Page {
 			header('Location: /items');
 			exit;
 		}
-		
 		return $this;
 	}
 	
