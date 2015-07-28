@@ -117,11 +117,11 @@ class PCREPORT extends Formsheet{
 			$this->centerText(35,$y,$details[$index]['unit_value'],4,'b');
 			$this->centerText(39,$y,$details[$index]['balance_per_card'],3,'b');
 			//$this->centerText(42,$y,$details[$index]['balance_per_card'],3,'b');
-			$this->centerText(45,$y,$details[$index]['over'],3,'b');
-			$this->centerText(48,$y,$details[$index]['xunder'],3,'b');
+			//$this->centerText(45,$y,$details[$index]['over'],3,'b');
+			//$this->centerText(48,$y,$details[$index]['xunder'],3,'b');
             if ($ln + 1 >= $ROWS) {
                 return $index + 1;
-            }
+            } 
         }
         return $index + 1;
 	
