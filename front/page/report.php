@@ -58,11 +58,7 @@ class Front_Page_Report extends Front_Page {
             case 'monthly-report' :
                 return $this->report_MONTHLY();
                 break;
-<<<<<<< HEAD
-            case 'monthly-receiving-report' :
-=======
 			case 'monthly-receiving-report' :
->>>>>>> origin/master
                 return $this->report_MONTHLY_RECEIVING();
                 break;
             case 'ris' :
