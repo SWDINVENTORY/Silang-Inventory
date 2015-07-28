@@ -422,7 +422,7 @@ class Front_Page_Report extends Front_Page {
 		$query = sprintf('
 			(SELECT 
 			  `article`.`article_name`,
-			  `item`.`item_desc`,
+			  `item`.`item_desc` AS item_desc,
 			  `item`.`item_unit_measure`,
 			  `item`.`item_stock_no`,
 			  (SELECT 
@@ -475,7 +475,7 @@ class Front_Page_Report extends Front_Page {
 					item_stock_level_item_id 
 				  FROM
 				   `item_stock_level` 
-					 ) HAVING MAX(`item_cost`.`item_cost_id`)) ');
+					 ) HAVING MAX(`item_cost`.`item_cost_id`)) ORDER BY item_desc');
 		//echo $query;exit;
 		$data['details'] = front()->database()->query($query);
 		
