@@ -486,7 +486,7 @@ class Front_Page_Report extends Front_Page {
 		
         $rc = new PCREPORT();
         for ($x = 1; $x <= $total_page; $x++) {
-            $rc->hdr($material);
+            $rc->hdr($material,$to);
             $next_index = $rc->data_box($next_index, $ROWS, $data['details']);
             if ($x < $total_page) {
                 $rc->createSheet();

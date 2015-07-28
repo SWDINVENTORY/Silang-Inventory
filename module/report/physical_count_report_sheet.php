@@ -15,7 +15,7 @@ class PCREPORT extends Formsheet{
 		$this->createSheet();
 	}
 	
-	function hdr($reportType){
+	function hdr($reportType,$to){
 		$metrics = array(
 			'base_x'=> 0.2,
 			'base_y'=> 0.3,
@@ -34,7 +34,7 @@ class PCREPORT extends Formsheet{
 		$y++;
 		$this->centerText(0,$y++,'(Type of Inventory Item)',60,'');
 		$y ++;
-		$this->centerText(0,$y++,'As of <DATE>',60,'b');
+		$this->centerText(0,$y++,'As of '.date('F d, Y',strtotime($to)),60,'b');
 		$y ++;
 		$this->leftText(1,$y,'For which ',60,'');
 		$this->GRID['font_size']=10;
@@ -49,7 +49,7 @@ class PCREPORT extends Formsheet{
 		$this->leftText(24,$y,'SWD',60,'b');
 		$this->drawline($y+0.1,'h',array(23.2,4));
 		$this->GRID['font_size']=9;
-		$this->leftText(27.5,$y,', is accountable, having assumed such accountability on',60,'');
+		$this->leftText(27.5,$y,', is accountable, having assumed such accountability on      '.date('F d, Y',strtotime($to)),60,'');
 		$this->drawline($y+0.1,'h',array(42.5,7));
 		$y++;
 		$this->centerText(4,$y,'(Accountable Officer)',9,'');
