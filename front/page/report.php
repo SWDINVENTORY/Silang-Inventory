@@ -417,7 +417,7 @@ class Front_Page_Report extends Front_Page {
 	
     protected function report_PHYSICAL_COUNT() {
 		$from  = date('Y-m-d 0:0:0', strtotime($this->get['from_month']));
-		$to  = date('Y-m-d 13:59:59', strtotime($this->get['to_month']));
+		$to  = date('Y-m-d 23:59:59', strtotime($this->get['to_month']));
 		$material = $this->get['article_type'];
 		$query = sprintf('
 			(SELECT 
@@ -430,14 +430,14 @@ class Front_Page_Report extends Front_Page {
 			  FROM
 				`item_cost` 
 			  WHERE `item_cost`.`item_cost_id` = `item`.`item_id` 
-			  AND `item_cost`.`item_cost_updated` <"'.$to.'"
+			  AND `item_cost`.`item_cost_updated` <="'.$to.'"
 			  HAVING (MAX(`item_cost`.`item_cost_id`))) AS unit_value,
 			  (SELECT
 					`item_stock_level_qty`
 				FROM
 					`item_stock_level`
 				WHERE (
-					`item_stock_level_date` <"'.$to.'"
+					`item_stock_level_date` <="'.$to.'"
 					AND `item_stock_level_item_id` =`item`.`item_id` )
 				HAVING (MAX(`item_stock_level_id`))) AS balance_per_card,
 			  0 AS over,
@@ -449,33 +449,33 @@ class Front_Page_Report extends Front_Page {
 				  `article`.`article_id` = `item`.`item_article_id`
 				) 
 			WHERE 
-			  `article`.`article_inventory_type` = "'.$material.'" ) UNION ALL 
+			  `article`.`article_inventory_type` = "'.$material.'" AND `item`.`item_id` IN (SELECT item_stock_level_item_id FROM `item_stock_level` WHERE item_stock_level_date <="'.$to.'")  )
+			  UNION ALL 
 			 (SELECT 
-				`article`.`article_name` AS article_name,
-			  `item`.`item_desc` AS item_desc,
-			  `item`.`item_unit_measure` AS item_unit_measure,
-			  `item`.`item_stock_no` AS item_stock_no,
-			  `item_cost`.`item_cost_unit_cost` AS unit_value,
-			  `item`.`item_qty` AS balance_per_card,
-			  0 AS over,
-			  0 AS xunder
-			   
-			FROM
-			   `item` 
+				  `article`.`article_name` AS article_name,
+				  `item`.`item_desc` AS item_desc,
+				  `item`.`item_unit_measure` AS item_unit_measure,
+				  `item`.`item_stock_no` AS item_stock_no,
+				  `item_cost`.`item_cost_unit_cost` AS unit_value,
+				  `item`.`item_qty` AS balance_per_card,
+				  0 AS over,
+				  0 AS xunder 
+				FROM
+				  `item` 
 				  INNER JOIN `item_cost` 
 					ON (
 					  `item`.`item_id` = `item_cost`.`item_cost_item_id`
-					)
-				INNER JOIN `swdinventory_debug`.`article` 
-				ON (`item`.`item_article_id` = `article`.`article_id`)
-			WHERE item_id NOT IN 
-			  (SELECT 
-				item_stock_level_item_id 
-			  FROM
-				`item` 
-				INNER JOIN `item_stock_level` 
-					ON (`item`.`item_id` = `item_stock_level`.`item_stock_level_id`)
-			  WHERE `item_stock_level_date` < "'.$to.'")) ');
+					) 
+				  INNER JOIN `article` 
+					ON (
+					  `item`.`item_article_id` = `article`.`article_id`
+					) 
+				WHERE item_id NOT IN  
+				  (SELECT 
+					item_stock_level_item_id 
+				  FROM
+				   `item_stock_level` 
+					 ) HAVING MAX(`item_cost`.`item_cost_id`)) ');
 		//echo $query;exit;
 		$data['details'] = front()->database()->query($query);
 		
