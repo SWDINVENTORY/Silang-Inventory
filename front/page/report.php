@@ -475,7 +475,7 @@ class Front_Page_Report extends Front_Page {
 					item_stock_level_item_id 
 				  FROM
 				   `item_stock_level` 
-					 ) HAVING MAX(`item_cost`.`item_cost_id`)) ORDER BY item_desc');
+					 ) HAVING MAX(`item_cost`.`item_cost_id`)) AND `article`.`article_inventory_type` = "'.$material.'"  ORDER BY item_desc');
 		//echo $query;exit;
 		$data['details'] = front()->database()->query($query);
 		
