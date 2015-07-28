@@ -421,7 +421,7 @@ class Front_Page_Report extends Front_Page {
 		$material = $this->get['article_type'];
 		$query = sprintf('
 			(SELECT 
-			  `article`.`article_name`,
+			  `article`.`article_name` AS article_name, 
 			  `item`.`item_desc` AS item_desc,
 			  `item`.`item_unit_measure`,
 			  `item`.`item_stock_no`,
@@ -484,7 +484,7 @@ class Front_Page_Report extends Front_Page {
 					item_stock_level_item_id 
 				  FROM
 				   `item_stock_level`  
-					 )) ORDER BY item_desc');
+					 )) ORDER BY article_name'); 
 		//echo $query;exit;
 		$data['details'] = front()->database()->query($query);
 		
