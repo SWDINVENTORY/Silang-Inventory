@@ -410,10 +410,10 @@ class Front_Page_Report extends Front_Page {
 		}
     }
 
-	protected function report_MONTHLY_RECEIVING(){
+	/*protected function report_MONTHLY_RECEIVING(){
 		echo "DITO GARRY :)!";
 		exit;
-	}
+	}*/
 	
     protected function report_PHYSICAL_COUNT() {
 		$from  = date('Y-m-d 0:0:0', strtotime($this->get['from_month']));
