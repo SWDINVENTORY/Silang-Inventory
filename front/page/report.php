@@ -492,14 +492,34 @@ class Front_Page_Report extends Front_Page {
         $next_index = 0;
         $data_count = count($data['details']);
         $total_page = ceil($data_count / $ROWS);
-		
+		$last_page=0;
         $rc = new PCREPORT();
         for ($x = 1; $x <= $total_page; $x++) {
+			$ROWS_x = $ROWS;
+			if($x==$total_page){
+				$last_page=1;
+				$ROWS_x = 18;
+				//echo (count($data['details'])-$next_index).' '.$ROWS;exit;
+				if((count($data['details'])-$next_index)>$ROWS_x){
+					$ROWS = 28;
+					$total_page++;
+				}
+				if($x<$total_page){
+					$last_page=0;
+				}
+			}
             $rc->hdr($material,$to);
-            $next_index = $rc->data_box($next_index, $ROWS, $data['details']);
+            $next_index = $rc->data_box($next_index, $ROWS,$ROWS_x,$last_page, $data['details'],$x,$total_page);
             if ($x < $total_page) {
                 $rc->createSheet();
-            }
+            }else{
+				if((count($data['details'])-$next_index)<=0){
+					$rc->details();
+				}
+				if($x!=$total_page){
+					$rc->createSheet();
+				}
+			}
         }
         $rc->output();
     }
