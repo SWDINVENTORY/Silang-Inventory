@@ -12,17 +12,14 @@
 			<option value="EPM">Engineering & Production Materials</option>
 		</select>
 		
-		<label for="from_month">From Date</label>	
-		<input type="month" id="from_month" required="required">
+		<label for="month">Month</label>
+		<input type="month" id="month" required="required">
 		
-		<label for="to_month">To Date</label>
-		<input type="month" id="to_month" required="required">	
-							
 		<button id="go_button" class="btn btn-primary">Go</button>
 	</form>
 </div>
 
-<iframe src="/report/monthly-report" width="100%" height="100%">IFrame Not Supported!</iframe>
+<iframe src="/report/monthly-receiving-report" width="100%" height="100%">IFrame Not Supported!</iframe>
 
 <link rel="stylesheet" type="text/css" href="/assets/css/reports.css">
 <script type="text/javascript" src="/assets/js/reports.js"></script>
@@ -31,11 +28,10 @@
         $('form').on('submit', function(e) {
             e.preventDefault();			
             var article_type = ($('#article_type').val())?$('#article_type').val():false;
-            var from_month = ($('#from_month').val())?$('#from_month').val():false;
-            var to_month = ($('#to_month').val())?$('#to_month').val():false;
-            var get = $('iframe')[0].src.split('/?')[0]+'/?article_type='+article_type+'&from_month='+from_month+'&to_month='+to_month;
+            var month = ($('#month').val())?$('#month').val():false;
+            var get = $('iframe')[0].src.split('/?')[0]+'/?article_type='+article_type+'&month='+month;
 			
-			if(article_type && from_month && to_month) {
+			if(article_type && month) {
                 return $('iframe')[0].src=get;
             }
         });

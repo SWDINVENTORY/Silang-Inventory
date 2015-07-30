@@ -15,7 +15,7 @@ class PCREPORT extends Formsheet{
 		$this->createSheet();
 	}
 	
-	function hdr($reportType){
+	function hdr($reportType,$to){
 		$metrics = array(
 			'base_x'=> 0.2,
 			'base_y'=> 0.3,
@@ -34,7 +34,7 @@ class PCREPORT extends Formsheet{
 		$y++;
 		$this->centerText(0,$y++,'(Type of Inventory Item)',60,'');
 		$y ++;
-		$this->centerText(0,$y++,'As of <DATE>',60,'b');
+		$this->centerText(0,$y++,'As of '.date('F d, Y',strtotime($to)),60,'b');
 		$y ++;
 		$this->leftText(1,$y,'For which ',60,'');
 		$this->GRID['font_size']=10;
@@ -49,7 +49,7 @@ class PCREPORT extends Formsheet{
 		$this->leftText(24,$y,'SWD',60,'b');
 		$this->drawline($y+0.1,'h',array(23.2,4));
 		$this->GRID['font_size']=9;
-		$this->leftText(27.5,$y,', is accountable, having assumed such accountability on',60,'');
+		$this->leftText(27.5,$y,', is accountable, having assumed such accountability on      '.date('F d, Y',strtotime($to)),60,'');
 		$this->drawline($y+0.1,'h',array(42.5,7));
 		$y++;
 		$this->centerText(4,$y,'(Accountable Officer)',9,'');
@@ -62,7 +62,7 @@ class PCREPORT extends Formsheet{
 	}
 	
 	
-	function data_box($start_index, $ROWS, $details){
+	function data_box($start_index, $ROWS,$ROWS_x,$last_page, $details,$page,$total_page){
 		$metrics = array(
 			'base_x'=> 0.2,
 			'base_y'=> 1.7,
@@ -71,19 +71,23 @@ class PCREPORT extends Formsheet{
 			'cols'=> 60,
 			'rows'=> 6,	
 		);	
+		//echo $page.' '.$total_page.'<br>';
+		if($page==$total_page){
+			$ROWS = $ROWS_x;
+		}
 		$this->section($metrics);
 		$this->GRID['font_size']=9;	
-		$this->drawBox(0,0,60,32);
-		$this->drawLine(2,'v',array(0,32));
-		$this->drawLine(12,'v',array(0,32));
-		$this->drawLine(28,'v',array(0,32));
-		$this->drawLine(32,'v',array(0,32));
-		$this->drawLine(35,'v',array(0,32));
-		$this->drawLine(39,'v',array(0,32));
-		$this->drawLine(42,'v',array(0,32));
-		$this->drawLine(45,'v',array(0,32));
-		$this->drawLine(48,'v',array(0,32));
-		$this->drawLine(51,'v',array(0,32));
+		$this->drawBox(0,0,60,($ROWS+4));
+		$this->drawLine(2,'v',array(0,($ROWS+4)));
+		$this->drawLine(12,'v',array(0,($ROWS+4)));
+		$this->drawLine(28,'v',array(0,($ROWS+4)));
+		$this->drawLine(32,'v',array(0,($ROWS+4)));
+		$this->drawLine(35,'v',array(0,($ROWS+4)));
+		$this->drawLine(39,'v',array(0,($ROWS+4)));
+		$this->drawLine(42,'v',array(0,($ROWS+4)));
+		$this->drawLine(45,'v',array(0,($ROWS+4)));
+		$this->drawLine(48,'v',array(0,($ROWS+4)));
+		$this->drawLine(51,'v',array(0,($ROWS+4)));
 		$this->drawLine(3,'h');
 		
 		$this->centerText(0,2,'Item #',2,'b');
@@ -104,7 +108,7 @@ class PCREPORT extends Formsheet{
 		$this->centerText(45,2,'Short',3,'b');
 		$this->centerText(48,2,'Over',3,'b');
 		$this->centerText(51,2,'Remarks',9,'b');
-		//echo "<pre>";print_r($details);exit();
+		$this->rightText(57,33,'Page '.$page.' of '.$total_page,3,''); //page number
 		$y =4;
 		for ($ln = 0, $index = $start_index; $index < count($details); $ln++, $index++, $y++){
 			$numbering = $index+1;
@@ -116,12 +120,18 @@ class PCREPORT extends Formsheet{
 			$this->centerText(32,$y,$details[$index]['item_unit_measure'],3,'b'); 
 			$this->centerText(35,$y,$details[$index]['unit_value'],4,'b');
 			$this->centerText(39,$y,$details[$index]['balance_per_card'],3,'b');
-			$this->centerText(42,$y,$details[$index]['balance_per_card'],3,'b');
-			$this->centerText(45,$y,$details[$index]['over'],3,'b');
-			$this->centerText(48,$y,$details[$index]['xunder'],3,'b');
+			//$this->centerText(42,$y,$details[$index]['balance_per_card'],3,'b');
+			//$this->centerText(45,$y,$details[$index]['over'],3,'b');
+			//$this->centerText(48,$y,$details[$index]['xunder'],3,'b');
+			//echo ($ln+1).' '.$ROWS_x."<br>";
+			
+			//echo ($ln+1).' '.$ROWS."<br>";
+			if($page==$total_page-1){
+				$ROWS = $ROWS_x;
+			}
             if ($ln + 1 >= $ROWS) {
                 return $index + 1;
-            }
+            } 
         }
         return $index + 1;
 	

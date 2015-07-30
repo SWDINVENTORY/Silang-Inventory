@@ -10,6 +10,7 @@ use Report\BinCard as BinCard;
 use Report\IAReport as IAReport;
 use Report\IssueOutReport as IssueOutReport;
 use Report\MonthlyReport as MonthlyReport;
+use Report\MonthlyReceivingReport as MonthlyReceivingReport;
 use Report\OldReusableStock as OldReusableStock;
 use Report\PCREPORT as PCREPORT;
 use Report\POReport as POReport;
@@ -41,10 +42,9 @@ class Front_Page_Report extends Front_Page {
     public function render() {
         $this->request = front()->registry()->get('request', 'variables', '0');
         $this->get = front()->registry()->get('get');
-		
-		
+				
 		//echo $this->request;
-		
+
         switch ($this->request) {
             case 'inventory-physical-count' :
                 return $this->report_PHYSICAL_COUNT();
@@ -57,6 +57,9 @@ class Front_Page_Report extends Front_Page {
                 break;
             case 'monthly-report' :
                 return $this->report_MONTHLY();
+                break;
+			case 'monthly-receiving-report' :
+                return $this->report_MONTHLY_RECEIVING();
                 break;
             case 'ris' :
                 if (isset($_GET['ris_no'])) {
@@ -198,6 +201,7 @@ class Front_Page_Report extends Front_Page {
             ->setColumns(array('issuance.created',
                 'ris_no',
                 'ris_division',
+                'ris_purpose',
                 'ris_dtl_item_desc',                
                 'ris_dtl_item_size',
                 'issuance_dtl_item_charging',
@@ -230,7 +234,7 @@ class Front_Page_Report extends Front_Page {
                 $issued_item[$index] = array(
                     'date' => date('m/d/Y', strtotime($issued[$i]['created'])),
                     'ris_no' => $issued[$i]['ris_no'],
-                    'rc_desc' => $issued[$i]['ris_division'],
+                    'rc_desc' => $issued[$i]['ris_purpose'],
                     'inv_desc' => $issued[$i]['ris_dtl_item_desc'],
                     'issued_qty' => $issued[$i]['issuance_dtl_item_issued'],
                     'unit_cost' => $issued[$i]['ris_dtl_item_cost'],
@@ -367,48 +371,84 @@ class Front_Page_Report extends Front_Page {
              $month_data['detail'][$i]['bal_qty'] = $bal['item_qty'];*/	
 		
 		$reportType = "SUPPLIES INVENTORY";  
-		//$data_chunk = array_chunk($temp, 46,true);
-		//$total_page = count($data_chunk);
+		$data_chunk = array_chunk($temp, 36,true);
+		$total_page = count($data_chunk);
 		
 		$key = 0;
 		$page_no = 0;
 		
-		//foreach($data_chunk as $data) {
-			$rc = new MonthlyReport();
+		$rc = new MonthlyReport();
+		foreach($data_chunk as $data) {
 			$page_no += 1;
 			$rc->hdr($reportType,$this->get['from_month'],$this->get['to_month']);
 			$rc->details();
-			$rc->data_box($temp);
-			//if($total_page > $page_no ) $rc->createSheet();
-		//}
+			$rc->data_box($data,$page_no);
+			if($total_page > $page_no ){
+				$rc->createSheet();
+			}
+		}
         $rc->output();
     }
+	
+    protected function report_MONTHLY_RECEIVING() {
+		$reportType = "SUPPLIES INVENTORY";  
+		
+		//print_r($this->get);exit;
+		if($this->get['month']){
+			$rc = new MonthlyReceivingReport();
+			$rc->hdr($reportType,$this->get['month']);
+			$rc->data_box(2);
+			$rc->createSheet();
+			$rc->hdr($reportType,$this->get['month']);
+			$rc->data_box(0);
+			$rc->ftr();
+			$rc->output();
+		}else{
+			$rc = new NoData();
+			$rc->hdr();
+			$rc->output();	
+		}
+    }
 
+	/*protected function report_MONTHLY_RECEIVING(){
+		echo "DITO GARRY :)!";
+		exit;
+	}*/
+	
     protected function report_PHYSICAL_COUNT() {
 		$from  = date('Y-m-d 0:0:0', strtotime($this->get['from_month']));
-		$to  = date('Y-m-d 13:59:59', strtotime($this->get['to_month']));
+		$to  = date('Y-m-d 23:59:59', strtotime($this->get['to_month']));
 		$material = $this->get['article_type'];
 		$query = sprintf('
 			(SELECT 
-			  `article`.`article_name`,
-			  `item`.`item_desc`,
+			  `article`.`article_name` AS article_name, 
+			  `item`.`item_desc` AS item_desc,
 			  `item`.`item_unit_measure`,
-			  `item`.`item_stock_no`,
+			  `item`.`item_stock_no` AS item_stock_no,
 			  (SELECT 
 				`item_cost`.`item_cost_unit_cost` 
 			  FROM
 				`item_cost` 
-			  WHERE `item_cost`.`item_cost_id` = `item`.`item_id` 
-			  AND `item_cost`.`item_cost_updated` <"'.$to.'"
-			  HAVING (MAX(`item_cost`.`item_cost_id`))) AS unit_value,
+			  WHERE `item_cost`.`item_cost_updated` <= "'.$to.'" 
+				  AND `item_cost`.`item_cost_id` = 
+				  (SELECT 
+					MAX(`item_cost`.`item_cost_id`) 
+				  FROM
+					`item_cost` 
+				  WHERE `item_cost`.`item_cost_item_id` = `item`.`item_id`)) AS unit_value,
 			  (SELECT
-					`item_stock_level_qty`
+					`item_stock_level_current_qty`
 				FROM
 					`item_stock_level`
 				WHERE (
-					`item_stock_level_date` <"'.$to.'"
+					`item_stock_level_date` <="'.$to.'"
 					AND `item_stock_level_item_id` =`item`.`item_id` )
-				HAVING (MAX(`item_stock_level_id`))) AS balance_per_card,
+				AND 
+				  `item_stock_level`.`item_stock_level_id` = (SELECT 
+					MAX(`item_stock_level`.`item_stock_level_id`) 
+				  FROM
+					`item_stock_level` 
+				  WHERE `item_stock_level`.`item_stock_level_item_id` = `item`.`item_id`) ) AS balance_per_card,
 			  0 AS over,
 			  0 AS xunder
 			FROM
@@ -418,33 +458,33 @@ class Front_Page_Report extends Front_Page {
 				  `article`.`article_id` = `item`.`item_article_id`
 				) 
 			WHERE 
-			  `article`.`article_inventory_type` = "'.$material.'" ) UNION ALL 
+			  `article`.`article_inventory_type` = "'.$material.'" AND `item`.`item_id` IN (SELECT item_stock_level_item_id FROM `item_stock_level` WHERE item_stock_level_date <="'.$to.'")  )
+			  UNION ALL 
 			 (SELECT 
-				`article`.`article_name` AS article_name,
-			  `item`.`item_desc` AS item_desc,
-			  `item`.`item_unit_measure` AS item_unit_measure,
-			  `item`.`item_stock_no` AS item_stock_no,
-			  `item_cost`.`item_cost_unit_cost` AS unit_value,
-			  `item`.`item_qty` AS balance_per_card,
-			  0 AS over,
-			  0 AS xunder
-			   
-			FROM
-			   `item` 
+				  `article`.`article_name` AS article_name,
+				  `item`.`item_desc` AS item_desc,
+				  `item`.`item_unit_measure` AS item_unit_measure,
+				  `item`.`item_stock_no` AS item_stock_no,
+				  `item_cost`.`item_cost_unit_cost` AS unit_value,
+				  `item`.`item_qty` AS balance_per_card,
+				  0 AS over,
+				  0 AS xunder 
+				FROM
+				  `item` 
 				  INNER JOIN `item_cost` 
 					ON (
 					  `item`.`item_id` = `item_cost`.`item_cost_item_id`
-					)
-				INNER JOIN `swdinventory_debug`.`article` 
-				ON (`item`.`item_article_id` = `article`.`article_id`)
-			WHERE item_id NOT IN 
-			  (SELECT 
-				item_stock_level_item_id 
-			  FROM
-				`item` 
-				INNER JOIN `item_stock_level` 
-					ON (`item`.`item_id` = `item_stock_level`.`item_stock_level_id`)
-			  WHERE `item_stock_level_date` < "'.$to.'")) ');
+					) 
+				  INNER JOIN `article` 
+					ON (
+					  `item`.`item_article_id` = `article`.`article_id`
+					) 
+				WHERE `item_cost`.`item_cost_id` = (SELECT MAX(item_cost_id) FROM `item_cost` WHERE item_cost_item_id = `item`.`item_id` ) AND `article`.`article_inventory_type` = "'.$material.'" AND item_id NOT IN  
+				  (SELECT 
+					item_stock_level_item_id 
+				  FROM
+				   `item_stock_level`  
+					 )) ORDER BY article_name,item_stock_no '); 
 		//echo $query;exit;
 		$data['details'] = front()->database()->query($query);
 		
@@ -452,14 +492,34 @@ class Front_Page_Report extends Front_Page {
         $next_index = 0;
         $data_count = count($data['details']);
         $total_page = ceil($data_count / $ROWS);
-		
+		$last_page=0;
         $rc = new PCREPORT();
         for ($x = 1; $x <= $total_page; $x++) {
-            $rc->hdr($material);
-            $next_index = $rc->data_box($next_index, $ROWS, $data['details']);
+			$ROWS_x = $ROWS;
+			if($x==$total_page){
+				$last_page=1;
+				$ROWS_x = 18;
+				//echo (count($data['details'])-$next_index).' '.$ROWS;exit;
+				if((count($data['details'])-$next_index)>$ROWS_x){
+					$ROWS = 28;
+					$total_page++;
+				}
+				if($x<$total_page){
+					$last_page=0;
+				}
+			}
+            $rc->hdr($material,$to);
+            $next_index = $rc->data_box($next_index, $ROWS,$ROWS_x,$last_page, $data['details'],$x,$total_page);
             if ($x < $total_page) {
                 $rc->createSheet();
-            }
+            }else{
+				if((count($data['details'])-$next_index)<=0){
+					$rc->details();
+				}
+				if($x!=$total_page){
+					$rc->createSheet();
+				}
+			}
         }
         $rc->output();
     }
