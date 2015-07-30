@@ -159,7 +159,7 @@
 									<div class="form-group">
 										<label class="col-sm-6 control-label">RM No.</label>
 										<div class="col-sm-5">
-											<input type="text" class="form-control" name="issuance_no" placeholder="RM No."/>
+											<input type="text" class="form-control" name="rm_no" placeholder="RM No." required/>
 										</div>
 									</div>
 									<div class="form-group">
@@ -238,28 +238,28 @@
 							<label for="input-name" class="col-sm-3 control-label">Stock No</label>
 							<div class="form-group col-sm-5">	
 								<input type="text" class="form-control" placeholder="Stock No"
-									name="rm_dtl_item_stock_no" disabled="disabled">
+									name="ris_dtl_item_stock_no" disabled="disabled">
 							</div>
 						</div>
 						<div class="col-sm-12">
 							<label for="input-address" class="col-sm-3 control-label">Desc</label>
 							<div class="form-group col-sm-9">
 								<input type="text" class="form-control" placeholder="Description"
-									name="rm_dtl_item_desc" disabled="disabled">
+									name="ris_dtl_item_desc" disabled="disabled">
 							</div>
 						</div>
 						<div class="col-sm-12">
 							<label for="input-address" class="col-sm-3 control-label">Size</label>
 							<div class="form-group col-sm-5">
 								<input type="text" class="form-control" placeholder="Size"
-									name="rm_dtl_item_size" disabled="disabled">
+									name="ris_dtl_item_size" disabled="disabled">
 							</div>
 						</div>
 						<div class="col-sm-12">
 							<label for="input-address" class="col-sm-3 control-label">Unit</label>
 							<div class="form-group col-sm-2">
 								<input type="text" class="form-control" placeholder="UNIT"
-									name="rm_dtl_item_unit" disabled="disabled">
+									name="ris_dtl_item_unit" disabled="disabled">
 							</div>
 						</div>
 						<div class="col-sm-12">
@@ -273,7 +273,7 @@
 							<label for="input-name" class="col-sm-3 control-label">Returned Qty</label>
 							<div class="form-group col-sm-5">	
 								<input type="text" class="form-control" placeholder="QTY"
-									name="issuance_dtl_item_issued" >
+									name="rm_dtl_item_returned" >
 							</div>
 						</div>
 						<div class="col-sm-12">
@@ -353,7 +353,6 @@
 			            }];
 		
 		rm_dtl_columns = [{ "mData": function(data) {
-				console.log(data);
 				return data.ris_dtl_item_no;
 			}},
 			{ "mData": "ris_dtl_item_acct_no" },
@@ -385,14 +384,14 @@
 					var target_modal = new RegExp('//target-modal//','g'); 
 					
 					var action = action_template
-						.replace(model, 'ris_dtl')
-						.replace(target_modal, 'ris_dtl')
-						.replace(model_id, data.ris_dtl_id);
+						.replace(model, 'rm_dtl')
+						.replace(target_modal, 'rm_dtl')
+						.replace(model_id, data.rm_dtl_id);
 					
 					
 					action = $(action).clone();
-					$(action). find('a.edit-ris_dtl').text('Return Item');
-					$(action).find('a.delete-ris_dtl').attr('href', '#').removeAttr('onclick');
+					$(action). find('a.edit-rm_dtl').text('Return Item');
+					$(action).find('a.delete-rm_dtl').attr('href', '#').removeAttr('onclick');
 					action = $(action).html();
 					return action;
 				}
@@ -454,7 +453,6 @@
 						//alert('Issuance Number '+issuance_no+' not existing!');
 						input.empty().focus();
 					}*/
-					console.log(rm);
 					if(rm){
 						rm.rm_is_issued = parseInt(rm.rm_is_issued); 
 						rm.rm_is_cancelled = parseInt(rm.rm_is_cancelled); 
@@ -615,11 +613,12 @@
 			}
 			//IF EDITING DETAIL
 			if(action_handle.hasClass('edit-rm_dtl')) {
+				
 				var row_position = rm_dtl_table.fnGetPosition(row[0]); 
 				var row_data = rm_dtl_table.fnGetData(row[0]);
 				current_rm_dtl = row_data;
 				current_rm_dtl_row = row_position;
-				
+				console.log(current_rm_dtl);
 				//MODIFY MODAL FOR EDIT MODE
 				changeModal({
 					'action':'/rm/#',
@@ -696,6 +695,7 @@
 		//CREATE rm
 		$('#create-rm').click(function(){
 			//rm_dtl_table.fnClearTable();
+			
 			changeModal({
 					'action':'/rm/furnish',
 					'model':'rm',
@@ -703,7 +703,7 @@
 					'pr_button':'Furnish RM',
 					'modal_label': 'Return Item',
 					'run': function(){
-						$('#add-to-purchase').show();
+						
 						clear_form('rm', function(){
 							$('input[name="rm_created"]').val(new Date().toDateString());
 						});
@@ -762,7 +762,8 @@
 			
 			var inputs = form.find('input[name]');
 			switch(button_action){
-				case 'edit-rm_dtl':	
+				case 'edit-rm_dtl':
+					console.log(current_rm_dtl);
 					$.each(inputs, function(i, o) {
 						if (current_rm_dtl[$(o).attr('name')]!= 'undefined') {
 							current_rm_dtl[$(o).attr('name')] = $(o).val();

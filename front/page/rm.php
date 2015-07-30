@@ -64,15 +64,34 @@ class Front_Page_Rm extends Front_Page {
 
 	protected function _add() {
 		$post = $this -> post;
+		echo '<pre>';
+		print_r($post);
+		echo 'isset = '.isset($post['rm_id']);
 		
-		if (isset($post['ris_id']) && !empty($post['ris_id'])) {
+		if (isset($post['rm_id']) && empty($post['rm_id'])) {
 		
-			if (isset($post['ris_dtl']) && is_array($post['ris_dtl']) &&
-				!empty($post['ris_dtl'])) {
-					$rm_details =  $post['ris_dtl'];
+			if (isset($post['rm_dtl']) && is_array($post['rm_dtl']) && !empty($post['rm_dtl'])) {
+					$rm_details =  $post['rm_dtl'];
 					$rm_id = $this->Rm()->add(array(
 						'rm_no' => $post['rm_no'],
 						'rm_ris_id' => $post['ris_id'],
+						'rm_created' => date('Y-m-d h:i:s', time())
+					));
+					echo 'RMID:'.$rm_id;
+			}else {
+				echo '<br/> 2 false';
+			}
+		}else {
+			echo '<br/> 1 false';
+		}
+		exit;
+		if (isset($post['rm_id']) && !empty($post['rm_id'])) {
+		
+			if (isset($post['rm_dtl']) && is_array($post['rm_dtl']) && !empty($post['rm_dtl'])) {
+					$rm_details =  $post['rm_dtl'];
+					$rm_id = $this->Rm()->add(array(
+						'rm_no' => $post['rm_no'],
+						'rm_issuance_id' => $post['issuance_id'],
 						'rm_created' => date('Y-m-d h:i:s', time())
 					));
 					
@@ -92,6 +111,9 @@ class Front_Page_Rm extends Front_Page {
 					$status = array();
 					$status['status'] = 1;
 					$status['msg'] = 'Successfully Returned'; 
+					
+					print_r($status);
+					exit;
 					
 					if (IS_AJAX) {
 						header('Content-Type: application/json');
