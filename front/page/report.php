@@ -392,16 +392,80 @@ class Front_Page_Report extends Front_Page {
 	
     protected function report_MONTHLY_RECEIVING() {
 		$reportType = "SUPPLIES INVENTORY";  
-		
-		//print_r($this->get);exit;
+		$month = date('Y-n',strtotime($this->get['month']));
 		if($this->get['month']){
+			$query = sprintf('		
+					SELECT 
+					  ia.*,
+					  ia_dtl.*,
+					  po.po_no,
+					  item.item_desc,
+					  item.item_unit_measure,
+					  supplier.supplier_name,
+					  CONCAT(
+						YEAR(ia.ia_date),
+						"-",
+						MONTH(ia.ia_date)
+					  ) AS ia_month,
+					  unit_cost 
+					FROM
+					  ia 
+					  INNER JOIN ia_dtl 
+						ON (ia.ia_id = ia_dtl.ia_dtl_ia_id) 
+					  INNER JOIN po 
+						ON (ia.ia_po_id = po.po_id) 
+					  INNER JOIN po_dtl 
+						ON (
+						  ia_dtl.ia_dtl_po_dtl_id = po_dtl.po_dtl_id
+						) 
+					  INNER JOIN item 
+						ON (
+						  po_dtl.po_dtl_stock_no = item.item_stock_no
+						) 
+					  INNER JOIN supplier 
+						ON (
+						  po.po_supplier_id = supplier.supplier_id
+						) 
+					  INNER JOIN 
+						(SELECT 
+						  item_cost_item_id,
+						  AVG(`item_cost_unit_cost`) AS unit_cost 
+						FROM
+						  item_cost 
+						GROUP BY item_cost_item_id) ic 
+						ON (
+						  ic.item_cost_item_id = item.item_id
+						) 
+					HAVING ia_month = "'.$month.'" 
+				');
+			$month_data = front()->database()->query($query);
+		
+		
+		
+		
+		
+			$data = array_chunk ($month_data,2);
+			$total_page = count($data);
+			
 			$rc = new MonthlyReceivingReport();
-			$rc->hdr($reportType,$this->get['month']);
-			$rc->data_box(2);
-			$rc->createSheet();
-			$rc->hdr($reportType,$this->get['month']);
-			$rc->data_box(0);
-			$rc->ftr();
+			$ctr =1;
+			foreach($data as $d){
+				$rc->hdr($reportType,$this->get['month']);
+				if($total_page == $ctr){
+					$rc->data_box(0,$d);
+					$rc->ftr();
+				}else{
+					$rc->data_box(2,$d);
+					$rc->createSheet();
+				}
+				$ctr++;
+			}
+			
+			
+			//$rc->createSheet();
+			//$rc->hdr($reportType,$this->get['month']);
+			//$rc->data_box(0);
+			//$rc->ftr();
 			$rc->output();
 		}else{
 			$rc = new NoData();
