@@ -365,26 +365,19 @@ class Front_Page_Report extends Front_Page {
             }
         }
 		
-		 /*$bal = front()->database()
-             ->search('item')
-             ->filterByItemId($month_data['detail'][$i]['item_id'])
-             ->getRow();
-
-             $month_data['detail'][$i]['bal_qty'] = $bal['item_qty'];*/	
 		
 		$reportType = "SUPPLIES INVENTORY";  
 		$data_chunk = array_chunk($temp, 36,true);
 		$total_page = count($data_chunk);
-		
 		$key = 0;
 		$page_no = 0;
 		
 		$rc = new MonthlyReport();
 		foreach($data_chunk as $data) {
-			$page_no += 1;
+			++$page_no;
 			$rc->hdr($reportType,$this->get['from_month'],$this->get['to_month']);
 			$rc->details();
-			$rc->data_box($data,$page_no);
+			$rc->data_box($data,$page_no,$total_page);
 			if($total_page > $page_no ){
 				$rc->createSheet();
 			}

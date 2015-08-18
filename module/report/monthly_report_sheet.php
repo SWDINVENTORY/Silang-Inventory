@@ -44,7 +44,7 @@ class MonthlyReport extends Formsheet{
 	}
 	
 	
-	function data_box($detail,$page_no){
+	function data_box($detail,$page_no,$total_page){
 		$metrics = array(
 			'base_x'=> 0.2,
 			'base_y'=> 1.7,
@@ -85,10 +85,14 @@ class MonthlyReport extends Formsheet{
 		$this->centerText(46,1.3,'Ending',4,'b');
 		$this->centerText(46,2.3,'Balance',4,'b');
 		
+		
+		
+		$this->rightText(50,49,'Page '.$page_no.' of '.$total_page,'','');
 		$y=4;
+		
 		($page_no == 1)?$ctr=1:$ctr=(--$page_no*36)+1;
-		foreach($detail as $d){
-			$this->centerText(0,$y,'Item '.$ctr++,3,'');
+		foreach($detail as $k => $d){
+			$this->centerText(0,$y,$ctr++,3,'');
 			$this->centerText(3,$y,$d['article'],10,'');
 			$this->centerText(13,$y,$d['desc'],15,'');
 			$this->centerText(27,$y,$d['stock_no'],3,'');
