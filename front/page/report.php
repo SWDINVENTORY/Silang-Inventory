@@ -67,7 +67,10 @@ class Front_Page_Report extends Front_Page {
                 }
                 return $this->report_RIS(0);
                 break;
-            case 'rms' :
+			case 'rms' :
+				if (isset($_GET['rms_no'])) {
+					return $this->report_RMS($_GET['rms_no']);
+				}
                 return $this->report_RMS('');
                 break;
             case 'old-reusable-stock' :
@@ -642,8 +645,8 @@ class Front_Page_Report extends Front_Page {
 		}
     }
 
-    protected function report_RMS($data) {
-        $rc = new ReturnedMaterialSlip($data);
+    protected function report_RMS($rms_no) {
+        $rc = new ReturnedMaterialSlip();
         $rc->hdr();
         $rc->table();
         $rc->ftr();
