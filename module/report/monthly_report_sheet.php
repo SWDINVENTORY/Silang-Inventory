@@ -89,7 +89,7 @@ class MonthlyReport extends Formsheet{
 		
 		$this->rightText(50,49,'Page '.$page_no.' of '.$total_page,'','');
 		$y=4;
-		
+		$this->GRID['font_size']=8;	
 		($page_no == 1)?$ctr=1:$ctr=(--$page_no*36)+1;
 		foreach($detail as $k => $d){
 			$this->centerText(0,$y,$ctr++,3,'');
