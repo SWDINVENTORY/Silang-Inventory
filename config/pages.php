@@ -7,5 +7,6 @@ return array(
 	 //'/staff' => 'Front_Page_Staff',
 	 //'/articles' => 'Front_Page_Article',
 	 //'/report/' => 'Front_Page_Report',
+	 '/items_img_upload' => 'Front_Page_Upload',
 	 '/report-filter' => 'Front_Page_ReportFilter'
 );
