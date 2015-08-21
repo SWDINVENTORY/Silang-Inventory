@@ -8,5 +8,6 @@ return array(
 	 //'/articles' => 'Front_Page_Article',
 	 //'/report/' => 'Front_Page_Report',
 	 '/items_img_upload' => 'Front_Page_Upload',
+	 '/upload_handler' => 'Front_Page_UploadHandler',
 	 '/report-filter' => 'Front_Page_ReportFilter'
 );
