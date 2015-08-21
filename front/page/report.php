@@ -63,12 +63,14 @@ class Front_Page_Report extends Front_Page {
                 break;
             case 'ris' :
                 if (isset($_GET['ris_no'])) {
-                    $data = $this->Requisition()->getByRisNo($_GET['ris_no']);
-                    return $this->report_RIS($data);
+                    return $this->report_RIS($_GET['ris_no']);
                 }
                 return $this->report_RIS(0);
                 break;
-            case 'rms' :
+			case 'rms' :
+				if (isset($_GET['rms_no'])) {
+					return $this->report_RMS($_GET['rms_no']);
+				}
                 return $this->report_RMS('');
                 break;
             case 'old-reusable-stock' :
@@ -89,6 +91,9 @@ class Front_Page_Report extends Front_Page {
     protected function get_RIS($ris_no = 12345) {
         $requisition = $this->Requisition->getByRisNo($ris_no);
         $requisition['ris_dtl'] = $this->Requisition->getDetail($requisition['ris_id']);
+		//echo "<pre>";
+		//print_r( $requisition['ris_dtl'] );
+		//exit;
         return $requisition;
     }
 
@@ -363,26 +368,19 @@ class Front_Page_Report extends Front_Page {
             }
         }
 		
-		 /*$bal = front()->database()
-             ->search('item')
-             ->filterByItemId($month_data['detail'][$i]['item_id'])
-             ->getRow();
-
-             $month_data['detail'][$i]['bal_qty'] = $bal['item_qty'];*/	
 		
 		$reportType = "SUPPLIES INVENTORY";  
 		$data_chunk = array_chunk($temp, 36,true);
 		$total_page = count($data_chunk);
-		
 		$key = 0;
 		$page_no = 0;
 		
 		$rc = new MonthlyReport();
 		foreach($data_chunk as $data) {
-			$page_no += 1;
+			++$page_no;
 			$rc->hdr($reportType,$this->get['from_month'],$this->get['to_month']);
 			$rc->details();
-			$rc->data_box($data,$page_no);
+			$rc->data_box($data,$page_no,$total_page);
 			if($total_page > $page_no ){
 				$rc->createSheet();
 			}
@@ -392,16 +390,80 @@ class Front_Page_Report extends Front_Page {
 	
     protected function report_MONTHLY_RECEIVING() {
 		$reportType = "SUPPLIES INVENTORY";  
-		
-		//print_r($this->get);exit;
+		$month = date('Y-n',strtotime($this->get['month']));
 		if($this->get['month']){
+			$query = sprintf('		
+					SELECT 
+					  ia.*,
+					  ia_dtl.*,
+					  po.po_no,
+					  item.item_desc,
+					  item.item_unit_measure,
+					  supplier.supplier_name,
+					  CONCAT(
+						YEAR(ia.ia_date),
+						"-",
+						MONTH(ia.ia_date)
+					  ) AS ia_month,
+					  unit_cost 
+					FROM
+					  ia 
+					  INNER JOIN ia_dtl 
+						ON (ia.ia_id = ia_dtl.ia_dtl_ia_id) 
+					  INNER JOIN po 
+						ON (ia.ia_po_id = po.po_id) 
+					  INNER JOIN po_dtl 
+						ON (
+						  ia_dtl.ia_dtl_po_dtl_id = po_dtl.po_dtl_id
+						) 
+					  INNER JOIN item 
+						ON (
+						  po_dtl.po_dtl_stock_no = item.item_stock_no
+						) 
+					  INNER JOIN supplier 
+						ON (
+						  po.po_supplier_id = supplier.supplier_id
+						) 
+					  INNER JOIN 
+						(SELECT 
+						  item_cost_item_id,
+						  AVG(`item_cost_unit_cost`) AS unit_cost 
+						FROM
+						  item_cost 
+						GROUP BY item_cost_item_id) ic 
+						ON (
+						  ic.item_cost_item_id = item.item_id
+						) 
+					HAVING ia_month = "'.$month.'" 
+				');
+			$month_data = front()->database()->query($query);
+		
+		
+		
+		
+		
+			$data = array_chunk ($month_data,2);
+			$total_page = count($data);
+			
 			$rc = new MonthlyReceivingReport();
-			$rc->hdr($reportType,$this->get['month']);
-			$rc->data_box(2);
-			$rc->createSheet();
-			$rc->hdr($reportType,$this->get['month']);
-			$rc->data_box(0);
-			$rc->ftr();
+			$ctr =1;
+			foreach($data as $d){
+				$rc->hdr($reportType,$this->get['month']);
+				if($total_page == $ctr){
+					$rc->data_box(0,$d);
+					$rc->ftr();
+				}else{
+					$rc->data_box(2,$d);
+					$rc->createSheet();
+				}
+				$ctr++;
+			}
+			
+			
+			//$rc->createSheet();
+			//$rc->hdr($reportType,$this->get['month']);
+			//$rc->data_box(0);
+			//$rc->ftr();
 			$rc->output();
 		}else{
 			$rc = new NoData();
@@ -524,15 +586,58 @@ class Front_Page_Report extends Front_Page {
         $rc->output();
     }
 
-    protected function report_RIS($data) {
-		//echo '<pre>';
-		//print_r($data['ris_dtl']);exit;
+    protected function report_RIS($ris_no) {
+		$query = sprintf('SELECT * FROM `ris`	WHERE (`ris_no` = "'.$ris_no.'")');
+		$data = front()->database()->query($query);
 		if($data){
+			$data = $data[0];
+			$query = sprintf(   
+					   'SELECT 
+						  `ris`.`ris_division`,
+						  `ris`.`ris_office`,
+						  `ris`.`ris_no`,
+						  `ris_dtl`.`ris_dtl_item_desc`,
+						  `ris_dtl`.`ris_dtl_item_unit`,
+						  `ris_dtl`.`ris_dtl_item_stock_no`,
+						  `ris_dtl`.`ris_dtl_item_size`,
+						  `ris_dtl`.`ris_dtl_item_cost`,
+						  `ris_dtl`.`ris_dtl_item_qty`,
+						  `issuance_dtl`.`issuance_dtl_item_issued`,
+						  `issuance_dtl`.`issuance_dtl_or_no`,
+						  `issuance_dtl`.`issuance_dtl_meter_no` 
+						FROM
+						  `ris_dtl` 
+						  INNER JOIN `ris` 
+							ON (
+							  `ris_dtl`.`ris_dtl_ris_id` = `ris`.`ris_id`
+							) 
+						  INNER JOIN `issuance` 
+							ON (
+							  `ris`.`ris_id` = `issuance`.`issuance_ris_id`
+							) 
+						  INNER JOIN `issuance_dtl` 
+							ON (
+							  `ris_dtl`.`ris_dtl_id` = `issuance_dtl`.`issuance_dtl_ris_dtl_id`
+							) 
+						WHERE (`ris`.`ris_no` = "'.$ris_no.'") '
+					);
+			$data['ris_dtl'] = front()->database()->query($query);
+			$data_chunk = array_chunk($data['ris_dtl'] , 23,true);
+			$total_page = count($data_chunk);
+			$key = 0;
+			$page_no = 0;
+			
 			$rc = new RequisitionAndIssueSlip($data);
-			$rc->hdr();
-			$rc->table();
-			$rc->ftr();
-			$rc->output();
+			foreach($data_chunk as $data) {
+				$page_no += 1;
+				$rc->hdr();
+				$rc->table($data);
+				$rc->ftr();
+				if($total_page > $page_no ){
+					$rc->createSheet();
+				}
+			}
+		   $rc->output();
 		}else{
 			$rc = new NoData();
 			$rc->hdr();
@@ -540,8 +645,8 @@ class Front_Page_Report extends Front_Page {
 		}
     }
 
-    protected function report_RMS($data) {
-        $rc = new ReturnedMaterialSlip($data);
+    protected function report_RMS($rms_no) {
+        $rc = new ReturnedMaterialSlip();
         $rc->hdr();
         $rc->table();
         $rc->ftr();

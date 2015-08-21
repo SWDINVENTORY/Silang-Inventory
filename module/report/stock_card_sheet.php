@@ -17,6 +17,9 @@ class StockCard extends Formsheet{
 	}
 	
 	function hdr($data){
+		//echo "<pre>";
+		//print_r($data);
+		//exit;
 		$metrics = array(
 			'base_x'=> 0.2,
 			'base_y'=> 0.3,
@@ -37,6 +40,9 @@ class StockCard extends Formsheet{
 	}
 	
 	function data_box($data){
+	//	echo "<pre>";
+		//print_r ($data);exit;
+		
 		$metrics = array(
 			'base_x'=> 0.2,
 			'base_y'=> 1,
@@ -65,9 +71,9 @@ class StockCard extends Formsheet{
 		$this->drawLine(3,'h');
 		$this->drawLine(4,'h',array(11,36));
 		$this->drawLine(5,'h');
-		$this->leftText(0.2,2,'Item: ',3,'b');
+		$this->leftText(0.2,2,'Item:  '.$data['desc'] ,3,'b');
 		$this->leftText(11.2,2,'Description:',3,'b');
-		$this->leftText(35.2,1.1,'Stock No.:',3,'b');
+		$this->leftText(35.2,1.1,'Stock No.:  '.$data['stock_no'],3,'b');
 		$this->leftText(35.2,2.8,'Re-Order Point:',3,'b');
 		
 		$x_ntrvl = 4;

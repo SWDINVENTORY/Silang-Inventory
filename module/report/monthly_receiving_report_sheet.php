@@ -36,7 +36,7 @@ class MonthlyReceivingReport extends Formsheet{
 		return $this;
 	}
 	
-	function data_box($h){
+	function data_box($h,$data){
 		$metrics = array(
 			'base_x'=> 0.2,
 			'base_y'=> 1,
@@ -45,15 +45,16 @@ class MonthlyReceivingReport extends Formsheet{
 			'cols'=> 44,
 			'rows'=> 25,	
 		);	
+		
 		$this->section($metrics);
 		$this->GRID['font_size']=9;	
 		$this->drawBox(0,0,$metrics['cols'],$metrics['rows']);
 		$this->drawLine(2,'v');
 		$this->drawLine(3.5,'v');
-		$this->drawLine(8,'v');
 		$this->drawLine(10,'v');
-		$this->drawLine(11.5,'v');
-		$this->drawLine(13,'v');
+		$this->drawLine(12,'v');
+		$this->drawLine(13.5,'v');
+		$this->drawLine(15,'v');
 		$this->drawLine(23,'v');
 		$this->drawLine(26,'v');
 		$this->drawLine(29,'v');
@@ -67,12 +68,12 @@ class MonthlyReceivingReport extends Formsheet{
 		$this->centerText(0,1.5,'DATE',2,'b');
 		$this->centerText(2,1.1,'IAR',1.5,'b');
 		$this->centerText(2,1.9,'NO.',1.5,'b');
-		$this->centerText(3.5,1.5,'SUPLLIER',4.5,'b');
-		$this->centerText(8,1.1,'Inv.#/',2,'b');
-		$this->centerText(8,1.9,'DR#',2,'b');
-		$this->centerText(10,1.5,'Qty',1.5,'b');
-		$this->centerText(11.5,1.5,'Unit',1.5,'b');
-		$this->centerText(13,1.5,'DESCRIPTION',10,'b');
+		$this->centerText(3.5,1.5,'SUPPLIER',6.5,'b');
+		$this->centerText(10,1.1,'Inv.#/',2,'b');
+		$this->centerText(10,1.9,'DR#',2,'b');
+		$this->centerText(12,1.5,'Qty',1.5,'b');
+		$this->centerText(13.5,1.5,'Unit',1.5,'b');
+		$this->centerText(15,1.5,'DESCRIPTION',8,'b');
 		$this->centerText(23,1.5,'Unit Cost',3,'b');
 		$this->centerText(26,1.5,'Total Amt.',3,'b');
 		$this->centerText(29,1.5,'PO #',1.5,'b');
@@ -83,23 +84,34 @@ class MonthlyReceivingReport extends Formsheet{
 		$this->GRID['font_size']=8;
 		$this->centerText(39,1.7,'Purpose/Accountable',5,'');
 		$this->centerText(39,2.3,'Employee',5,'');
-	/* 	
-		$y=4;
-		($page_no == 1)?$ctr=1:$ctr=(--$page_no*36)+1;
-		foreach($detail as $d){
-			$this->centerText(0,$y,'Item '.$ctr++,3,'');
-			$this->centerText(3,$y,$d['article'],10,'');
-			$this->centerText(13,$y,$d['desc'],15,'');
-			$this->centerText(27,$y,$d['stock_no'],3,'');
-			$this->centerText(30,$y,$d['bal_start'],4,'');
-			$this->centerText(34,$y,$d['received_qty'],4,'');
-			$this->centerText(38,$y,$d['issued_qty'],4,'');
-			$this->centerText(42,$y,$d['returned_qty'],4,'');
-			$this->centerText(46,$y,$d['bal_qty'],4,'');
+		
+		$y=3.5;
+
+		
+		
+		//echo '<pre>';
+		//print_r($data);exit;
+		$this->GRID['font_size']=7;	
+		foreach($data as $d){
+			$ttl_amt = $d['unit_cost']*$d['ia_dtl_item_qty'];
+			$this->centerText(0,$y,date('M d',strtotime($d['ia_date'])),2,'');
+			$this->centerText(2,$y,$d['ia_no'],1.5,'');
+			$this->GRID['font_size']=6;	
+			$this->centerText(3.5,$y,$d['supplier_name'],6.5,'');
+			$this->GRID['font_size']=7;	
+			$this->centerText(10,$y,$d['ia_inv_no'].' / '.$d['ia_dr_no'],2,'');
+			$this->centerText(12,$y,$d['ia_dtl_item_qty'],1.5,'');
+			$this->centerText(13.5,$y,$d['item_unit_measure'],1.5,'');
+			$this->centerText(15,$y,$d['item_desc'],8,'');
+			$this->centerText(23,$y,number_format($d['unit_cost'], 2 ),3,'');
+			$this->centerText(26,$y,number_format($ttl_amt,2),3,'');
+			$this->centerText(29,$y,$d['po_no'],1.5,'');
 			$y++;
 		}
-	 */	return $this;
+	 	return $this;
+		
 	}
+	
 	
 	function ftr(){
 		$metrics = array(
