@@ -63,6 +63,7 @@
 					<thead>
 						<tr>
 							<th>Article</th>
+							<th>Image</th>
 							<th>Description</th>
 							<th>Size</th>
 							<th>Acct No.</th>
@@ -177,6 +178,9 @@
 		
 		item_columns = [
 			{ "mData": "article_name" },
+			{ "mData": function(data){
+					return '<img class="item_img" src="/assets/img/item_images/'+data.item_stock_no+'.jpg" onerror="this.src=\'/assets/img/item_images/none.png\'" width="100" height="100"/>';
+			}},
 			{ "mData": "item_desc" },
 			{ "mData": "item_size" },
 			{ "mData": "item_acct_no" },
@@ -223,7 +227,6 @@
 				case 'item_cost_unit_cost':
 					return parseFloat(obj[value]).moneyFormat();
 				default:
-					console.log('value -> ', value);
 					return obj[value];
 			};
 		}
@@ -303,6 +306,7 @@
 					}
 				});
 		});
+	
 	});	
 })(jQuery);
 </script>

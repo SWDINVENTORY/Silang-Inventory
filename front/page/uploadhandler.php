@@ -18,9 +18,23 @@ class Front_Page_UploadHandler extends Front_Page {
     /* Public Methods
      -------------------------------*/
     public function render() {
-		
-        $uploadDir = 'files/';
-		$uploadDir = realpath(dirname(__FILE__).DIRECTORY_SEPARATOR.$uploadDir).DIRECTORY_SEPARATOR;
+		$this->request = front()->registry()->get('request', 'variables', '0');
+		$uploadDir = realpath(__DIR__.'../../../web/assets/img/item_images').DIRECTORY_SEPARATOR;
+		if($this->request) {
+			switch($this->request){
+				case 'check':
+					if (file_exists($uploadDir.DIRECTORY_SEPARATOR.$_POST['filename'])) {
+						echo 1;
+					} else {
+						echo 0;
+					}
+					exit;
+				break;
+				default:
+				break;
+			}
+		}
+        
 		// Set the allowed file extensions
 		$fileTypes = array('jpg', 'jpeg', 'gif', 'png'); // Allowed file extensions
 
