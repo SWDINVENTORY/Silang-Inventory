@@ -45,7 +45,7 @@ class PCREPORT extends Formsheet{
 		$this->drawline($y+0.1,'h',array(4,9));
 		$this->leftText(13.1,$y,',',60,'');
 		$this->GRID['font_size']=10;
-		$this->leftText(15.5,$y,'Supply Officer C',60,'b');
+		$this->leftText(15.5,$y,'Supply Officer',60,'b');
 		$this->drawline($y+0.1,'h',array(13.6,9));
 		$this->leftText(22.8,$y,',',60,'');
 		$this->GRID['font_size']=10;
