@@ -29,6 +29,9 @@ class PCREPORT extends Formsheet{
 		$y = 1;
 		$this->centerText(0,$y++,'REPORT ON THE PHYSICAL COUNT OF INVENTORIES',60,'b');
 		$y ++;
+		if($reportType =='ENGRPROD'){
+			$reportType = 'Engineering & Production Materials';
+		}
 		$this->centerText(0,$y,$reportType,60,'b');
 		$this->drawline($y+0.1,'h',array(25.5,9));
 		$y++;

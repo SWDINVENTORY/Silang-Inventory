@@ -118,7 +118,7 @@ class Front_Page_Report extends Front_Page {
 
 			$query = sprintf("( SELECT
 				issuance_dtl.issuance_dtl_item_created AS date,
-				issuance.issuance_no AS ref,
+				issuance.issuance_ris_id AS ref,
 				issuance.issuance_id AS tid,
 				-1 AS flag,
 				'' AS received_qty,
@@ -280,6 +280,8 @@ class Front_Page_Report extends Front_Page {
     }
 
     protected function report_MONTHLY() {
+		$reportType = $this->get['article_type'];
+		
         $query_1 = sprintf("( SELECT
 			issuance_dtl.issuance_dtl_item_created AS `date`,
 			issuance.issuance_no AS ref,
@@ -301,6 +303,7 @@ class Front_Page_Report extends Front_Page {
 			WHERE
 				issuance_dtl.issuance_dtl_item_created >= '%s'
 				AND issuance_dtl.issuance_dtl_item_created < '%s'	
+				AND `article`.`article_inventory_type` = '".$reportType."'
 			)
 			UNION
 				(
@@ -325,6 +328,7 @@ class Front_Page_Report extends Front_Page {
 					WHERE
 						ia_dtl.ia_dtl_item_created >= '%s'
 						AND ia_dtl.ia_dtl_item_created < '%s'
+						AND `article`.`article_inventory_type` = '".$reportType."'
 				)
 			ORDER BY 
 					date ASC, item_id", 
@@ -369,11 +373,14 @@ class Front_Page_Report extends Front_Page {
         }
 		
 		
-		$reportType = "SUPPLIES INVENTORY";  
 		$data_chunk = array_chunk($temp, 36,true);
 		$total_page = count($data_chunk);
 		$key = 0;
 		$page_no = 0;
+		
+		//echo '<pre>';
+		//print_r($data_chunk);
+		//exit;
 		
 		$rc = new MonthlyReport();
 		foreach($data_chunk as $data) {
@@ -389,17 +396,23 @@ class Front_Page_Report extends Front_Page {
     }
 	
     protected function report_MONTHLY_RECEIVING() {
-		$reportType = "SUPPLIES INVENTORY";  
+		$reportType = $material = $this->get['article_type']; 
 		$month = date('Y-n',strtotime($this->get['month']));
+	
+		
 		if($this->get['month']){
 			$query = sprintf('		
 					SELECT 
 					  ia.*,
 					  ia_dtl.*,
 					  po.po_no,
+					  po.po_account_no,
+					  po.po_purpose,
+					  po.po_account_no,
 					  item.item_desc,
 					  item.item_unit_measure,
 					  supplier.supplier_name,
+					  dept.dept_name,
 					  CONCAT(
 						YEAR(ia.ia_date),
 						"-",
@@ -424,6 +437,14 @@ class Front_Page_Report extends Front_Page {
 						ON (
 						  po.po_supplier_id = supplier.supplier_id
 						) 
+					  INNER JOIN article
+						ON ( 
+							article_id= item.item_article_id
+						)
+					  INNER JOIN dept 
+						ON (
+							po.po_dept_id = dept.dept_id
+						)
 					  INNER JOIN 
 						(SELECT 
 						  item_cost_item_id,
@@ -434,15 +455,14 @@ class Front_Page_Report extends Front_Page {
 						ON (
 						  ic.item_cost_item_id = item.item_id
 						) 
+					WHERE `article`.`article_inventory_type` = "'.$reportType.'"
+					AND `item`.`item_qty` > 0
 					HAVING ia_month = "'.$month.'" 
 				');
 			$month_data = front()->database()->query($query);
 		
 		
-		
-		
-		
-			$data = array_chunk ($month_data,2);
+			$data = array_chunk ($month_data,36);
 			$total_page = count($data);
 			
 			$rc = new MonthlyReceivingReport();
@@ -686,7 +706,7 @@ class Front_Page_Report extends Front_Page {
                 '' AS received_cost,
                 '' AS received_qty,
 				'' AS received_amt,
-				issuance.issuance_no AS issued_ref,
+				issuance.issuance_ris_id AS issued_ref,
                 ris_dtl.ris_dtl_item_cost AS issued_cost,
                 issuance_dtl.issuance_dtl_item_issued AS issued_qty,
 				ris_dtl.ris_dtl_item_cost * issuance_dtl.issuance_dtl_item_issued AS issued_amt,

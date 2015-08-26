@@ -31,6 +31,9 @@ class MonthlyReport extends Formsheet{
 		$this->centerText(0,$y++,'SILANG WATER DISTRICT',50,'b');
 		$this->centerText(0,$y++,'Silang, Cavite',50,'b');
 		$y++;
+		if($reportType =='ENGRPROD'){
+			$reportType = 'Engineering & Production Materials';
+		}
 		$this->centerText(0,$y++,$reportType,50,'b');
 		
 		if(date('Y',strtotime($fromMonth)) == date('Y',strtotime($toMonth))){

@@ -106,6 +106,9 @@ class MonthlyReceivingReport extends Formsheet{
 			$this->centerText(23,$y,number_format($d['unit_cost'], 2 ),3,'');
 			$this->centerText(26,$y,number_format($ttl_amt,2),3,'');
 			$this->centerText(29,$y,$d['po_no'],1.5,'');
+			$this->centerText(33.5,$y,$d['dept_name'],2.5,'');
+			$this->centerText(36,$y,$d['po_account_no'],3,'');	
+			$this->centerText(39,$y,$d['po_purpose'],5,'');
 			$y++;
 		}
 	 	return $this;
