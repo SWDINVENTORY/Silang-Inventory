@@ -443,7 +443,7 @@ class Front_Page_Report extends Front_Page {
 						)
 					  INNER JOIN dept 
 						ON (
-							po.po_dept_id = dept.dept_id
+							ia.ia_dept_id = dept.dept_id
 						)
 					  INNER JOIN 
 						(SELECT 
