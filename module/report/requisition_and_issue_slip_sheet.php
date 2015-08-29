@@ -115,7 +115,7 @@ class RequisitionAndIssueSlip extends Formsheet{
 		$this->drawLine(24,'v',array(1,24));
 		$this->drawLine(26.5,'v',array(1,24));
 		
-		$this->GRID['font_size']=7;	
+		$this->GRID['font_size']=8;	
 		if(isset($dtls)){
 			$y++;
 		
