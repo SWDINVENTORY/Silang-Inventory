@@ -118,7 +118,7 @@ class Front_Page_Report extends Front_Page {
 
 			$query = sprintf("( SELECT
 				issuance_dtl.issuance_dtl_item_created AS date,
-				issuance.issuance_ris_id AS ref,
+				ris.ris_no AS ref,
 				issuance.issuance_id AS tid,
 				-1 AS flag,
 				'' AS received_qty,
@@ -129,6 +129,7 @@ class Front_Page_Report extends Front_Page {
 				INNER JOIN ris_dtl ON ris_dtl.ris_dtl_id = issuance_dtl.issuance_dtl_ris_dtl_id
 				INNER JOIN item ON item.item_stock_no = ris_dtl.ris_dtl_item_stock_no
 				INNER JOIN issuance ON issuance.issuance_id = issuance_dtl.issuance_dtl_issuance_id
+				INNER JOIN ris ON ris.ris_id = issuance.issuance_ris_id
 				WHERE
 					item.item_stock_no = '%s'
 				AND (
@@ -139,7 +140,7 @@ class Front_Page_Report extends Front_Page {
 				UNION
 					(
 						SELECT
-							ia_dtl.ia_dtl_item_created AS date,
+							ia.ia_date AS date,
 							ia.ia_no AS ref,
 							ia.ia_id AS tid,
 							1 AS flag,
@@ -159,7 +160,14 @@ class Front_Page_Report extends Front_Page {
 						)
 					)
 				ORDER BY
-					date", $this->get['stock_no'], date('Y-m-d H:i:s', strtotime($this->get['from_date'])), date('Y-m-d 23:59:59', strtotime($this->get['to_date'])), $this->get['stock_no'], date('Y-m-d H:i:s', strtotime($this->get['from_date'])), date('Y-m-d 23:59:59', strtotime($this->get['to_date'])));
+					date,
+					ref", 
+					$this->get['stock_no'],
+					date('Y-m-d H:i:s', strtotime($this->get['from_date'])),
+					date('Y-m-d 23:59:59', strtotime($this->get['to_date'])), $this->get['stock_no'],
+					date('Y-m-d H:i:s',strtotime($this->get['from_date'])),
+					date('Y-m-d 23:59:59',strtotime($this->get['to_date']))
+				);
 			//echo $query;exit();
 			$bin_card_data['detail'] = front()->database()->query($query);
 			//echo '<pre>';print_r($bin_card_data);exit;
@@ -175,16 +183,21 @@ class Front_Page_Report extends Front_Page {
 			//echo '<pre>';
 			//print_r($bin_card_data);
 			//exit;
-			//$limit_ng_linya_na_kasya_sa_papel = 57;
-			//$data_chunk = array_chunk($bin_card_data['detail'], $limit_ng_linya_na_kasya_sa_papel, true);
-			//$total_page = count($data_chunk);
-
-			//foreach ($data_chunk as $data) {
-				$rc = new BinCard();
+			$limit_ng_linya_na_kasya_sa_papel = 28;
+			$data_chunk = array_chunk($bin_card_data['detail'], $limit_ng_linya_na_kasya_sa_papel, true);
+			$total_page = count($data_chunk);
+			$ctr =1;
+			$rc = new BinCard();
+			foreach ($data_chunk as $data) {
 				$rc->hdr($bin_card_data['header']);
-				$rc->table($bin_card_data['detail']);
-				$rc->output();
-			//}
+				$rc->table($data);
+				if($total_page != $ctr){
+					$rc->createSheet();
+				}
+				$ctr++;
+			}
+			$rc->output();
+			
 		}else{
 			$rc = new NoData();
 			$rc->hdr();
