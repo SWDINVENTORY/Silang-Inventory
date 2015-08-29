@@ -4,16 +4,12 @@
 	</div>
 	<br>
 	<form>
-		<label for="article_type">Inventory Type</label>	
-		<select id="article_type" required="required">
-			<option>Select</option>
-			<option value="SUPPLIES">Supplies</option>
-			<option value="MATERIAL">Materials</option>
-			<option value="ENGRPROD">Engineering & Production Materials</option>
-		</select>
 		
-		<label for="month">Month</label>
-		<input type="month" id="month" required="required">
+		<label for="from_month">From Date</label>	
+		<input type="date" id="from_month" required="required">
+		
+		<label for="to_month">To Date</label>
+		<input type="date" id="to_month" required="required">	
 		
 		<button id="go_button" class="btn btn-primary">Go</button>
 	</form>
@@ -27,11 +23,11 @@
     $('document').ready(function() {
         $('form').on('submit', function(e) {
             e.preventDefault();			
-            var article_type = ($('#article_type').val())?$('#article_type').val():false;
-            var month = ($('#month').val())?$('#month').val():false;
-            var get = $('iframe')[0].src.split('/?')[0]+'/?article_type='+article_type+'&month='+month;
+            var from_month = ($('#from_month').val())?$('#from_month').val():false;
+            var to_month = ($('#to_month').val())?$('#to_month').val():false;
+            var get = $('iframe')[0].src.split('/?')[0]+'/?from_month='+from_month+'&to_month='+to_month;
 			
-			if(article_type && month) {
+			if(from_month && to_month) {
                 return $('iframe')[0].src=get;
             }
         });

@@ -16,7 +16,7 @@ class MonthlyReceivingReport extends Formsheet{
 		$this->createSheet();
 	}
 	
-	function hdr($reportType,$month){
+	function hdr($from,$to){
 		$metrics = array(
 			'base_x'=> 0.2,
 			'base_y'=> 0.3,
@@ -32,7 +32,7 @@ class MonthlyReceivingReport extends Formsheet{
 		$this->GRID['font_size']=10;	
 		$this->centerText(0,$y++,'MONTHLY RECEIVING REPORT',50,'b');
 		$this->GRID['font_size']=9;	
-		$this->centerText(0,$y++,'For the Month of '.date('F Y',strtotime($month)),50,'b');
+		$this->centerText(0,$y++,'From the Month of '.date('F d, Y',strtotime($from)).' to '.date('F d, Y',strtotime($to)),50,'b');
 		return $this;
 	}
 	
@@ -60,7 +60,7 @@ class MonthlyReceivingReport extends Formsheet{
 		$this->drawLine(29,'v');
 		$this->drawLine(30.5,'v');
 		$this->drawLine(33.5,'v');
-		$this->drawLine(36,'v',array(1,$metrics['rows']-1));
+		$this->drawLine(36.5,'v',array(1,$metrics['rows']-1));
 		$this->drawLine(39,'v',array(1,$metrics['rows']-1));
 		$this->drawLine(2.75,'h');
 		$this->drawLine(1,'h',array(33.5,10.5));
@@ -79,8 +79,8 @@ class MonthlyReceivingReport extends Formsheet{
 		$this->centerText(29,1.5,'PO #',1.5,'b');
 		$this->centerText(30.5,1.5,'Remarks',3,'b');
 		$this->centerText(33.5,0.7,'DESTINATION',10.5,'b');
-		$this->centerText(33.5,2,'Division',2.5,'');
-		$this->centerText(36,2,'Account',3,'');	
+		$this->centerText(33.5,2,'Division',3,'');
+		$this->centerText(36.5,2,'Account',2.5,'');	
 		$this->GRID['font_size']=8;
 		$this->centerText(39,1.7,'Purpose/Accountable',5,'');
 		$this->centerText(39,2.3,'Employee',5,'');
@@ -106,9 +106,10 @@ class MonthlyReceivingReport extends Formsheet{
 			$this->centerText(23,$y,number_format($d['unit_cost'], 2 ),3,'');
 			$this->centerText(26,$y,number_format($ttl_amt,2),3,'');
 			$this->centerText(29,$y,$d['po_no'],1.5,'');
-			$this->centerText(33.5,$y,$d['dept_name'],2.5,'');
-			$this->centerText(36,$y,$d['po_account_no'],3,'');	
+			$this->fitText(33.6,$y,$d['dept_name'],1.35,'');
+			$this->centerText(36.5,$y,$d['po_account_no'],2.5,'');	
 			$this->centerText(39,$y,$d['po_purpose'],5,'');
+			$this->centerText(30.5,$y,$d['po_dtl_item_type'],3,'b');
 			$y++;
 		}
 	 	return $this;
@@ -116,7 +117,7 @@ class MonthlyReceivingReport extends Formsheet{
 	}
 	
 	
-	function ftr(){
+	function ftr($unit_cost_total,$article_total,$grand_total){
 		$metrics = array(
 			'base_x'=> 0.2,
 			'base_y'=> 5.8,
@@ -126,15 +127,25 @@ class MonthlyReceivingReport extends Formsheet{
 			'rows'=> 13,	
 		);	
 		$this->section($metrics);
+		//echo "<pre>";
+		//print_r($article_total);
+		//exit;
+		
 		
 		$y = 1;
 		$this->GRID['font_size']=9;
 		$this->leftText(13,$y,'TOTAL','','b');
-		$this->rightText(26,$y,'0.00','','b');
+		$this->rightText(26,$y,number_format($unit_cost_total, 2 ),'','b');
 		$this->drawLine($y+0.2,'h',array(23,3.2));
 		$this->drawLine($y+0.4,'h',array(23,3.2));
 		$y+=2;
 		
+		foreach($article_total as $k => $v){
+			$this->rightText(29,$y,number_format($v,2),'','b');
+			$this->leftText(13,$y++, $k,'','');
+			
+		}
+		/*
 		$this->rightText(29,$y,'0.00','','b');
 		$this->leftText(13,$y++,'Non - Stock Items','','');
 		
@@ -158,13 +169,14 @@ class MonthlyReceivingReport extends Formsheet{
 		
 		$this->rightText(29,$y,'0.00','','b');
 		$this->leftText(13,$y++,'Stock - Water Meter','','');
-		
-		
-		$this->rightText(29,$y,'0.00','','b');
+		*/
+	
+		$this->rightText(29,$y,$grand_total,'','b');
 		$this->leftText(13,$y,'GRAND TOTAL','','b');
 		$this->drawLine($y+0.2,'h',array(26,3.2));
 		$this->drawLine($y+0.4,'h',array(26,3.2));
-		$y+=2;
+		
+		$y=13;
 		$this->leftText(0,$y,'NOMER M. LEGASPI','','b');
 		$this->leftText(8,$y,'ARIEL L. MADLANGSAKAY','','b');
 		$this->leftText(25,$y,'MARY GRACE E. BAYBAY','','b');

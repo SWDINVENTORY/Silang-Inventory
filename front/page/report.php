@@ -396,11 +396,11 @@ class Front_Page_Report extends Front_Page {
     }
 	
     protected function report_MONTHLY_RECEIVING() {
-		$reportType = $material = $this->get['article_type']; 
-		$month = date('Y-n',strtotime($this->get['month']));
-	
+		$from  = date('Y-m-d 0:0:0', strtotime($this->get['from_month']));
+		$to  = date('Y-m-d 23:59:59', strtotime($this->get['to_month']));
+		//echo $from . ' - '. $to;
 		
-		if($this->get['month']){
+		if($from&&$to){
 			$query = sprintf('		
 					SELECT 
 					  ia.*,
@@ -413,12 +413,14 @@ class Front_Page_Report extends Front_Page {
 					  item.item_unit_measure,
 					  supplier.supplier_name,
 					  dept.dept_name,
+					  article.article_name,
 					  CONCAT(
 						YEAR(ia.ia_date),
 						"-",
 						MONTH(ia.ia_date)
 					  ) AS ia_month,
-					  unit_cost 
+					  unit_cost ,
+					  po_dtl.po_dtl_item_type
 					FROM
 					  ia 
 					  INNER JOIN ia_dtl 
@@ -455,10 +457,11 @@ class Front_Page_Report extends Front_Page {
 						ON (
 						  ic.item_cost_item_id = item.item_id
 						) 
-					WHERE `article`.`article_inventory_type` = "'.$reportType.'"
-					AND `item`.`item_qty` > 0
-					HAVING ia_month = "'.$month.'" 
+					WHERE item.item_qty > 0
+					AND ia_date >= "'.$from.'" 
+					AND ia_date <= "'.$to.'" 
 				');
+				//echo $query;exit();
 			$month_data = front()->database()->query($query);
 		
 		
@@ -468,10 +471,25 @@ class Front_Page_Report extends Front_Page {
 			$rc = new MonthlyReceivingReport();
 			$ctr =1;
 			foreach($data as $d){
-				$rc->hdr($reportType,$this->get['month']);
+				
+				//MANIPUALTE DATE FOR FOOTER PORTION
+				$unit_cost_total = $grand_total = 0;
+				$article_total = array();
+				foreach($d as $o){
+					$unit_cost_total += $o['unit_cost'];
+					$grand_total += ($o['unit_cost']*$o['ia_dtl_item_qty']);
+					if(!isset($article_total[$o['article_name']])){
+						$article_total[$o['article_name']] = 0;
+					}
+					
+					$article_total[$o['article_name']] += ($o['unit_cost']*$o['ia_dtl_item_qty']);
+					
+				}
+				
+				$rc->hdr($from,$to);
 				if($total_page == $ctr){
 					$rc->data_box(0,$d);
-					$rc->ftr();
+					$rc->ftr($unit_cost_total,$article_total,$grand_total);
 				}else{
 					$rc->data_box(2,$d);
 					$rc->createSheet();
@@ -479,11 +497,6 @@ class Front_Page_Report extends Front_Page {
 				$ctr++;
 			}
 			
-			
-			//$rc->createSheet();
-			//$rc->hdr($reportType,$this->get['month']);
-			//$rc->data_box(0);
-			//$rc->ftr();
 			$rc->output();
 		}else{
 			$rc = new NoData();
