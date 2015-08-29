@@ -732,7 +732,7 @@ class Front_Page_Report extends Front_Page {
                 '' AS received_cost,
                 '' AS received_qty,
 				'' AS received_amt,
-				issuance.issuance_ris_id AS issued_ref,
+				ris.ris_no AS issued_ref,
                 ris_dtl.ris_dtl_item_cost AS issued_cost,
                 issuance_dtl.issuance_dtl_item_issued AS issued_qty,
 				ris_dtl.ris_dtl_item_cost * issuance_dtl.issuance_dtl_item_issued AS issued_amt,
@@ -744,6 +744,7 @@ class Front_Page_Report extends Front_Page {
             INNER JOIN ris_dtl ON ris_dtl.ris_dtl_id = issuance_dtl.issuance_dtl_ris_dtl_id
             INNER JOIN item ON item.item_stock_no = ris_dtl.ris_dtl_item_stock_no
             INNER JOIN issuance ON issuance.issuance_id = issuance_dtl.issuance_dtl_issuance_id
+			INNER JOIN ris ON ris.ris_id = issuance.issuance_ris_id
             WHERE
                 item.item_stock_no = '%s'
             AND (
@@ -754,7 +755,7 @@ class Front_Page_Report extends Front_Page {
             UNION
                 (
                     SELECT
-                        ia_dtl.ia_dtl_item_created AS date,
+                        ia.ia_date AS date,
                         1 AS flag,
 						ia.ia_id AS tid,
 						ia.ia_no AS received_ref,
@@ -781,7 +782,7 @@ class Front_Page_Report extends Front_Page {
                     )
                 )
             ORDER BY
-                date", $this->get['stock_no'], date('Y-m-d H:i:s', strtotime($this->get['from_date'])), date('Y-m-d H:i:s', strtotime($this->get['to_date'])), $this->get['stock_no'], date('Y-m-d H:i:s', strtotime($this->get['from_date'])), date('Y-m-d H:i:s', strtotime($this->get['to_date'])));
+                date,received_ref,issued_ref", $this->get['stock_no'], date('Y-m-d H:i:s', strtotime($this->get['from_date'])), date('Y-m-d H:i:s', strtotime($this->get['to_date'])), $this->get['stock_no'], date('Y-m-d H:i:s', strtotime($this->get['from_date'])), date('Y-m-d H:i:s', strtotime($this->get['to_date'])));
 
         $stock_card_data['detail'] = front()->database()->query($query);
 
@@ -794,8 +795,26 @@ class Front_Page_Report extends Front_Page {
 		//echo '<pre>';
 		//print_r($stock_card_data);exit;
 		
-        $rc = new StockCard();
-        $rc->hdr($stock_card_data['header'])->details($stock_card_data['detail'])->data_box($stock_card_data['header'])->output();
+		$limit_ng_linya_na_kasya_sa_papel = 28;
+		$data_chunk = array_chunk($stock_card_data['detail'], $limit_ng_linya_na_kasya_sa_papel, true);
+		$total_page = count($data_chunk);
+		$ctr =1;
+		
+		$rc = new StockCard();
+		foreach ($data_chunk as $data) {
+			
+			$rc->hdr($stock_card_data['header']);
+			$rc->details($data);
+			$rc->data_box($stock_card_data['header']);
+			
+			if($total_page != $ctr){
+				$rc->createSheet();
+			}
+			$ctr++;
+		}
+		$rc->output();
+		
+	
 		
 		}else{
 			$rc = new NoData();
