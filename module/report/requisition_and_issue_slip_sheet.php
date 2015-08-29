@@ -115,17 +115,21 @@ class RequisitionAndIssueSlip extends Formsheet{
 		$this->drawLine(24,'v',array(1,24));
 		$this->drawLine(26.5,'v',array(1,24));
 		
-		$this->GRID['font_size']=8;	
+		$this->GRID['font_size']=7;	
 		if(isset($dtls)){
 			$y++;
-			foreach($dtls as $ris_dtl){
+		
+			
+			foreach($dtls['ris_dtl'] as $ris_dtl){
 				$this->centerText(0,$y,'',3,'');
 				//$this->centerText(-0.65,$y,$ris_dtl['issuance_dtl_item_charging'],3,'');
 				$this->centerText(1.75,$y,$ris_dtl['ris_dtl_item_stock_no'],3,'');
 				$this->centerText(4.75,$y,$ris_dtl['ris_dtl_item_unit'],2,'');
 				$this->leftText(7,$y,$ris_dtl['ris_dtl_item_desc'],12,'');
-				$this->centerText(17.5,$y,$ris_dtl['ris_dtl_item_size'],3,'');
-				//$this->fitText(18.1,$y,$ris_dtl['ris_dtl_item_size'],0.6,'');
+			
+				//$this->centerText(17.5,$y,$ris_dtl['ris_dtl_item_size'],3,'');
+					
+				$this->fitText(18.1,$y,$ris_dtl['ris_dtl_item_size'],0.6,'');
 				$this->centerText(20,$y,$ris_dtl['ris_dtl_item_qty'],2,'');
 				$this->centerText(22,$y,$ris_dtl['issuance_dtl_item_issued'],2,'');
 				$this->GRID['font_size']=8;
