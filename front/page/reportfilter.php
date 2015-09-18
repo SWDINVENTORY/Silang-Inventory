@@ -40,35 +40,35 @@ class Front_Page_ReportFilter extends Front_Page {
 		
 		switch($this->request) {
 			case 'physical-count':
-				$this->_template = '\report_filter\physical_count_report_filter.phtml';
+				$this->_template = DS.'report_filter'.DS.'physical_count_report_filter.phtml';
 			break;
 			case 'bin-card':
                 $this->_title.='Bin Card Report';
-				$this->_template = '\report_filter\bin_card.phtml';
+				$this->_template = DS.'report_filter'.DS.'bin_card.phtml';
 			break;
 			case 'issue-out': 
 				$this->_title.='Issue Out Report';
-				$this->_template = '\report_filter\issue_out_report.phtml';
+				$this->_template = DS.'report_filter'.DS.'issue_out_report.phtml';
 			break;
 			case 'monthly-report':
                 $this->_title.='Monthly Report'; 
-				$this->_template = '\report_filter\monthly_report.phtml';
+				$this->_template = DS.'report_filter'.DS.'monthly_report.phtml';
 			break;
 			case 'monthly-recieving':
                 $this->_title.='Monthly Recieving Report'; 
-				$this->_template = '\report_filter\monthly_receiving.phtml';
+				$this->_template = DS.'report_filter'.DS.'monthly_receiving.phtml';
 			break;
 			case 'ris': 
-				$this->_template = '\report_filter\ris.phtml';
+				$this->_template = DS.'report_filter'.DS.'ris.phtml';
 			break;
 			case 'rms': 
-				$this->_template = '\report_filter\rms.phtml';
+				$this->_template = DS.'report_filter'.DS.'rms.phtml';
 			break;
 			case 'old-reusable-stock': 
-				$this->_template = '\report_filter\old_reusable_stock.phtml';
+				$this->_template = DS.'report_filter'.DS.'old_reusable_stock.phtml';
 			break;
 			case 'stock-card': 
-				$this->_template = '\report_filter\stock_card.phtml';
+				$this->_template = DS.'report_filter'.DS.'stock_card.phtml';
 			break;
 			default:
 				echo 'Report!';
