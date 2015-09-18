@@ -115,12 +115,13 @@ class RequisitionAndIssueSlip extends Formsheet{
 		$this->drawLine(24,'v',array(1,24));
 		$this->drawLine(26.5,'v',array(1,24));
 		
-		$this->GRID['font_size']=8;	
+		$this->GRID['font_size']=8;
+		
 		if(isset($dtls)){
 			$y++;
 		
-			
-			foreach($dtls['ris_dtl'] as $ris_dtl){
+			$data =  isset($dtls['ris_dtl'])?$dtls['ris_dtl']:$dtls;
+			foreach($data as $ris_dtl){
 				$this->centerText(0,$y,'',3,'');
 				//$this->centerText(-0.65,$y,$ris_dtl['issuance_dtl_item_charging'],3,'');
 				$this->centerText(1.75,$y,$ris_dtl['ris_dtl_item_stock_no'],3,'');
