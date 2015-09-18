@@ -123,7 +123,8 @@ class Front_Page_Report extends Front_Page {
 				-1 AS flag,
 				'' AS received_qty,
 				issuance_dtl.issuance_dtl_item_issued AS issued_qty,
-				'' AS bal_qty
+				'' AS bal_qty,
+				item.item_id as iid
 				FROM
 					issuance_dtl
 				INNER JOIN ris_dtl ON ris_dtl.ris_dtl_id = issuance_dtl.issuance_dtl_ris_dtl_id
@@ -146,7 +147,8 @@ class Front_Page_Report extends Front_Page {
 							1 AS flag,
 							ia_dtl.ia_dtl_item_qty AS received_qty,
 							'' AS issued_qty,
-							'' AS bal_qty
+							'' AS bal_qty,
+							item.item_id as iid
 						FROM
 							item
 						INNER JOIN po_dtl ON item.item_stock_no = po_dtl.po_dtl_stock_no
@@ -168,18 +170,24 @@ class Front_Page_Report extends Front_Page {
 					date('Y-m-d H:i:s',strtotime($this->get['from_date'])),
 					date('Y-m-d 23:59:59',strtotime($this->get['to_date']))
 				);
-			//echo $query;exit();
+//			echo $query;exit();
 			$bin_card_data['detail'] = front()->database()->query($query);
 			//echo '<pre>';print_r($bin_card_data);exit;
+			//echo '<pre>';
 			for ($i = 0; $i < count($bin_card_data['detail']); $i++) {
 				$bal = front()->database()->
 					search('item_stock_level')
 						->filterByItemStockLevelTid($bin_card_data['detail'][$i]['tid'])
 						->addFilter('item_stock_level_flag = %s', $bin_card_data['detail'][$i]['flag'])
+						->addFilter('item_stock_level_item_id = %s', $bin_card_data['detail'][$i]['iid'])
 						->getRow();
+						/*if($bal['item_stock_level_qty']==2225||$bal['item_stock_level_qty']==2272){
+							print_r($bal);
+						}*/
 				$bin_card_data['detail'][$i]['date'] = date('M d', strtotime($bin_card_data['detail'][$i]['date']));
 				$bin_card_data['detail'][$i]['bal_qty'] = $bal['item_stock_level_qty'];
 			}
+			//exit;
 			//echo '<pre>';
 			//print_r($bin_card_data);
 			//exit;
@@ -350,7 +358,7 @@ class Front_Page_Report extends Front_Page {
 					date('Y-m-d H:i:s', strtotime($this->get['from_month'])),
 					date('Y-m-d 23:59:59', strtotime($this->get['to_month']))
 		);
-
+		echo $query_1;exit;
         $month_data['detail'] = front()->database()->query($query_1);
         $temp = array();
 		
@@ -738,7 +746,8 @@ class Front_Page_Report extends Front_Page {
 				ris_dtl.ris_dtl_item_cost * issuance_dtl.issuance_dtl_item_issued AS issued_amt,
                 '' AS bal_qty,
                 ris_dtl.ris_dtl_item_cost AS bal_cost,
-                '' AS bal_amt
+                '' AS bal_amt,
+				item.item_id as iid
             FROM
                 issuance_dtl
             INNER JOIN ris_dtl ON ris_dtl.ris_dtl_id = issuance_dtl.issuance_dtl_ris_dtl_id
@@ -768,7 +777,8 @@ class Front_Page_Report extends Front_Page {
                         '' AS issued_amt,
                         '' AS bal_qty,
                         po_dtl.po_dtl_item_cost AS bal_cost,
-                        '' AS bal_amt
+                        '' AS bal_amt,
+						item.item_id as iid
                     FROM
                         item
                     INNER JOIN po_dtl ON item.item_stock_no = po_dtl.po_dtl_stock_no
@@ -787,7 +797,7 @@ class Front_Page_Report extends Front_Page {
         $stock_card_data['detail'] = front()->database()->query($query);
 
         for ($i = 0; $i < count($stock_card_data['detail']); $i++) {
-            $bal = front()->database()->search('item_stock_level')->filterByItemStockLevelTid($stock_card_data['detail'][$i]['tid'])->addFilter('item_stock_level_flag = %s', $stock_card_data['detail'][$i]['flag'])->getRow();
+            $bal = front()->database()->search('item_stock_level')->filterByItemStockLevelTid($stock_card_data['detail'][$i]['tid'])->addFilter('item_stock_level_flag = %s', $stock_card_data['detail'][$i]['flag'])->addFilter('item_stock_level_item_id = %s', $stock_card_data['detail'][$i]['iid'])->getRow();
             $stock_card_data['detail'][$i]['date'] = date('M d', strtotime($stock_card_data['detail'][$i]['date']));
             $stock_card_data['detail'][$i]['bal_qty'] = $bal['item_stock_level_qty'];
             $stock_card_data['detail'][$i]['bal_amt'] = number_format($bal['item_stock_level_qty'] * $stock_card_data['detail'][$i]['bal_cost'], 2, '.', ',');
