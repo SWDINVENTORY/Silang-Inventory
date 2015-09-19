@@ -363,12 +363,20 @@ class Front_Page_Report extends Front_Page {
 		//echo $query_1;exit;
 		}else{
 			$query_1 = sprintf("SELECT 
-							`date`,`ref`, `tid`,
-							`item_id`,`desc`,`item_stock_no` as stock_no,
-							`article_name` as article,`flag`, 
-							0 as bal_start,
-							SUM(r_qty) AS received_qty, SUM(i_qty) AS issued_qty ,
-							SUM(b_qty) AS bal_qty , 0 as returned_qty
+							  `date`,
+							  `ref`,
+							  `tid`,
+							  `item_id`,
+							  `desc`,
+							  `item_stock_no` as stock_no,
+							  `article_name` as article,
+							  `flag`,
+							  SUM(r_qty) AS received_qty,
+							  SUM(i_qty) AS issued_qty,
+							  SUM(b_qty) AS bal_qty ,
+							   0 as returned_qty,
+							  beg_qty as bal_start,
+							  beg_qty + SUM(r_qty) - SUM(i_qty) AS bal_qty
 							FROM(
 							(SELECT
 							ia_dtl.ia_dtl_item_created AS `date`,
@@ -447,7 +455,40 @@ class Front_Page_Report extends Front_Page {
 							  AND `article`.`article_inventory_type` = '%s'
 							  GROUP BY  item.item_stock_no
 							  ORDER BY  item.item_stock_no) 
-						) AS inventory GROUP BY item_stock_no ORDER BY `article`,`desc`",
+						) AS current_inventory 
+						 INNER JOIN 
+						(SELECT 
+						  item.`item_id` AS iid,
+						  CASE
+							WHEN item_stock_level_current_qty IS NULL 
+							THEN item.`item_qty` 
+							ELSE item_stock_level_current_qty 
+						  END AS beg_qty 
+						FROM
+						  `article` 
+						  INNER JOIN `item` 
+							ON (
+							  `article`.`article_id` = `item`.`item_article_id`
+							) 
+						  LEFT JOIN `item_stock_level` 
+							ON (
+							  `item_stock_level`.`item_stock_level_item_id` = `item`.`item_id`
+							) 
+						WHERE (
+							(
+							  `item_stock_level`.`item_stock_level_date` >= '%s' 
+							  AND `item_stock_level`.`item_stock_level_date` <= '%s'
+							) 
+							OR `item_stock_level`.`item_stock_level_date` IS NULL
+						  ) 
+						  AND `article`.`article_inventory_type` = '%s' 
+						  GROUP BY iid
+						ORDER BY item_stock_level.`item_stock_level_date` ASC) AS begin_inventory 
+						ON (begin_inventory.iid = current_inventory.item_id)
+						GROUP BY item_stock_no ORDER BY `article`,`desc`",
+					$from,
+					$to,
+					$reportType,
 					$from,
 					$to,
 					$reportType,
