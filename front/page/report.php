@@ -302,7 +302,9 @@ class Front_Page_Report extends Front_Page {
 
     protected function report_MONTHLY() {
 		$reportType = $this->get['article_type'];
-		
+		$from = date('Y-m-d 00:00:00', strtotime($this->get['from_month']));
+		$to = date('Y-m-d 23:59:59', strtotime($this->get['to_month']));
+		if(false){
         $query_1 = sprintf("( SELECT
 			issuance_dtl.issuance_dtl_item_created AS `date`,
 			issuance.issuance_no AS ref,
@@ -358,8 +360,105 @@ class Front_Page_Report extends Front_Page {
 					date('Y-m-d H:i:s', strtotime($this->get['from_month'])),
 					date('Y-m-d 23:59:59', strtotime($this->get['to_month']))
 		);
-		echo $query_1;exit;
-        $month_data['detail'] = front()->database()->query($query_1);
+		//echo $query_1;exit;
+		}else{
+			$query_1 = sprintf("SELECT 
+							`date`,`ref`, `tid`,
+							`item_id`,`desc`,`item_stock_no` as stock_no,
+							`article_name` as article,`flag`, 
+							0 as bal_start,
+							SUM(r_qty) AS received_qty, SUM(i_qty) AS issued_qty ,
+							SUM(b_qty) AS bal_qty , 0 as returned_qty
+							FROM(
+							(SELECT
+							ia_dtl.ia_dtl_item_created AS `date`,
+							ia.ia_no AS ref,
+							ia.ia_id AS tid,
+							item.item_id,
+							item.item_desc AS `desc`,
+							item.item_stock_no,
+							article.article_name,
+							1 AS flag,
+							CASE  WHEN ia_dtl.ia_dtl_item_qty  IS  NULL THEN 0 ELSE SUM(ia_dtl.ia_dtl_item_qty) END AS r_qty,
+							0 AS i_qty,
+							0 AS b_qty
+							FROM
+								`article`
+								INNER JOIN `item` 
+									ON (`article`.`article_id` = `item`.`item_article_id`)
+								LEFT JOIN `po_dtl` 
+									ON (`item`.`item_stock_no` = `po_dtl`.`po_dtl_stock_no`)
+								LEFT JOIN `ia_dtl` 
+									ON (`ia_dtl`.`ia_dtl_po_dtl_id` = `po_dtl`.`po_dtl_id`)
+								LEFT JOIN `ia` 
+									ON (`ia`.`ia_id` = `ia_dtl`.`ia_dtl_ia_id`)
+									WHERE (
+								(
+								  ia_dtl.ia_dtl_item_created >= '%s' 
+								  AND ia_dtl.ia_dtl_item_created < '%s'
+								) 
+								OR ia_dtl.ia_dtl_item_created IS NULL
+							  ) 
+							  AND `article`.`article_inventory_type` = '%s'
+							  GROUP BY  item.item_stock_no
+							  ORDER BY  item.item_stock_no) 
+							  UNION ALL
+							  (SELECT 
+							  issuance_dtl.issuance_dtl_item_created AS `date`,
+							  issuance.issuance_no AS ref,
+							  GROUP_CONCAT(issuance.issuance_id) AS tid,
+							  item.item_id,
+							  item.item_desc AS `desc`,
+							  item.`item_stock_no`,
+							  article.article_name,
+							  - 1 AS flag,
+							  0 AS r_qty,
+							  CASE WHEN issuance_dtl.issuance_dtl_item_issued IS NULL THEN 0 ELSE SUM(issuance_dtl.issuance_dtl_item_issued) END  AS i_qty,
+							  0 AS b_qty 
+							FROM
+							  `article` 
+							  INNER JOIN `item` 
+								ON (
+								  `article`.`article_id` = `item`.`item_article_id`
+								) 
+							  LEFT JOIN `ris_dtl` 
+								ON (
+								  `item`.`item_stock_no` = `ris_dtl`.`ris_dtl_item_stock_no`
+								) 
+							  LEFT JOIN `issuance_dtl` 
+								ON (
+								  `issuance_dtl`.`issuance_dtl_ris_dtl_id` = `ris_dtl`.`ris_dtl_id`
+								) 
+							  LEFT JOIN `ris` 
+								ON (
+								  `ris_dtl`.`ris_dtl_ris_id` = `ris`.`ris_id`
+								) 
+							  LEFT JOIN `issuance` 
+								ON (
+								  `issuance_dtl`.`issuance_dtl_issuance_id` = `issuance`.`issuance_id`
+								) 
+							WHERE (
+								(
+								  issuance_dtl.issuance_dtl_item_created >= '%s'
+								  AND issuance_dtl.issuance_dtl_item_created < '%s'
+								) 
+								OR issuance_dtl.issuance_dtl_item_created IS NULL
+							  ) 
+							  AND `article`.`article_inventory_type` = '%s'
+							  GROUP BY  item.item_stock_no
+							  ORDER BY  item.item_stock_no) 
+						) AS inventory GROUP BY item_stock_no ORDER BY `article`,`desc`",
+					$from,
+					$to,
+					$reportType,
+					$from,
+					$to,
+					$reportType
+				);
+			
+		}
+		$temp = $month_data['detail'] = front()->database()->query($query_1);
+		if(false){
         $temp = array();
 		
         for ($i = 0; $i < count($month_data['detail']); $i++) {
@@ -393,6 +492,7 @@ class Front_Page_Report extends Front_Page {
             }
         }
 		
+		}
 		
 		$data_chunk = array_chunk($temp, 36,true);
 		$total_page = count($data_chunk);
