@@ -220,6 +220,7 @@ class Front_Page_Report extends Front_Page {
     }
 
     protected function report_ISSUE_OUT() {
+        $format =  $this->get['format'];
         
         $issued = front()->database()
             ->search()
@@ -282,22 +283,52 @@ class Front_Page_Report extends Front_Page {
         foreach ($issued_item as $item) {
             array_push($datas['details'], $item);
         }
-		
-		
-        $ROWS = 43;
-        $next_index = 0;
-        $data_count = count($datas['details']);
-        $total_page = ceil($data_count / $ROWS);
-        $rc = new IssueOutReport();
+		if($format=='csv'){
+			$csv = array();
+			array_push($csv,array('SILANG WATER DISTRICT'));
+			array_push($csv,array('Silang, Cavite'));
+			array_push($csv,array(' '));
+			array_push($csv,array('Report on Materials and Supplies Issued'));
+			array_push($csv,array('for the month '.$datas['headers']['date']));
+			array_push($csv,array(' '));
+			array_push($csv,array(' '));
+			$columns  = array(	'Date', 'RIS NO.','RC Description',
+								'Inventory Description', 'Qty Issued',
+								'Unit Cost','Total Cost',
+								'Charging','Total Per Charging','Total Cost Per Charging',
+								'Total Per RC','Total Cost Per RC As Per Charging');
+			array_push($csv,$columns);
+			foreach($datas['details'] as $cell){
+				$row = array();
+				foreach($cell as $key=>$value){
+					array_push($row,$value);
+				}
+				array_push($csv,$row);
+			}
 
-        for ($x = 1; $x <= $total_page; $x++) {
-            $rc->hdr($datas['headers']);
-            $next_index = $rc->data_box($next_index, $ROWS, $datas['details']);
-            if ($x < $total_page) {
-                $rc->createSheet();
-            }
-        }
-        $rc->output();
+			$filename = 'Issue Out Report: '.str_replace(',','',$datas['headers']['date']);
+			header('Content-Type: text/csv; charset=utf-8');
+			header('Content-Disposition: attachment; filename='.$filename.'.csv');
+			$output = fopen('php://output', 'w');
+			foreach($csv as $d){
+				fputcsv($output, $d);
+			}
+		}else{
+	        $ROWS = 43;
+	        $next_index = 0;
+	        $data_count = count($datas['details']);
+	        $total_page = ceil($data_count / $ROWS);
+	        $rc = new IssueOutReport();
+
+	        for ($x = 1; $x <= $total_page; $x++) {
+	            $rc->hdr($datas['headers']);
+	            $next_index = $rc->data_box($next_index, $ROWS, $datas['details']);
+	            if ($x < $total_page) {
+	                $rc->createSheet();
+	            }
+	        }
+	        $rc->output();
+    	}
     }
 
     protected function report_MONTHLY() {
