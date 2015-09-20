@@ -955,7 +955,9 @@ class Front_Page_Report extends Front_Page {
 
     protected function report_STOCK_CARD() {
         $head = $this->Item()->getByStockNo($this->get['stock_no']);
-		
+		$stock_no = $this->get['stock_no'];
+		$from = date('Y-m-d 00:00:00', strtotime($this->get['from_date']));
+		$to = date('Y-m-d 23:59:59', strtotime($this->get['to_date']));
 		
 		if(!isset($this->get['stock_no'])) {
 			echo 'Enter <strong>Stock No</strong>, <strong>From Date</strong>, <strong>To Date</strong> to proceed...';
@@ -970,7 +972,7 @@ class Front_Page_Report extends Front_Page {
 				'stock_no' => $head['item_stock_no'],
 				'desc' => $head['item_desc'].' '.$head['item_size']
 			);
-
+		if(false){
         $query = sprintf("( SELECT
                 issuance_dtl.issuance_dtl_item_created AS date,
                 -1 AS flag,
@@ -1032,19 +1034,117 @@ class Front_Page_Report extends Front_Page {
                 )
             ORDER BY
                 date,received_ref,issued_ref", $this->get['stock_no'], date('Y-m-d H:i:s', strtotime($this->get['from_date'])), date('Y-m-d H:i:s', strtotime($this->get['to_date'])), $this->get['stock_no'], date('Y-m-d H:i:s', strtotime($this->get['from_date'])), date('Y-m-d H:i:s', strtotime($this->get['to_date'])));
-
+		}else{
+			$query = sprintf("SELECT * FROM (
+								(SELECT 
+								  `item_stock_level`.`item_stock_level_date` AS `date`,
+								  `item_stock_level`.`item_stock_level_flag` AS flag,
+								  '' AS received_ref,
+								  '' AS received_cost,
+								  '' AS received_qty,
+								  '' AS received_amt,
+								  ris.ris_no AS issued_ref,
+								  ris_dtl.ris_dtl_item_cost AS issued_cost,
+								  issuance_dtl.issuance_dtl_item_issued AS issued_qty,
+								  ris_dtl.ris_dtl_item_cost * issuance_dtl.issuance_dtl_item_issued AS issued_amt,
+								  `item_stock_level`.`item_stock_level_qty` AS bal_qty,
+								  ris_dtl.ris_dtl_item_cost AS bal_cost,
+								  ris_dtl.ris_dtl_item_cost * `item_stock_level`.`item_stock_level_qty` AS bal_amt 
+								FROM
+								  `item_stock_level` 
+								  INNER JOIN `item` 
+									ON (
+									  `item_stock_level`.`item_stock_level_item_id` = `item`.`item_id`
+									) 
+								  INNER JOIN `issuance` 
+									ON (
+									  `item_stock_level`.`item_stock_level_tid` = `issuance`.`issuance_id`
+									) 
+								  INNER JOIN `ris` 
+									ON (
+									  `issuance`.`issuance_ris_id` = `ris`.`ris_id`
+									) 
+								  INNER JOIN `issuance_dtl` 
+									ON (
+									  `issuance_dtl`.`issuance_dtl_issuance_id` = `issuance`.`issuance_id`
+									) 
+								  INNER JOIN `ris_dtl` 
+									ON (
+									  `issuance_dtl`.`issuance_dtl_ris_dtl_id` = `ris_dtl`.`ris_dtl_id` 
+									  AND `ris_dtl`.`ris_dtl_item_stock_no` = `item`.`item_stock_no`
+									) 
+								WHERE (
+									`item`.`item_stock_no` = '%s' 
+									AND `item_stock_level`.`item_stock_level_flag` = - 1 
+									AND `item_stock_level`.`item_stock_level_date` >= '%s' 
+									AND `item_stock_level`.`item_stock_level_date` <= '%s'
+								  )) 
+								UNION
+								ALL 
+								(SELECT 
+								  `item_stock_level`.`item_stock_level_date` AS `date`,
+								  `item_stock_level`.`item_stock_level_flag` AS flag,
+								  ia.ia_no AS received_ref,
+								  po_dtl.po_dtl_item_cost AS received_cost,
+								  ia_dtl.ia_dtl_item_qty AS received_qty,
+								  ia_dtl.ia_dtl_item_qty * po_dtl.po_dtl_item_cost AS received_amt,
+								  '' AS issued_ref,
+								  '' AS issued_cost,
+								  '' AS issued_qty,
+								  '' AS issued_amt,
+								  `item_stock_level`.`item_stock_level_qty` AS bal_qty,
+								  po_dtl.po_dtl_item_cost AS bal_cost,
+								  po_dtl.po_dtl_item_cost * `item_stock_level`.`item_stock_level_qty` AS bal_amt 
+								FROM
+								  `item_stock_level` 
+								  INNER JOIN `item` 
+									ON (
+									  `item_stock_level`.`item_stock_level_item_id` = `item`.`item_id`
+									) 
+								  INNER JOIN `ia` 
+									ON (
+									  `ia`.`ia_id` = `item_stock_level`.`item_stock_level_tid`
+									) 
+								  INNER JOIN `ia_dtl` 
+									ON (
+									  `ia_dtl`.`ia_dtl_ia_id` = `ia`.`ia_id`
+									) 
+								  INNER JOIN `po` 
+									ON (`po`.`po_id` = `ia`.`ia_po_id`) 
+								  INNER JOIN `po_dtl` 
+									ON (
+									  `ia_dtl`.`ia_dtl_po_dtl_id` = `po_dtl`.`po_dtl_id` 
+									  AND `po_dtl`.`po_dtl_stock_no` = `item`.`item_stock_no`
+									) 
+								WHERE (
+									`item`.`item_stock_no` = '%s' 
+									AND `item_stock_level`.`item_stock_level_flag` = 1 
+									AND `item_stock_level`.`item_stock_level_date` >= '%s' 
+									AND `item_stock_level`.`item_stock_level_date` <= '%s'
+								  ))
+								  ) AS stock_card 
+								ORDER BY `date` ",
+									$stock_no,
+									$from,
+									$to,
+									$stock_no,
+									$from,
+									$to
+								);
+		}
         $stock_card_data['detail'] = front()->database()->query($query);
-
+		if(false){
         for ($i = 0; $i < count($stock_card_data['detail']); $i++) {
             $bal = front()->database()->search('item_stock_level')->filterByItemStockLevelTid($stock_card_data['detail'][$i]['tid'])->addFilter('item_stock_level_flag = %s', $stock_card_data['detail'][$i]['flag'])->addFilter('item_stock_level_item_id = %s', $stock_card_data['detail'][$i]['iid'])->getRow();
             $stock_card_data['detail'][$i]['date'] = date('M d', strtotime($stock_card_data['detail'][$i]['date']));
             $stock_card_data['detail'][$i]['bal_qty'] = $bal['item_stock_level_qty'];
             $stock_card_data['detail'][$i]['bal_amt'] = number_format($bal['item_stock_level_qty'] * $stock_card_data['detail'][$i]['bal_cost'], 2, '.', ',');
         }
+		}
 		//echo '<pre>';
 		//print_r($stock_card_data);exit;
 		
-		$limit_ng_linya_na_kasya_sa_papel = 28;
+		$limit_ng_linya_na_kasya_sa_papel = 41;
 		$data_chunk = array_chunk($stock_card_data['detail'], $limit_ng_linya_na_kasya_sa_papel, true);
 		$total_page = count($data_chunk);
 		$ctr =1;
