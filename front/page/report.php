@@ -115,7 +115,10 @@ class Front_Page_Report extends Front_Page {
 				'reorder_point' => '',
 				'description' => $head['item_desc']
 			);
-
+			$stock_no = $this->get['stock_no'];
+			$from = date('Y-m-d 00:00:00', strtotime($this->get['from_date']));
+			$to = date('Y-m-d 23:59:59', strtotime($this->get['to_date']));
+			if(false){
 			$query = sprintf("( SELECT
 				issuance_dtl.issuance_dtl_item_created AS date,
 				ris.ris_no AS ref,
@@ -170,11 +173,73 @@ class Front_Page_Report extends Front_Page {
 					date('Y-m-d H:i:s',strtotime($this->get['from_date'])),
 					date('Y-m-d 23:59:59',strtotime($this->get['to_date']))
 				);
+			}else{
+				$query = sprintf("SELECT * FROM (
+									(SELECT
+										`item_stock_level`.`item_stock_level_date` AS `date`,
+										ris.ris_no AS ref,
+										`item_stock_level`.`item_stock_level_flag`  AS flag,
+										'' AS received_qty,
+										issuance_dtl.issuance_dtl_item_issued AS issued_qty,
+										`item_stock_level`.`item_stock_level_qty` AS bal_qty,
+										`item_stock_level`.`item_stock_level_current_qty` AS curr_qty
+										FROM
+										   `item_stock_level`
+											INNER JOIN`item` 
+												ON (`item_stock_level`.`item_stock_level_item_id` = `item`.`item_id`)
+											INNER JOIN`issuance` 
+												ON (`item_stock_level`.`item_stock_level_tid` = `issuance`.`issuance_id`)
+											
+											INNER JOIN`ris` 
+												ON (`issuance`.`issuance_ris_id` = `ris`.`ris_id`)
+											INNER JOIN`issuance_dtl` 
+												ON (`issuance_dtl`.`issuance_dtl_issuance_id` = `issuance`.`issuance_id`)
+											INNER JOIN`ris_dtl` 
+												ON (`issuance_dtl`.`issuance_dtl_ris_dtl_id` = `ris_dtl`.`ris_dtl_id` AND `ris_dtl`.`ris_dtl_item_stock_no` = `item`.`item_stock_no` )
+										WHERE (`item`.`item_stock_no` = '%s' AND `item_stock_level`.`item_stock_level_flag` = -1 AND
+											`item_stock_level`.`item_stock_level_date` >= '%s' AND `item_stock_level`.`item_stock_level_date` <= '%s'
+											)
+										)
+										UNION ALL 
+										(SELECT
+										`item_stock_level`.`item_stock_level_date` AS `date`,
+										ia.ia_no AS ref,
+										`item_stock_level`.`item_stock_level_flag`  AS flag,
+										ia_dtl.ia_dtl_item_qty AS received_qty,
+										'' AS issued_qty,
+										`item_stock_level`.`item_stock_level_qty` AS bal_qty,
+										`item_stock_level`.`item_stock_level_current_qty` AS curr_qty
+										FROM
+										   `item_stock_level`
+											INNER JOIN`item` 
+												ON (`item_stock_level`.`item_stock_level_item_id` = `item`.`item_id`)
+											 INNER JOIN`ia` 
+												ON (`ia`.`ia_id` = `item_stock_level`.`item_stock_level_tid`)
+											INNER JOIN`ia_dtl` 
+												ON (`ia_dtl`.`ia_dtl_ia_id` = `ia`.`ia_id`)
+											INNER JOIN`po` 
+												ON (`po`.`po_id` = `ia`.`ia_po_id`)
+											INNER JOIN`po_dtl` 
+											 ON (`ia_dtl`.`ia_dtl_po_dtl_id` = `po_dtl`.`po_dtl_id` AND `po_dtl`.`po_dtl_stock_no`= `item`.`item_stock_no` )
+										WHERE (`item`.`item_stock_no` = '%s' AND `item_stock_level`.`item_stock_level_flag` = 1 AND
+											`item_stock_level`.`item_stock_level_date` >= '%s' AND `item_stock_level`.`item_stock_level_date` <= '%s'
+											)
+										) 
+									)AS bin_card ORDER BY `date`",
+										$stock_no,
+										$from,
+										$to,
+										$stock_no,
+										$from,
+										$to
+									);
+			}
 //			echo $query;exit();
 			$bin_card_data['detail'] = front()->database()->query($query);
 			//echo '<pre>';print_r($bin_card_data);exit;
 			//echo '<pre>';
 			for ($i = 0; $i < count($bin_card_data['detail']); $i++) {
+				if(false){
 				$bal = front()->database()->
 					search('item_stock_level')
 						->filterByItemStockLevelTid($bin_card_data['detail'][$i]['tid'])
@@ -184,8 +249,9 @@ class Front_Page_Report extends Front_Page {
 						/*if($bal['item_stock_level_qty']==2225||$bal['item_stock_level_qty']==2272){
 							print_r($bal);
 						}*/
-				$bin_card_data['detail'][$i]['date'] = date('M d', strtotime($bin_card_data['detail'][$i]['date']));
 				$bin_card_data['detail'][$i]['bal_qty'] = $bal['item_stock_level_qty'];
+				}
+				$bin_card_data['detail'][$i]['date'] = date('M d', strtotime($bin_card_data['detail'][$i]['date']));
 			}
 			//exit;
 			//echo '<pre>';
