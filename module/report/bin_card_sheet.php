@@ -88,7 +88,18 @@ class BinCard extends Formsheet{
 		//print_r($data);
 		//exit;
 		
+		$this->SetDrawColor(0,0,0);
+		$this->SetFillColor(255,255,255);
+		$begbal=true;
         foreach($data as $datum) {
+			if($begbal){
+				$this->DrawBox(0,$y-0.7,10,1,'DF');
+				$this->centerText(0,$y, 'Beginning Balance',10,'I');
+				$this->centerText(20, $y, $datum['curr_qty'],5,'U');
+				$y++;
+				$begbal=false;
+			}
+
             $this->centerText(0,$y, date('M d', strtotime($datum['date'])),5,'');
             $this->centerText(5,$y, $datum['ref'],5,'');
             $this->centerText(10, $y, $datum['received_qty'],5,'');
@@ -96,6 +107,9 @@ class BinCard extends Formsheet{
             $this->centerText(20, $y, $datum['bal_qty'],5,'');    
             $y++;
         }
+		$this->DrawBox(0,$y-0.7,10,1,'DF');
+		$this->centerText(0,$y, 'Ending Balance',10,'I');
+		$this->centerText(20, $y, $datum['bal_qty'],5,'U');
     }
  }
 ?>

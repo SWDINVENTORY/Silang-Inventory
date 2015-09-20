@@ -249,15 +249,16 @@ class Front_Page_Report extends Front_Page {
 						/*if($bal['item_stock_level_qty']==2225||$bal['item_stock_level_qty']==2272){
 							print_r($bal);
 						}*/
+				$bin_card_data['detail'][$i]['date'] = date('M d', strtotime($bin_card_data['detail'][$i]['date']));
 				$bin_card_data['detail'][$i]['bal_qty'] = $bal['item_stock_level_qty'];
 				}
-				$bin_card_data['detail'][$i]['date'] = date('M d', strtotime($bin_card_data['detail'][$i]['date']));
+				
 			}
 			//exit;
 			//echo '<pre>';
 			//print_r($bin_card_data);
 			//exit;
-			$limit_ng_linya_na_kasya_sa_papel = 28;
+			$limit_ng_linya_na_kasya_sa_papel = 27;
 			$data_chunk = array_chunk($bin_card_data['detail'], $limit_ng_linya_na_kasya_sa_papel, true);
 			$total_page = count($data_chunk);
 			$ctr =1;
