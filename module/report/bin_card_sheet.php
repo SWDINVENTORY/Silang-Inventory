@@ -107,6 +107,7 @@ class BinCard extends Formsheet{
             $this->centerText(20, $y, $datum['bal_qty'],5,'');    
             $y++;
         }
+		$y = 30.7;
 		$this->DrawBox(0,$y-0.7,10,1,'DF');
 		$this->centerText(0,$y, 'Ending Balance',10,'I');
 		$this->centerText(20, $y, $datum['bal_qty'],5,'U');
