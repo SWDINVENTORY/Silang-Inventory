@@ -1049,7 +1049,10 @@ class Front_Page_Report extends Front_Page {
 								  ris_dtl.ris_dtl_item_cost * issuance_dtl.issuance_dtl_item_issued AS issued_amt,
 								  `item_stock_level`.`item_stock_level_qty` AS bal_qty,
 								  ris_dtl.ris_dtl_item_cost AS bal_cost,
-								  ris_dtl.ris_dtl_item_cost * `item_stock_level`.`item_stock_level_qty` AS bal_amt 
+								  ris_dtl.ris_dtl_item_cost * `item_stock_level`.`item_stock_level_qty` AS bal_amt,
+								  `item_stock_level`.`item_stock_level_current_qty` AS curr_qty,								  
+								  ris_dtl.ris_dtl_item_cost AS curr_cost,						  
+								  ris_dtl.ris_dtl_item_cost * `item_stock_level`.`item_stock_level_current_qty` AS curr_amt			
 								FROM
 								  `item_stock_level` 
 								  INNER JOIN `item` 
@@ -1094,7 +1097,10 @@ class Front_Page_Report extends Front_Page {
 								  '' AS issued_amt,
 								  `item_stock_level`.`item_stock_level_qty` AS bal_qty,
 								  po_dtl.po_dtl_item_cost AS bal_cost,
-								  po_dtl.po_dtl_item_cost * `item_stock_level`.`item_stock_level_qty` AS bal_amt 
+								  po_dtl.po_dtl_item_cost * `item_stock_level`.`item_stock_level_qty` AS bal_amt,
+								 `item_stock_level`.`item_stock_level_current_qty` AS curr_qty,								  
+								  po_dtl.po_dtl_item_cost AS curr_cost,						  
+								  po_dtl.po_dtl_item_cost * `item_stock_level`.`item_stock_level_current_qty` AS curr_amt						  
 								FROM
 								  `item_stock_level` 
 								  INNER JOIN `item` 
@@ -1144,7 +1150,7 @@ class Front_Page_Report extends Front_Page {
 		//echo '<pre>';
 		//print_r($stock_card_data);exit;
 		
-		$limit_ng_linya_na_kasya_sa_papel = 41;
+		$limit_ng_linya_na_kasya_sa_papel = 39;
 		$data_chunk = array_chunk($stock_card_data['detail'], $limit_ng_linya_na_kasya_sa_papel, true);
 		$total_page = count($data_chunk);
 		$ctr =1;
@@ -1153,8 +1159,8 @@ class Front_Page_Report extends Front_Page {
 		foreach ($data_chunk as $data) {
 			
 			$rc->hdr($stock_card_data['header']);
-			$rc->details($data);
 			$rc->data_box($stock_card_data['header']);
+			$rc->details($data);
 			
 			if($total_page != $ctr){
 				$rc->createSheet();

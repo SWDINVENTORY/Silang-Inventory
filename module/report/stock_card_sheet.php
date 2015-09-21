@@ -68,6 +68,12 @@ class StockCard extends Formsheet{
 		$this->drawLine($x+=$x_ntrvl,'v',array(4,43));
 		$this->drawLine($x+=$x_ntrvl,'v',array(4,43));
 		$this->drawLine($x+=$x_ntrvl,'v',array(4,43));
+		$this->SetDrawColor(0,0,0);
+		$this->SetFillColor(255,255,255);
+		$this->DrawBox(0,5,11,1.5,'FD');
+		$this->DrawBox(11,5,36,1.5,'D');
+		$this->DrawBox(0,45.5,11,1.5,'FD');
+		$this->DrawBox(11,45.5,36,1.5,'D');
 		$this->drawLine(3,'h');
 		$this->drawLine(4,'h',array(11,36));
 		$this->drawLine(5,'h');
@@ -104,6 +110,7 @@ class StockCard extends Formsheet{
 		$this->centerText($x+=$x_ntrvl,4.8,'Amount',$x_ntrvl,'b');
 		
 		$this->leftText(0,48,'For Property and Supply Unit Use','','b');
+		
 		return $this;
 	
 	}
@@ -122,11 +129,21 @@ class StockCard extends Formsheet{
 
 		
 		$y = 1;
+		$begbal = true;
 		foreach($data as $data ) {
 			$x_ntrvl = 4;
 			$x_ntrvl3 = 8;
 			$x = 3;
-			
+			if($begbal){
+				$y=0.75;
+				$this->centerText(0,$y, 'Beginning Balance',11,'I');
+				$this->centerText(35,$y,$data['curr_qty'],$x_ntrvl,'u');
+				$this->centerText(39,$y,$data['curr_cost'],$x_ntrvl,'u');
+				$this->centerText(43,$y,$data['curr_amt'],$x_ntrvl,'u');
+				$y+=1.25;
+				$begbal=false;
+				
+			}
 			
 			$this->centerText(0,$y, date('M d', strtotime($data['date'])),3,'');
 			$this->centerText($x,$y,$data['received_ref'],$x_ntrvl,'');
@@ -142,7 +159,11 @@ class StockCard extends Formsheet{
             $this->centerText($x+=$x_ntrvl,$y,$data['bal_amt'],$x_ntrvl,'');
 			$y++;
 		}
-
+		$y=41.25;
+		$this->centerText(0,$y, 'Ending Balance',11,'I');
+		$this->centerText(35,$y,$data['bal_qty'],$x_ntrvl,'u');
+		$this->centerText(39,$y,$data['bal_cost'],$x_ntrvl,'u');
+		$this->centerText(43,$y,$data['bal_amt'],$x_ntrvl,'u');
 	
 		
 		return $this;
