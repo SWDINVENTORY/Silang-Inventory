@@ -138,8 +138,8 @@ class StockCard extends Formsheet{
 				$y=0.75;
 				$this->centerText(0,$y, 'Beginning Balance',11,'I');
 				$this->centerText(35,$y,$data['curr_qty'],$x_ntrvl,'u');
-				$this->centerText(39,$y,$data['curr_cost'],$x_ntrvl,'u');
-				$this->centerText(43,$y,$data['curr_amt'],$x_ntrvl,'u');
+				$this->centerText(39,$y,number_format($data['curr_cost'],2,'.',','),$x_ntrvl,'u');
+				$this->centerText(43,$y,number_format($data['curr_amt'],2,'.',','),$x_ntrvl,'u');
 				$y+=1.25;
 				$begbal=false;
 				
@@ -152,18 +152,18 @@ class StockCard extends Formsheet{
 			$this->centerText($x+=$x_ntrvl,$y,$data['received_cost'],$x_ntrvl,'');
 		    $this->centerText($x+=$x_ntrvl,$y,$data['received_amt'],$x_ntrvl,'');
 			$this->centerText($x+=$x_ntrvl,$y,$data['issued_qty'],$x_ntrvl,'');
-			$this->centerText($x+=$x_ntrvl,$y,$data['issued_cost'],$x_ntrvl,'');
-			$this->centerText($x+=$x_ntrvl,$y,$data['issued_amt'],$x_ntrvl,'');
+			$this->centerText($x+=$x_ntrvl,$y,number_format($data['issued_cost'],2,'.',','),$x_ntrvl,'');
+			$this->centerText($x+=$x_ntrvl,$y,number_format($data['issued_amt'],2,'.',','),$x_ntrvl,'');
 			$this->centerText($x+=$x_ntrvl,$y,$data['bal_qty'],$x_ntrvl,'');
-            $this->centerText($x+=$x_ntrvl,$y,$data['bal_cost'],$x_ntrvl,'');
-            $this->centerText($x+=$x_ntrvl,$y,$data['bal_amt'],$x_ntrvl,'');
+            $this->centerText($x+=$x_ntrvl,$y,number_format($data['bal_cost'],2,'.',','),$x_ntrvl,'');
+            $this->centerText($x+=$x_ntrvl,$y,number_format($data['bal_amt'],2,'.',','),$x_ntrvl,'');
 			$y++;
 		}
 		$y=41.25;
 		$this->centerText(0,$y, 'Ending Balance',11,'I');
 		$this->centerText(35,$y,$data['bal_qty'],$x_ntrvl,'u');
-		$this->centerText(39,$y,$data['bal_cost'],$x_ntrvl,'u');
-		$this->centerText(43,$y,$data['bal_amt'],$x_ntrvl,'u');
+		$this->centerText(39,$y,number_format($data['bal_cost'],2,'.',','),$x_ntrvl,'u');
+		$this->centerText(43,$y,number_format($data['bal_amt'],2,'.',','),$x_ntrvl,'u');
 	
 		
 		return $this;
